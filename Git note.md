@@ -1,7 +1,8 @@
-# 1. Git的工作流
+# Git的工作流
 
 一图解：![git_command](git-command.jpg)
-推荐看[这个博客](https://www.liaoxuefeng.com/wiki/896043488029600)
+
+同时，推荐看[这个博客](https://www.liaoxuefeng.com/wiki/896043488029600)
 
 ## 1.1 组成部分
 
@@ -17,20 +18,23 @@
 首先在一切开始之前，需要保证当前操作所在的环境是一个git仓库(git repository)
 如果不在git仓库内，任何指令都无法进行。如果这个文件夹是一个git仓库，那么它应当有一个`.git`文件夹
 
-**初始化**   
+**初始化**
+
 运用`git init`指令，创建`.git`目录。同时在`git config -- global`处设置`user.name`和`user.email`(这个信息是必要的，且以后的每次对git操作产生的记录都会包含这个个人信息)
 
-**提交**   
+**提交**
+
 它分为几个步骤，由上图可见，是：`git add`->`git commit`->`git push`，以下对三个步骤的作用稍作解释。
-`git add` 将文件加入`Staging Area`中，将`Untracked files`加入到git所关注的文件列表之中。
-`git commit` 意味着修改生效，将文件保存到了本地仓库中。
-`git push` 将本地仓库的内容推到了远程仓库中。
+* `git add` 将文件加入`Staging Area`中，将`Untracked files`加入到git所关注的文件列表之中。
+* `git commit` 意味着修改生效，将文件保存到了本地仓库中。
+* `git push` 将本地仓库的内容推到了远程仓库中。
 
 **拉取**
+
 基本上都是对应层级的逆操作：
-`git pull` 将远程仓库的内容拉取到工作区
-`git clone` \ `git fetch` 将远程仓库的内容同步到本地仓库
-`git checkout` 将`Staging Area`中的指定文件修改内容撤销。
+* `git pull` 将远程仓库的内容拉取到工作区
+* `git clone` \ `git fetch` 将远程仓库的内容同步到本地仓库
+* `git checkout` 将本地仓库的内容同步至工作区
 
 # Appendix 操作命令
 
