@@ -1,6 +1,7 @@
 # 1. Git的工作流
 
 一图解：![git_command](git-command.jpg)
+推荐看[这个博客](https://www.liaoxuefeng.com/wiki/896043488029600)
 
 ## 1.1 组成部分
 
