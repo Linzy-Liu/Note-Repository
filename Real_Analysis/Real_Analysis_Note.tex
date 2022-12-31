@@ -1,0 +1,100 @@
+\documentclass{ctexbook}
+\usepackage{amsmath, amsthm, amssymb, mathrsfs,anyfontsize}
+
+\begin{document}
+
+\theoremstyle{definition} 
+\newtheorem{define}{Def}[section]
+
+\theoremstyle{plain} 
+\newtheorem{thm}{Theorem}[section] \newtheorem{lema}{Lemma} \newtheorem{cor}{Corollary}
+\newtheorem{prop}{Property} \newtheorem{fact}{Fact} 
+
+%\frontmatter
+%\tableofcontents
+
+\mainmatter
+\chapter{Measure Theory}
+
+\section{Set Theory}
+
+Before presenting our ideas, we should give some notations here as a standard.
+\begin{define}[point]
+    A \textbf{point} $x \in \mathbb{R}^n$ consists of n-tuple of real numbers,
+    \[x=(x_1,x_2,\ldots,x_n),\quad x_i \in \mathbb{R}^n \text{ for } i=1,2,\ldots,n\]
+\end{define}
+\begin{define}[norm]
+    The \textbf{norm} of $x$ is denoted by $\left|x\right|$ and is defined to be the standard Euclidean norm given by 
+    \[\left|x\right|:=(\sum\limits^n_{i=1}x_i^2)^{1/2}\]
+\end{define}
+\begin{define}[complement]
+    The \textbf{complement} of a set $E$ in $\mathbb{R}^n$ is denoted by $E^c$ and defined by 
+    \[E^c:=\{x\in \mathbb{R}^n:\, x \notin E\}\]
+    And the \textbf{complement} of $F$ in $E$ is denoted by 
+    \[E-F:=\{x \in E:\, x \notin F\}\]
+    assuming $E$ and $F$ are the subsets of $\mathbb{R}^n$
+\end{define}
+\begin{define}[distance between sets]
+    Let $E$ and $F$ be the subsets of $\mathbb{R}^n$, we define the distance between $E$ and $F$ by 
+    \[d(E,F):=\inf\limits_{x\in E, y\in F}\left|x-y\right|\] 
+\end{define}
+\begin{define}
+    An open ball centered at $x$ and of radius $r$ is denoted by 
+    \[B_r(x):=\{y\in \mathbf{R}^n:\, \left|x-y\right|<r\}\]
+\end{define}
+\begin{define}[open set and close set]
+    A set $E \subset \mathbf{R}^n$ is \textbf{open} if for every $x$ in $E$, there exists $r>0$ with $B_r(x) \subset E$
+    On the contrary, a set $E \subset \mathbf{R}^n$ is \textbf{closed} if it's complement is open
+\end{define}
+\begin{define}[compact set]
+    A set is \textbf{bounded} if the set can be contained in some open balls with finite radius.
+    And a bounded set is \textbf{compact} if the set is also closed, which holds the \textit{Heine-Borel~covering~property} 
+\end{define}
+\begin{define}[perfect set]
+    A point $x\in \mathbb{R}^n$ is a \textbf{limit~point} of set $E$ if for every $r>0$, the ball $B_r(x)$ contains the point of
+    E.
+    If there is a point $x \in E$ such that there exists $r>0$ where $B_r(x)\cap E$ equals to $\{x\}$, we call it an \textbf{isolated~point}.
+    A close set is \textbf{perfect} if there're no isolateted points in it.  
+\end{define}
+\begin{define}[rectangles]
+    A \textbf{close rectangle} $R$ in $\mathbb{R}^n$ is given by taking the product of one-dimensional closed and bounded intervals.
+    \[R:=[a_1,b_1]\times\ldots\times[a_n,b_n]\]
+    where $a_i\leq b_i$ are real numbers, for $i=1,2,\ldots,n$\\
+    The \textbf{volume} of rectangles R is denoted by $\left|R\right|$, which is defined to be 
+    \[\left|R\right|:=\prod\limits_{i=1}^n(b_i-a_i)\]
+\end{define}
+
+The main idea in building the measure theory consists of measuring a subset of $\mathbb{R}^n$ properly. However, the property of
+a subset of $\mathbb{R}^n$ can be extremely ambuguous. Hence, the core of approximating the "volume" of most of subsets in $\mathbb{R}^n$
+lay in the rectangles, which can be manipulated easily and has a standard notion of volume that is given by taking the product of
+length of all sides. Such claim is guaranteed by the theorems below.
+
+\begin{lema}
+    If a rectangle $R$ is the almost disjoint union of finitely many rectangles, say $R = \bigcup \limits_{i=1}^N R_i$, then
+    \[\left|R\right|=\sum\limits_{i=1}^N \left|R_i\right|\]
+\end{lema}
+\begin{lema}
+    If $R,R_1,R_2,\ldots,R_N$ are rectangles, and $R \subset \bigcup \limits_{i=1}^N R_i$, then
+    \[\left|R\right|\leq\sum\limits_{i=1}^N \left|R_i\right|\]
+\end{lema}
+
+\begin{thm}
+    Every open subset $\mathcal{O}$ of $\mathbb{R}$ can be uniquely written as a countable union of disjoint open intervals.
+\end{thm}
+\begin{thm}
+    Every open subset $\mathcal{O}$ of $\mathbb{R}^n (n\geq 1)$ can be written as a countable union of almost disjoint closed
+    rectangles. (A countable union is said to be \textbf{almost~disjoint} only if the interiors of the sets are disjoint.)
+\end{thm}
+\begin{fact}[Cantor Set]
+    Let $\mathcal{C} $ denote the Cantor Set, then:
+    \begin{enumerate}
+        \item $\mathcal{C} $ is a compact set.
+        \item $\mathcal{C} $ is perfect.
+        \item $\mathcal{C} $ has the cardinality of continuum, which implies $\,\overline{\overline{\mathcal{C}}} = \aleph$
+    \end{enumerate}
+\end{fact}
+
+\section{The exterior measure}
+
+
+\end{document}
