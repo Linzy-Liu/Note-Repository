@@ -96,5 +96,104 @@ length of all sides. Such claim is guaranteed by the theorems below.
 
 \section{The exterior measure}
 
+After simple introductions to our claim which says most of subset can be approximated by countable rectangles, we raise the
+notion of an intuitive measure 
+
+\begin{define}[exterior measure]
+    If $E$ is any subset of $\mathbb{R}^n$, the \textbf{exterior~measure} of $E$ is given by
+    \[m^*(E)=\inf\sum\limits_{k=1}^{\infty}\left|R_k\right|\]
+    where the infimum is taken over all countable coverings $\left\{R_k\right\}_{k=1}^{\infty}$ by closed rectangles where 
+    $E \subset \bigcup\limits_{k=1}^{\infty}R_k$.
+\end{define}
+
+\begin{fact}
+    We try to list some trival facts here.
+    \begin{enumerate}
+        \item Let $Q$ denote a closed cube, then we have $m^*(Q) = \left\lvert Q\right\rvert $
+        \item If $Q$ is an open cube, the result $m^*(Q) = \left\lvert Q\right\rvert $ still holds.
+        \item The exterior measure of a rectangle $R$ equals to its volume.
+        \item The exterior measure of $\mathbb{R}^n$ is infinite.
+        \item Let $\mathcal{C} $ denote the Cantor Set, then $m^*(\mathcal{C})=0$
+    \end{enumerate}
+\end{fact}
+
+Before giving the property of exterior measure, we should point out a remark that could be generated from the facts above
+immediately: 
+For every $\epsilon>0$,there exists a covering $E \subset \bigcup\limits_{k=1}^{\infty}Q_k$ with
+\[\sum\limits_{k=1}^{\infty}m^*(Q_k) \leq m^*(E)+\epsilon\]
+
+\begin{prop}[Monotonicity]
+    If $E_1 \subset E_2$, then \[m^*(E_1) \leq M^*(E_2)\]
+\end{prop}
+
+\begin{prop}[Countable Sub-additivity]
+    If $E \subset \bigcup\limits_{k=1}^{\infty}E_k$, then \[m^*(E) \leq \sum\limits_{k=1}^{\infty}m^*(E_k)\]
+\end{prop}
+
+\begin{prop}
+    \label{sec exterior measure:open set}
+    If $E \subset \mathbb{R}^n$, \[m^*(E) = \inf m^*(\mathcal{O} )\], where $\mathcal{O} $ is taken over all open sets
+    that contains $E$.
+\end{prop}
+
+\begin{prop}
+    If $E=E_1\bigcup E_2$, and $d(E_1,E_2) > 0$, then \[m^*(E) = m^*(E_1)+m^*(E_2)\]
+\end{prop}
+
+\begin{prop}
+    If $E$ is a countable union of almost disjoint cubes $E = \bigcup\limits_{k=1}^{\infty}E_k$, then
+    \[m^*(E)=\sum\limits_{k=1}^{\infty}m^*(E_k)\]
+\end{prop}
+
+\section{Lebesgue Measure}
+
+Before we formally introduce the notion of measure, we need to have an essential recall on the measure we are looking for:
+\begin{enumerate}
+    \item The measure $m$ should be a non-negative function defined on the family of subsets $E$ of $\mathbb{R}^n$ that we allow to be extended-value
+    \item $m(E)=b-a$ if $E$ is the interval $\left[a,b\right] $ with $a \leq b$
+    \item $m(E) = \sum\limits_{n=1}^{\infty}m(E_n)$ whenever $E = \bigcup\limits_{n=1}^{\infty}m(E_n)$ and $\left\{E_n\right\}_{n=1}^{\infty}$ are disjoint. (Namely, $m$ satisfies countable additivity)
+    \item Let $E+h$ denote $\left\{x+h:\, x \in E\right\}$, then $m(E+h)=m(E)$ for every $h \in \mathbb{R}^n$
+\end{enumerate}
+
+According to the facts above, we can see that the exterior~measure has sactisfied the previous two properties and sub-additivity.
+We'll claim that in a certain family of subsets of $\mathbb{R}^n$, the exterior~measure can obtain the property of countable
+additivity. Such measure will be illustrated below:
+
+\begin{define}[Lebesgue Measure]
+    A subset $E$ of $\mathbb{R}^n$ is \textbf{Lebesgue~measurable}, or simply \textbf{measurable}, if for any $\epsilon>0$,
+    there exists an open set $\mathcal{O} $ with $E \subset \mathcal{O} $ and 
+    \[m^*(\mathcal{O} - E) < \epsilon\]
+    If $E$ is measurable, we define its \textbf{Lebesgue~measure} by \[m(E)=m^*(E)\]
+\end{define}
+Clearly, the Lebesgue~measure inherited all the properties from the exterior measure. To discover the nature of measurable,
+we could compare the definition of measurable with Property 3 in page \pageref{sec exterior measure:open set}
+
+\begin{prop}
+    Every open set in $\mathbb{R}^n$ are measurable.
+\end{prop}
+\begin{prop}
+    If $m^*(E)=0$, then $E$ is measurable. In particular, if $F$ is a subset of a set of exterior measure 0, then $F$ is measurable.
+\end{prop}
+\begin{prop}
+    A countable union of measurable sets is measurable.
+\end{prop}
+\begin{lema}
+    If $F$ is closed and $K$ is compact, and these sets are disjoint, then $d(K,F)>0$
+\end{lema}
+\noindent What if switch the condition to "two disjoint closed sets"?
+\begin{prop}
+    Closed sets are measurable.
+\end{prop}
+\begin{prop}
+    The complement of a measurable set is measurable.
+\end{prop}
+In conclusion, we found many familiar sets in the family of measurable sets, including open sets, closed sets and compact sets,
+which are easy to manipulate. More specifically, we can conclude that the family of measurable sets is a $\sigma-$algerbra proven
+by Property 8 and Property 10.
+
+\begin{thm}
+    If $E_1,E_2,\ldots$ are disjoint measurable sets, and $E = \bigcup\limits_{n=1}^{\infty}E_n$, then
+    \[m(E)=\sum\limits_{n=1}^{\infty}m(E_n)\]
+\end{thm}
 
 \end{document}
