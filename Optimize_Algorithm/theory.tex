@@ -1,0 +1,50 @@
+\documentclass{ctexart}
+\usepackage{amsmath, amsthm, amssymb, mathrsfs,anyfontsize}
+
+\begin{document}
+
+\section{模拟退火（Stimulated Annealing）}
+
+\subsection{想法}
+
+事实上，\textbf{模拟退火算法}可以视为一种改良后的``贪婪''类算法。它的重大进步就在于通过Metropolis采样让算法能脱离局部最优解，
+得到全局最优解。这个算法抽象自金属冶炼的退火过程。被冶炼的物体在由高温缓慢降至低温时，物体自身会自发地使自身的内能降至最低点。
+其原理在于高温时，物体内的原子会进行较强的分子热运动，易于跳出自身原来所在的平衡位置。而随着温度的缓慢降低，分子的跳跃会越来越困难。
+从而最终达到``全局最低内能''的状态。
+
+\subsection{流程}
+
+\noindent 需给条件：\\
+\begin{tabular}[t]{l|l}
+    \hline
+    初始解 &  $x_0$\\
+    迭代数 & $L$ \\
+    扰动函数 & $C$\\
+    代价函数（内能函数） & $E$\\
+    降温函数 & $\text{TransT}$\\
+    \hline
+\end{tabular}
+
+
+\begin{enumerate}
+    \item 给定充分大的初始温度$T$，合适的初始解$x_0$和迭代数$L$
+    \item 对当前解施加扰动\[x_n' = C(x_n, T)\]
+    \item 计算内能差\[\varDelta E = E(x_n') - E(x_n)\]
+    \item 按以下概率接受新解$x_{n+1}=x_n'$，否则接受原解$x_n$ \[\mathbb{P} (\varDelta E )=\left\{ 
+        \begin{array}{ll}
+            1 & \text{, }\varDelta E < 0\\
+            e^{-\frac{\varDelta E }{T}} & \text{, }\varDelta E \geq 0
+        \end{array} \right.\]
+    \item 判断当前解$x_{n+1}$是否符合收敛标准或达到迭代数上限。若其中任一满足，则进行下一步，反之则回到第二步。
+    \item 判断当前温度是否达到温度下限。若达到，则结束程序；反之则对温度进行变换$T' = \text{TransT}(T)$后回到第二步。
+\end{enumerate}
+
+\subsection{注意事项}
+
+\begin{itemize}
+    \item 降温过程应当足够缓慢。虽然这会降低性能表现，但可以保证足够的准度。（当然，也不能慢过穷举）
+    \item 初始温度应当足够大，否则可能一开始就只能困在局部最优解中无法出来。
+    \item 显而易见，这个算法是求最小值的。
+\end{itemize}
+
+\end{document}
