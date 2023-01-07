@@ -1,4 +1,3 @@
-import time
 import numpy as npy
 
 converge_rate = 0.05
@@ -6,8 +5,23 @@ eq_range = 1e-15
 
 
 class StimulatedAnnealing:
-	def __init__(self, iteration, x0, temperature, trans_t, change_func, target_func, target_value = None,
+	def __init__(self, iteration, x0, temperature: npy.ndarray, trans_t, change_func, target_func, target_value = None,
 	             target_change = None):
+		"""
+		:param iteration: An integer denote the maximum iteration to find the best solution in a certain temperature
+		:param x0: The initial solution
+		:param temperature: A list of 2 elements with the form of [init_T, bound_T], and init_T > bound_T
+		:param trans_t: The transform function of T. The function receives a real number and returns a real number
+		:param change_func: The function that introduces small changes to the solution. The function receives
+		a solution and the temperature as parameters and returns a real number.
+		:param target_func: The function whose minimum value we are interested at. The function receives a solution and
+		returns a real value
+		:param target_value: The value when substituting x0 into target function.
+		:param target_change: The function that generates new solution and calculates the difference of target function's
+		value between the new solution and the original solution. The function receives a solution and the temperature,
+		returns the dx and dE.(dx denotes the difference between new solution and the original solution, dE denotes the
+		difference of target function's value between the new and the original.)
+		"""
 		self.iter = iteration
 		self.x = npy.array(x0)
 		self.T = temperature
@@ -18,13 +32,11 @@ class StimulatedAnnealing:
 		self.dE = target_change
 		self.history = [x0]
 
-	# temperature is a list of 2 elements in the form of [init_T, bound_T]
-	# change_func and target_change should receive two parameter: x and T; target_func only receive x.
-	# And the parameter x in these three functions should be of same dimension.
-	# change_func returns a vector which is the new x, target_func returns a real number
-	# And target_change returns dx and dE. Namely, target_change should generate a new x by itself.
-
 	def metropolis(self):
+		"""
+		Proceed the process of metropolis sampling and change the value inplace
+		:return: no return
+		"""
 		if self.E_value is None:
 			self.E_value = self.E(self.x)
 		if self.dE is not None:
@@ -49,6 +61,10 @@ class StimulatedAnnealing:
 				self.E_value = temp_E
 
 	def solve(self):
+		"""
+		Find the minimum value point
+		:return: returns the minimum value and corresponding point
+		"""
 		limit_count_iter = converge_rate * self.iter
 		previous_x = None
 		while self.T[0] > self.T[1]:
