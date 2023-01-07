@@ -9,3 +9,4 @@ Mainly used for storing Linzy Liu's notes
 2. Real Analysis
 3. 优化类算法
    * 模拟退火
+   * 遗传算法
