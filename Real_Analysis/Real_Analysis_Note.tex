@@ -196,4 +196,45 @@ by Property 8 and Property 10.
     \[m(E)=\sum\limits_{n=1}^{\infty}m(E_n)\]
 \end{thm}
 
+\begin{define}[the limit of sets]
+    If $E_1,E_2,\ldots$ is a countable collection of subsets of $\mathbb{R}^n$ that increases to $E$ in the sense that
+    $E_k \subset E_{k+1}$ for all $k \in \mathbb{N}^*$ and $E = \bigcup\limits_{k=1}^\infty E_k$, then we write 
+    $E_k \nearrow E$ or $E_k \uparrow E$ or \[\lim \limits_{k\rightarrow \infty}E_k = E\]
+    Similarly, if $E_1,E_2,\ldots$ decreases to $E$ in the senese that $E_{k+1} \subset E_k$ for all $k \in \mathbb{N}^*$
+    and $E = \bigcap\limits_{k=1}^{\infty}E_k$, then we write 
+    $E_k \searrow E$ or $E_k \downarrow E$ or \[\lim \limits_{k\rightarrow \infty}E_k = E\]
+\end{define}
+
+\begin{define}[The upper limit and lower limit of sets]
+    Let $E_1, E_2,\ldots$ be a countable collection of subsets of $\mathbb{R}^n$. Then we denote the \textbf{upper~limit} of the
+    collection as \[\varlimsup \limits_{k \rightarrow \infty} E_k := \bigcap\limits_{k=1}^\infty\bigcup\limits_{n=k}^\infty E_k \]
+    define the \textbf{lower~limit} as
+    \[\varliminf \limits_{k \rightarrow \infty} E_k := \bigcup\limits_{k=1}^\infty\bigcap\limits_{n=k}^\infty E_k \]
+\end{define}
+
+\begin{cor}[The continuity of Lebesgue~measure]
+    Suppose $E_1,E_2,\ldots$ is a countable collection of measurable sets in $\mathbb{R}^n$,
+    \begin{enumerate}
+        \item If $E_k \uparrow E$, then $m(E)=\lim\limits_{k \rightarrow \infty} m(E_k)$
+        \item If $E_k \downarrow E$ and $m(E_1)<\infty$, then $m(E) = \lim\limits_{k \rightarrow \infty} m(E_k)$
+    \end{enumerate}
+\end{cor}
+
+To provide a rather important geometric and analytic insight into the nature of measurable sets, we try to list the
+equivalent definitions of measurable sets below.
+\begin{thm}
+    Suppose $E$ is a measurable subset of $\mathbb{R}^n$, then for every $\epsilon>0$,
+    \begin{enumerate}
+        \item There exists an open set $\mathcal{O}$ with $E \subset \mathbb{O}$, and $m^*(\mathcal{O} - E) < \epsilon$
+        \item There exists a closed set $F$ with $F \subset E$, and $m^*(E-F)<\epsilon$
+        \item If $m(E)$ is finite, there exists a compact set $K$ with $K \subset E$ and $m^*(E-K) < \epsilon$
+        \item If $m(E)$ is finite, there exists a finite union $F=\bigcup\limits_{j=1}^N Q_j$ of closed cubes such that \[m(E\triangle F)<\epsilon\]
+    \end{enumerate}
+\end{thm}
+\begin{thm}[\textbf{Caratheodory`s~Criterion}]
+    Suppose $E$ is a subset of $\mathbb{R}^n$, if for every $A\subset \mathbb{R}^n$, the inequation
+    \[m^*(A) \geq m^*(A\cap E)+m^*(A\cap E^c)\]
+    holds, then we could confirm that $E$ is a measurable set.
+\end{thm}
+
 \end{document}
