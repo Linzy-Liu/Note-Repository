@@ -309,6 +309,51 @@ Such example lays on \textbf{axiom of choice}:
 
 \section{measurable~functions}
 
+We begin by considering only real~valued dunction $f$ of $\mathbb{R}^n$, which we allow to take on infinite numbers $+\infty$ and 
+$-\infty$. So we have \[-\infty \leq f(x) \leq +\infty\]And we shall say that $f$ is \textbf{finite-valued} if $-\infty \leq f(x) \leq \infty$
+for all $x$. Let $\overline{\mathbb{R}}$ denote the extended real numbers.
 
+\begin{define}[measurable function]
+    A funtion $f$ defined on a subset $E$ of $\mathbb{R}^n$ is \textbf{measurable} if for every real number $a$, the set
+    \[\left\{f < a\right\} =f^{-1}([-\infty,a)):= \left\{x \in E:\, f(x)<a\right\} \]
+    is measurable.
+\end{define}
+
+First, it is easy to note that there are many equivalent definitions of measurable functions.
+\begin{prop}
+    The finite-valued function $f$ is measurable if and only if $f^{-1}(\mathcal{O})$ is measurable for every open set $\mathcal{O} \subset \mathbb{R}$,
+    and if and only if $f^{-1}(F)$ is measurable for every closed set $F \subset \mathbb{R}$.
+    If we make the additional hypothesis that both $f^{-1}(-\infty)$ and $f^{-1}(\infty)$ are measurable, the property above can be
+    applied to extended-valued functions.
+\end{prop}
+Note that we can porve that after the operation of complements, countable union and countable intersections, the equivalence
+relation between new test sets and original test sets in definition still holds. Therefore, we have a developed property.
+\begin{prop}
+    The extended-valued function $f$ is measurable if and only if $f^{-1}(B)$ is measurable for every $B \in \mathscr{B}(\overline{\mathbb{R}})$
+\end{prop}
+\begin{prop}
+    If $f$ is continuous on $\mathbb{R}^n$, then $f$ is measurable. If $f$ is measurable and finite-valued, and $\Phi$ is continuous,
+    then $\Phi \circ f$ is measurable. 
+\end{prop}
+\begin{prop}
+    Suppose $\left\{f_n\right\}_{n=1}^\infty $ is a sequence of measurable fuctions, then 
+    \[\sup f_n,\quad \inf f_n,\quad \varlimsup\limits_{n \rightarrow \infty} f_n,\quad \varliminf\limits_{n \rightarrow \infty} f_n\]
+    are measurable.(These opreations are pointwise.)
+\end{prop}
+\begin{prop}
+    If $\left\{f_n\right\}_{n=1}^\infty $ is a collection of measurable functions, and the limit of the collection converges pointwisely
+    , and\[\lim\limits_{n \rightarrow \infty} f_n = f\]
+    then $f$ is measurable.
+\end{prop}
+\begin{prop}
+    If $f$ and $g$ are measurable, then
+    \begin{enumerate}
+        \item for every $k \in \mathbb{N}_+$, $f^k$ is measurable.
+        \item $f+g$ and $fg$ are measurable if both $f$ and $g$ are finite.
+    \end{enumerate}
+\end{prop}
+Since the proof of the second point of property is by $\bigcup\limits_{r \in \mathbb{Q}}\left\{f < a\right\}\cap\left\{g < a - r\right\}$
+and $fg = \frac{1}{4}[(f+g)^2 - (f-g)^2]$, we can somewhat loose its condition to part of extended-valued function. Because what we
+don't want is the existance of $\infty - \infty$ 
 
 \end{document}
