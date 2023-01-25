@@ -1,5 +1,6 @@
 \documentclass{ctexbook}
-\usepackage{amsmath, amsthm, amssymb, mathrsfs,anyfontsize}
+\usepackage{amsmath, amsthm, amssymb, mathrsfs,anyfontsize, bbm}
+\usepackage[colorlinks, bookmarksopen=true, bookmarksnumbered=true]{hyperref}
 
 \begin{document}
 
@@ -166,7 +167,7 @@ additivity. Such measure will be illustrated below:
     If $E$ is measurable, we define its \textbf{Lebesgue~measure} by \[m(E)=m^*(E)\]
 \end{define}
 Clearly, the Lebesgue~measure inherited all the properties from the exterior measure. To discover the nature of measurable,
-we could compare the definition of measurable with Property 3 in page \pageref{sec exterior measure:open set}
+we could compare the definition of measurable with Property \ref{sec exterior measure:open set}
 
 \begin{prop}
     Every open set in $\mathbb{R}^n$ are measurable.
@@ -180,7 +181,7 @@ we could compare the definition of measurable with Property 3 in page \pageref{s
 \begin{lema}
     If $F$ is closed and $K$ is compact, and these sets are disjoint, then $d(K,F)>0$
 \end{lema}
-\noindent What if switch the condition to "two disjoint closed sets"?
+\noindent What if switch the condition to ``two disjoint closed sets"?
 \begin{prop}
     Closed sets are measurable.
 \end{prop}
@@ -230,7 +231,7 @@ equivalent definitions of measurable sets below.
 \begin{thm}
     Suppose $E$ is a measurable subset of $\mathbb{R}^n$, then for every $\epsilon>0$,
     \begin{enumerate}
-        \item There exists an open set $\mathcal{O}$ with $E \subset \mathbb{O}$, and $m^*(\mathcal{O} - E) < \epsilon$
+        \item There exists an open set $\mathcal{O}$ with $E \subset \mathcal{O}$, and $m^*(\mathcal{O} - E) < \epsilon$
         \item There exists a closed set $F$ with $F \subset E$, and $m^*(E-F)<\epsilon$
         \item If $m(E)$ is finite, there exists a compact set $K$ with $K \subset E$ and $m^*(E-K) < \epsilon$
         \item If $m(E)$ is finite, there exists a finite union $F=\bigcup\limits_{j=1}^N Q_j$ of closed cubes such that \[m^*(E\triangle F)<\epsilon\]
@@ -300,7 +301,7 @@ for all sets in $\mathscr{P}(\mathbb{R}^n)$.
 
 Such example lays on \textbf{axiom of choice}:
 \begin{fact}
-    We define a binary ralation $x\sim y:$ x-y is rational. Obviously, we can find that such binary relation is an equivalence
+    We define a binary ralation $x\sim y:x-y$ is rational. Obviously, we can find that such binary relation is an equivalence
     relation. Therefore, we have equivalence class in section $[0,1]$: $\left\{\bar{x}\right\} $ for all $x$ in $[0,1]$. Such
     equivalence classes will be either disjoint or coincide, and we have $[0,1]=\cup_{x \in [0,1]}\bar{x}$. Now we
     choose one $x_\alpha$ from each $\bar{x}$, and let $\mathscr{N}$ denote the set $\left\{x_\alpha\right\}$, then we will see
@@ -326,7 +327,7 @@ First, it is easy to note that there are many equivalent definitions of measurab
     If we make the additional hypothesis that both $f^{-1}(-\infty)$ and $f^{-1}(\infty)$ are measurable, the property above can be
     applied to extended-valued functions.
 \end{prop}
-Note that we can porve that after the operation of complements, countable union and countable intersections, the equivalence
+Note that we can prove that after the operation of complements, countable union and countable intersections, the equivalence
 relation between new test sets and original test sets in definition still holds. Therefore, we have a developed property.
 \begin{prop}
     The extended-valued function $f$ is measurable if and only if $f^{-1}(B)$ is measurable for every $B \in \mathscr{B}(\overline{\mathbb{R}})$
@@ -346,6 +347,7 @@ relation between new test sets and original test sets in definition still holds.
     then $f$ is measurable.
 \end{prop}
 \begin{prop}
+    \label{prop:add-measurable}
     If $f$ and $g$ are measurable, then
     \begin{enumerate}
         \item for every $k \in \mathbb{N}_+$, $f^k$ is measurable.
@@ -355,5 +357,91 @@ relation between new test sets and original test sets in definition still holds.
 Since the proof of the second point of property is by $\bigcup\limits_{r \in \mathbb{Q}}\left\{f < a\right\}\cap\left\{g < a - r\right\}$
 and $fg = \frac{1}{4}[(f+g)^2 - (f-g)^2]$, we can somewhat loose its condition to part of extended-valued function. Because what we
 don't want is the existance of $\infty - \infty$ 
+
+\begin{define}[almost everywhere]
+    Generally speaking, a statement or a property is said to hold \textbf{almost~everywhere} if it is true except on a set of measure
+    zero. 
+\end{define}
+Take ``Equal almost everywhere'' as an example. Suppose $f$ and $g$ are two functions defined on a set $E$, we shall say that $f$ and
+$g$ are equal almost everywhere, write
+\[f(x) = g(x) \quad \text{a.e},\, x\in E\]
+if the set $\left\{x\in E:\, f(x)\neq g(x) \right\} $ has the measure of zero.
+
+With such definition, we can relax the properties above to conditions holding almost everywhere. Namely, we have some corollaries
+below.
+\begin{cor}
+    We assume the $f$ and $g$ below have the same definition field, then
+    \begin{enumerate}
+        \item Suppose $f$ is a measurable function, and $f=g\quad \text{a.e.}$ Then $g$ is measurable.
+        \item Assume $\{f_n\}_{n=1}^\infty$ is a collection of measurable functions, and \[\lim\limits_{n\rightarrow\infty}f_n = f\quad \text{a.e.}\]. Then $f$ is measurable.
+        \item Suppose $f$ and $g$ are finite-valued almost everywhere, then the property \ref{prop:add-measurable} still holds.
+    \end{enumerate}
+\end{cor} 
+
+\subsection*{Approximation of measurable functions}
+
+\begin{define}[Characteristic~function]
+    The \textbf{Characteristic~function} of a set $E$ is defined by
+    \[\chi_E(x) = \begin{cases}
+        1 & \text{if } x \in E,\\
+        0 & \text{if } x \notin E.
+    \end{cases}\]
+    It can also be denoted by $\mathbbm{1}_E$
+\end{define}
+
+\begin{define}
+    A \textbf{simple~function} is given as a finite sum
+    \begin{equation*}
+        f := \sum\limits_{n = 1}^N a_n\chi_{E_n}
+    \end{equation*}
+    where each $E_k$ is a measurable set, and $a_k$ are constants.
+    Especially, when each $E_k$ is a rectangle, we define such finite sum as \textbf{step~function}.
+\end{define}
+
+Actually, the step functions are widely used in Riemann integrals ,where partitions are mainly consists of sections. However,
+to find building blocks for Lebesgue integrals, we must replace step functions by simple functions. Then we will explain why we could
+take simple functions as the building blocks of Lebesgue integral.
+
+\begin{thm}
+    Suppose $f$ is a non-negative measurable function on $\mathbb{R}^n$. Then there exists an increasing sequence of non-negative
+    simple functions $\{\varphi_k\}_{k=1}^\infty$ that converges pointwise to $f$.
+\end{thm}
+
+Considering that we can divide any functions into two non-negative functions by $f = f_+ - f_-$, with $f_+$ denoting $\max\{f(x), 0\}$
+and $f_-$ denoting $\max\{-f(x), 0\}$ pointwise. Then a new theorem comes:
+
+\begin{thm}
+    Suppose $f$ is a measurable function on $\mathbb{R}^n$. Then there exists a sequence of simple functions $\{\varphi_k\}_{k=1}^\infty$
+    that satifies \[\left\lvert \varphi_k\right\rvert \leq \left\lvert  \varphi_{k+1}\right\rvert \quad \text{and} \quad \lim\limits_{k \rightarrow \infty}
+    \varphi_k = f \text{ for all }x  \]
+\end{thm}
+
+\begin{thm}
+    Suppose $f$ is measurable on $\mathbb{R}^n$.Then there exists a sequence of step functions $\{\phi_k\}_{k=1}^\infty$
+    that converges pointwise to f(x) for almost every $x$.
+\end{thm}
+
+\subsection*{Littlewood's~three~principles}
+
+\begin{fact}[Littlewood's~three~principles]
+    The relation between new concepts of Lebesgue measure and old concepts could be described below:
+    \begin{enumerate}
+        \item Every set is nearly a finite union of intervals.
+        \item Every function is nearly continuous.
+        \item Every convergent sequence is nearly uniformly convergent.
+    \end{enumerate}
+\end{fact}
+
+\begin{thm}[Egorov]
+    Suppose $\{f_k\}_{k=1}^\infty$ is a sequence measurable functions defined on a measurable set $E$ with $m(E) < \infty$, and
+    assume $f_k \rightarrow f \, \text{a.e.}$ on set $E$. Given $\epsilon > 0$, we can find a closed set $A_\epsilon \subset E$
+    such that $m(E-A_\epsilon) < \epsilon$ and $f_k \rightarrow f$ uniformly on $A_\epsilon$.
+\end{thm}
+
+\begin{thm}[Lusin]
+    Suppose $f$ is a finite-valued measurable function defined on a set $E$ with $E$ of finite measure. Then for every $\epsilon > 0$,
+    there exists a closed set $F_\epsilon$, with \[F_\epsilon \subset E, \quad \text{and} \quad m(E-F_\epsilon) \leq \epsilon\]
+    and such that $f|_{F_\epsilon}$ is continuous. 
+\end{thm}
 
 \end{document}
