@@ -8,8 +8,8 @@
 \newtheorem{define}{Def}[section]
 
 \theoremstyle{plain} 
-\newtheorem{thm}{Theorem}[section] \newtheorem{lema}{Lemma} \newtheorem{cor}{Corollary}
-\newtheorem{prop}{Property} \newtheorem{fact}{Fact} 
+\newtheorem{thm}{Theorem}[section] \newtheorem{lema}{Lemma}[chapter] \newtheorem{cor}{Corollary}[chapter]
+\newtheorem{prop}{Property}[chapter] \newtheorem{fact}{Fact}[chapter] 
 
 %\frontmatter
 %\tableofcontents
@@ -308,6 +308,13 @@ Such example lays on \textbf{axiom of choice}:
     the fact---The set $\mathscr{N}$ is not measurable.
 \end{fact}
 
+At the end, we will take a brief look at one simple corollary of \textbf{Fatou Lemma}(Lemma \ref{int: Fatou})
+\begin{lema}[Borel-Cantelli]
+    Suppose $\left\{E_k\right\}_{k=1}^\infty$ is a countable family of measurable subsets of $\mathbb{R}^n$ with 
+    \[\sum_{k=1}^\infty m(E_k) < \infty\]
+    Then we have $m(\varlimsup_{k\rightarrow\infty}E_k) = 0$
+\end{lema}
+
 \section{measurable~functions}
 
 We begin by considering only real~valued dunction $f$ of $\mathbb{R}^n$, which we allow to take on infinite numbers $+\infty$ and 
@@ -442,6 +449,182 @@ and $f_-$ denoting $\max\{-f(x), 0\}$ pointwise. Then a new theorem comes:
     Suppose $f$ is a finite-valued measurable function defined on a set $E$ with $E$ of finite measure. Then for every $\epsilon > 0$,
     there exists a closed set $F_\epsilon$, with \[F_\epsilon \subset E, \quad \text{and} \quad m(E-F_\epsilon) \leq \epsilon\]
     and such that $f|_{F_\epsilon}$ is continuous. 
+\end{thm}
+
+\section{The Brunn-Minkowski inequality}
+
+\begin{define}[convex set]
+    A \textbf{convex~set} $A$ is defined by the property that whenever $x$ and $y$ are in set $A$ then the line segment joining
+    them, namely $\left\{tx+(1-t)y:\,0<t<1\right\}$, also belongs to set $A$.
+\end{define} 
+
+Since addition and multiplication by scalars are basic features of vector spaces, Here we come to the study of the sum of two
+measurable sets $A$ and $B$, defined as
+\[A + B := \left\{x+y:\, x\in A, y \in B\right\} \]
+
+To give a general estimate for the measure of $A+B$  in terms of the measure of $A$ and $B$, we want an inequation in such form:
+\[ m(A+B)^\alpha \geq c_\alpha(m(A)^\alpha + m(B)^\alpha)\]
+
+\begin{thm}
+    Suppose set $A$ and $B$ on $\mathbb{R}^n$ are measurable and their sum $A+B$ is also meaurable, then we have the inequality:
+    \[m(A+B)^{1/n} \geq m(A)^{1/n} + m(B)^{1/n}\]
+\end{thm}
+Meanwhile, we have such facts:
+\begin{fact}
+    While we may assume that $A$ and $B$ are measurable, it does not necessarily follow that then $A + B$ is measurable.
+    However, we can see that if $A$ and $B$ are close sets, then $A+B$ is a close set. 
+\end{fact}
+
+\chapter{Integration Theory}
+
+\section{Basic properties and converge theorems}
+
+To make the definition natural, we try to build the integration by a step-by-step fashion. We proceed in four stages, by
+progressively integrating:
+\begin{enumerate}
+    \item Simple functions
+    \item Bounded functions supported on a set of finite measure
+    \item Non-negative functions
+    \item Integrable functions
+\end{enumerate}
+
+\subsection{Step one: Simple~functions}
+
+It could be obvious that a simple function can be written in a multitude way of linear combinations, which can probably result in some
+unexpected circumstances when establishing the Integration~Theory. Therefore, we try to standardize the form of simple functions.
+
+\begin{define}[The canonical form of simple functions]
+    Suppose $\varphi$ is a simple function with
+    \[\varphi = \sum\limits_{n=1}^N a_n\chi_{E_n}\]
+    where $a_n$ are real numbers and $E_n$ are measurable sets.
+    $\varphi$ is in its \textbf{canonical~form} when the numbers $a_k$ are distinct and non-zero, and the sets $E_k$ are disjoint.
+\end{define}
+
+\begin{define}[Lebesgue~integral for simple functions]
+    If $\varphi$ is a simple function with canonical form $\varphi = \sum_{n=1}^N a_n\chi_{E_n}$, then we define the \textbf{Lebesgue~integral}
+    of $\varphi$ as 
+    \[\int_{\mathbb{R}^n} \varphi(x)\,dx = \sum_{n=1}^N a_nm(E_n)\]
+    And if $E$ is a measurable subset of $\mathbb{R}^n$ with finite measure, then we define
+    \[\int_{E} \varphi(x)\,dx = \int_{\mathbb{R}^n} \varphi(x)\chi_{E_n}(x)\,dx\]
+    To emphasize the choice of measure, the integral can be also written as
+    \[\int_{\mathbb{R}^n} \varphi\,dm \quad \text{or} \quad \int_{\mathbb{R}^n} \varphi(x)\,m(dx)\]
+\end{define}
+
+\begin{prop}
+    \label{int: simple prop}
+    The integral of simple functions defined above satisfies the following properties:
+    \begin{enumerate}
+        \item Linearity. If $\varphi$ and $\psi$ are simple, and $a,b \in \mathbb{R}^n$ ,then \[\int (a\varphi + b\psi) = a\int\varphi + b\int\psi\]
+        \item Additivity. If $E$ and $F$ are disjoint subsets of $\mathbb{R}^n$ with finite measure, then\[\int_{E\cup F}\varphi = \int_E\varphi+\int_F\varphi\]
+        \item Monotonicity. If simple functions $\varphi$ and $\psi$ satisfies $\varphi \leq \psi$, then \[\int\varphi \leq \int\psi\]
+        \item Triangle inequality. If $\varphi$ is a simple function, then \[\left\lvert \int\varphi\right\rvert \leq \int\left\lvert \varphi\right\rvert\]
+        \item Independence of representation. If $\varphi = \sum_{n=1}^N a_n\chi_{E_n}$ is any representation of $\varphi$, then \[\int\varphi = \sum_{n=1}^N a_nm(E_n)\] 
+    \end{enumerate}
+\end{prop}
+
+\begin{fact}
+    Suppose $f$ and $g$ are simple functions with $f=g\,\text{a.e.}$, then $\int f=\int g$
+\end{fact}
+
+\subsection{Step two: Bounded functions supported on a set of finite measure}
+
+\begin{define}[support]
+    The \textbf{support} of a measurable function f is defined to be the set of all points where f does not vanish:
+    \[supp(f):=\left\{x: f(x) \neq 0\right\} \]
+    We shall say that $f$ is \textbf{supported} on a set $E$, if $f(x) = 0$ whenever $x\notin E$.
+\end{define}
+
+\begin{lema}
+    \label{int: bounded conv}
+    Let $f$ be a bounded function supported on a set $E$ of finite measure. If $\left\{\varphi_k\right\}_{k=1}^\infty$ is any
+    sequence of simple functions bounded by $M$, supported on $E$, and with $\varphi_k(x) \rightarrow f(x) \text{ a.e. }$, then:
+    \begin{enumerate}
+        \item The limit $\lim\limits_{n\rightarrow\infty}\int\varphi_n$ exists.
+        \item If $f=0 \text{ a.e. }$, then the limit $\lim\limits_{n\rightarrow\infty}\int\varphi_n$ equals zero.
+    \end{enumerate}
+\end{lema}
+
+\noindent Using Lemma \ref{int: bounded conv} we can now give a specific definition to the bounded functions that are supported
+on sets of finite measure:
+\begin{define}
+    Suppose $f$ is a bounded function supported on sets of finite measure. Then we define its \textbf{Lebesgue~measure} by:
+    \[\int f(x)\, dx := \lim_{n\rightarrow\infty}\int\varphi_n\, dx\]
+    where $\left\{\varphi_n\right\}_{n=1}^\infty$ is a sequence satisfying: $\left\lvert \varphi_n\right\rvert \leq M$,
+    each $\varphi_n$ is supported on the support of $f$, and $\varphi_n \rightarrow f \text{ for a.e. } x$
+\end{define}
+
+It can be easy to see that such definition inherits all the properties from Property \ref{int: simple prop}, except for Independence
+of representation. Its Independence of representation is about the integration is independent from the function sequence.
+
+\begin{thm}[Bounded convergence theorem]
+    Suppose $\left\{f_n\right\}_{n=1}^\infty$ is a sequence of measurable functions that are all bounded by $M$, are supported on
+    a set $E$ of finite measure, and $f_n(x) \rightarrow f(x)\text{ a.e. }$. Then $f$ is measurable, bounded and supported on set
+    $E$ for $\text{a.e. }x$, and \[\int\left\lvert f_n - f\right\rvert \rightarrow 0 \quad \text{as }n \rightarrow \infty\]
+\end{thm}
+
+\begin{thm}
+    Suppose $f$ is Riemann~integrable on the closed interval $[a,b]$, then $f$ is measurable, and
+    \[\int_{[a,b]}^\mathcal{R}f(x)\,dx = \int_{[a,b]}^\mathcal{L}f\, dm\]
+\end{thm}
+
+\subsection*{Stage three: Non-negative functions}
+
+\begin{define}[Lebesgue~integral]
+    The \textbf{Lebesgue~integral} of a non-negative measurable function $f$ is defined by
+    \[\int f \,dm= \sup\left\{\int g\,dm:\, 0\leq g \leq f\right\} \]
+    where $g$ is bounded and supported on a set of finite measure. When $\int f\,dm < \infty$, we say that $f$ is \textbf{Lebesgue~integrable}.
+\end{define}
+Actually, if we transfer the constrain of definition above to ``where $g$ is simple'', it is also an equivalent definition.
+
+\begin{prop}
+    The integral of non-negative measurable functions enjoys the following properties:
+    \begin{enumerate}
+        \item properties inherited from Property \ref{int: simple prop}
+        \item If $g$ is integrable, and $0\leq f\leq g$, then $f$ is integrable.
+        \item If $f$ is integrable, then $f(x) < \infty\text{ a.e. }x$
+        \item If $\int f = 0$, then $f(x) = 0\text{ a.e. }x$
+    \end{enumerate}
+\end{prop}
+
+\begin{lema}[Fatou]
+    \label{int: Fatou}
+    Suppose $\left\{f_n\right\}_{n=1}^\infty$ is a sequence of non-negative measurable functions, then
+    \[\int \varliminf_{n \rightarrow \infty} f_n \leq \varliminf_{n \rightarrow \infty} \int f_n\]
+\end{lema}
+\begin{cor}[Fatou]
+    Suppose $\left\{E_n\right\}_{n=1}^\infty$ is a sequence of measurable sets, then
+    \[m\left(\varliminf_{n \rightarrow \infty} E_n \right) \leq \varliminf_{n \rightarrow \infty} m(E_n)\]
+\end{cor}
+
+\begin{thm}[Monotone convergence theorem]
+    Suppose $\left\{f_n\right\} $ is a sequence of non-negative measurable functions, and $f_n\uparrow f$ for a.e. $x$. Then,
+    \[\lim_{n\rightarrow \infty}\int f_n\,dm = \int f\,dm\]
+\end{thm}
+\begin{cor}
+    Consider a series $\{a_k\}$, where $a_k(x) \geq 0$ for every $k \geq 1$, then
+    \[\int\sum_{n=1}^\infty a_k\, dm = \sum_{n=1}^\infty\int a_k\, dm\]
+\end{cor}
+
+\subsection{Stage four: general case}
+
+\begin{define}[Lebesgue~integral]
+    Suppose $f$ is a measurable function. Then we define the \textbf{Lebesgue~integral} of $f$ by
+    \[\int f = \int f_+ - \int f_-\]
+    and we say that $f$ is \textbf{Lebesgue~integrable} whenever both $f_+$ and $f_-$ are integrable.
+\end{define}
+
+\begin{thm}
+    Suppose $f$ is integrable on $\mathbb{R}^n$. Then for every $\epsilon > 0$:
+    \begin{itemize}
+        \item There exists a set of finite measure $B$ such that \[\int_{B^c} \left\lvert f\right\rvert \, dm < \epsilon\]
+        \item There is a $\delta > 0$ such that \[\int_E \left\lvert f\right\rvert\,dm < \epsilon\quad\text{whenever }m(E) < \delta \]
+    \end{itemize}
+\end{thm}
+
+\begin{thm}[Dominated convergence theorem]
+    Suppose $\left\{f_n\right\}_{n=1}^\infty$ is a sequence of measurable functions such that $f_n(x)\rightarrow f(x)\text{ a.e. }x$
+    as $n$ tends to infinity. If $\left\lvert f_n\right\rvert \leq g $ and $g$ is integrable, then
+    \[\lim_{n\rightarrow\infty}\int f_n = \int f\]
 \end{thm}
 
 \end{document}
