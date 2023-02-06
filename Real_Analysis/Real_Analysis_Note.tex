@@ -627,4 +627,97 @@ Actually, if we transfer the constrain of definition above to ``where $g$ is sim
     \[\lim_{n\rightarrow\infty}\int f_n = \int f\]
 \end{thm}
 
+\section{The space \texorpdfstring{$L^1$}. of integrable functions}
+
+The fact that the integrable functions form a vector space is an important observation about the algebraic properties of such
+functions. A fundamental analytic fact is that this vector space is complete in the appropriate norm. The appropriate norm is
+defined below:
+\begin{define}[the norm of integrable functions]
+    For any integrable function $f$ on $\mathbb{R}^n$, we define the $\textbf{norm}^2$ of $f$ as
+    \[\left\lVert f\right\rVert = \left\lVert f\right\rVert _{L^1} = \int_{\mathbb{R}^n} \left\lvert f\right\rvert\, dm\]
+\end{define}
+
+Then, we can define the colletion of all integrable functions with the norm above as the space $L^1(\mathbb{R}^n)$. Such vector
+space has prperties below:
+\begin{prop}
+    Suppose $f$ and $g$ are two functions in $L^1(\mathbb{R}^n)$
+    \begin{enumerate}
+        \item $\left\lVert af\right\rVert _{L^1} = \left\lvert a\right\rvert \left\lVert f\right\rVert _{L^1} $ for all $a \in \mathbb{R}$
+        \item $\left\lVert f+g\right\rVert _{L^1} \leq \left\lVert f\right\rVert _{L^1} + \left\lVert g\right\rVert _{L^1} $
+        \item $\left\lVert f\right\rVert _{L^1} = 0$ if and only if $f = 0\text{ a.e. }$
+        \item $d(f,g):=\left\lVert f-g\right\rVert _{L^1}$ defines a metric on $L^1(\mathbb{R}^n)$
+    \end{enumerate}
+\end{prop}
+
+Before illustrating the fundamental analytic fact, we should make clear the notion of ``complete''. A space $V$ with metric $d$ is
+said to be \textbf{complete} if for every Cauchy sequence $\left\{x_k\right\}$ in $V$(that is, $d(x_k, x_m) \rightarrow 0$ as
+$k,m\rightarrow\infty$), there exists $x \in V$ such that $\lim_{k\rightarrow\infty}x_k=x$
+
+
+\begin{thm}[Riesz-Fisher]
+    The vector space $L^1(\mathbb{R}^n)$ is complete in its metric.
+\end{thm}
+
+\begin{cor}
+    If $\left\{f_n\right\}$ converges to $f$ in $L^1$, then there exists a subsequence $\left\{f_{n_k}\right\}$ with 
+    \[\lim_{k\rightarrow\infty}f_{n_k} = f,\text{ a.e. }x\]
+\end{cor}
+
+\begin{define}[dense]
+    We say a family of functions $\mathcal{G}$ is \textbf{dense} in $L^1(\mathbb{R}^n)$ if for every $f \in L^1(\mathbb{R}^n)$,
+    $\forall \epsilon > 0$, there exists $g \in \mathcal{G}$ such that $\left\lVert f - g\right\rVert < \epsilon$
+\end{define}
+
+\begin{thm}
+    The following families of functions are dense in $L^1(\mathbb{R}^n)$:
+    \begin{enumerate}
+        \item The simple functions.
+        \item The step functions.
+        \item The continuous functions that supported on compact set.
+    \end{enumerate}
+\end{thm}
+
+\begin{prop}[Invariance properties]
+    Suppose $f \in L^1(\mathbb{R}^n)$, then:
+    \begin{enumerate}
+        \item \[\int_{\mathbb{R}^n} f(x-h)\,m(dx) = \int_{\mathbb{R}^n} f(x)\,m(dx)\]
+        \item \[\int_{\mathbb{R}^n} f(\delta x)\,m(dx) = \left\lvert \delta\right\rvert^n \int_{\mathbb{R}^n} f(x)\, m(dx)\]
+        \item \[\int_{\mathbb{R}^n} f(y)g(x-y)\,m(dy) = \int_{\mathbb{R}^n} f(x-y)g(y)\,m(dy)\]
+    \end{enumerate}
+\end{prop}
+
+And the translation invariance helps us discover the overall continuity in the space $L^1(\mathbb{R}^n)$
+\begin{thm}
+    Suppose $f \in L^1(\mathbb{R}^n)$, and let $f_h$ denote $f(x-h)$, then
+    \[\left\lVert f_h - f\right\rVert _{L^1} \rightarrow 0\quad \text{as }h\rightarrow 0 \]
+\end{thm}
+
+\section{Fubini's theorem}
+
+\begin{define}[slice]
+    Suppose $f$ is a function on $\mathbb{R}^n \times \mathbb{R}^m$, and $E$ is a subset of $\mathbb{R}^n \times \mathbb{R}^m$.
+    Then we define the \textbf{slice} of $f$ corresponding to $y \in \mathbb{R}^m$ as
+    \[f_y(x) = f(x,y),\quad\text{where $y$ is fixed.}\]
+    Similarly, the \textbf{slice} of $E$ is defined by 
+    \[E^y := \left\{x \in \mathbb{R}^n:\,(x,y)\in E\right\} \text{ and } E_x := \left\{y \in \mathbb{R}^m:\,(x,y)\in E\right\}\]
+\end{define}
+
+\begin{thm}
+    Suppose $f(x,y)$ is integrable on $\mathbb{R}^n \times \mathbb{R}^m$. Then for every $y\in\mathbb{R}^m$:
+    \begin{enumerate}
+        \item The slice $f^y(x)$ is integrable.
+        \item The function $x \mapsto \int_{\mathbb{R}^n} f^y(x)\,dm$ is integrable.
+        \item \[\int_{\mathbb{R}^{n+m}} f\,dm = \int_{\mathbb{R}^m}\,m(dy)\int_{\mathbb{R}^n}f(x,y)\,m(dx)\]
+    \end{enumerate}
+\end{thm}
+
+\begin{thm}
+    Suppose $f$ is a non-negative measurable function on $\mathbb{R}^n \times \mathbb{R}^m$, then for every $y \in \mathbb{R}^m$:
+    \begin{enumerate}
+        \item The slice $f^y(x)$ is measurable on $\mathbb{R}^n$
+        \item The function $x \mapsto \int_{\mathbb{R}^n} f^y(x)\,dm$ is measurable on $\mathbb{R}^n$.
+        \item The equation holds in the extended sense: \[\int_{\mathbb{R}^{n+m}} f\,dm = \int_{\mathbb{R}^m}\,m(dy)\int_{\mathbb{R}^n}f(x,y)\,m(dx)\]
+    \end{enumerate}
+\end{thm}
+
 \end{document}
