@@ -10,3 +10,5 @@ Mainly used for storing Linzy Liu's notes
 3. 优化类算法
    * 模拟退火
    * 遗传算法
+4. 数值分析
+5. Java代码(初学者训练用)
