@@ -42,6 +42,13 @@
 3. 避免相近数相减（如$\sqrt{n+1} - \sqrt{n}$）
 4. 减少运算次数
 
+## 1.2 算法的评价指标
+
+* **精确性**
+* **可靠性**：误差是否可以由理论或数学证明。
+* **复杂度**：一般来说分时间复杂度（计算次数）与空间复杂度（内存）。
+* **稳定性**：若输入数据的微小变化会导致输出剧烈变化，那么这样的算法是不稳定的。
+
 # 2. 解方程
 
 ## 2.1 二分法
@@ -68,5 +75,58 @@
 > 设$f$在$E \subset \mathbb{R}$上可微，且数列$\{x_n\}_{n=1}^\infty$由$x_{n+1} = f(x_n)$定义，若
 > \[\sup |f'(x)| \leq r < 1\]则数列收敛。
 
+# 3. 插值法
 
+## 3.1 为什么需要插值法
 
+> For a continuous function f defined on a section $[a,b]$, we have $n+1$ points satisfying 
+> \[a=x_0<x_1 < \ldots < x_n = b\] and $y_i = f(x_i)$ for each $i$. Then we need a function $g$ which is close to $f$ and is easy to manipulate.
+
+一般地来说，我们要求$g$至少满足$(f-g)(x_i) = 0$
+
+## 3.2 多项式插值
+
+我们在此记$F[x]_n$为以$x$为文字的，次数小于n的多项式全体。（或以$P_n$表示$<1,x,x^2,\ldots, x^n>$）
+
+那么我们首先有以下定理：
+> **Theorem 3.2.1**
+> 对于给定的$n$个不同的点$x_i,\quad i=0,1,\ldots,n$和$y_i = f(x_i)$， 其插值多项式存在且唯一。
+
+在说明多项式插值的存在性后，我们就可以着手考虑这样的多项式的具体形式了。于是我们接下来会介绍一个简洁的插值多项式。
+
+### 3.2.1 拉格朗日插值函数
+
+其思想是通过**基函数**来构造整个$n$阶插值函数。首先考虑其形式：
+> 假定已知$n$个点：$y_i = f(x_i)$, $i=0,1,\ldots,n$, 那么
+> $$
+> \begin{align*}
+>    & L_nf(x) = \sum_{i=1}^n \frac{y_i\,F(x)}{(x-x_i)F'(x_i)}\\
+>    & F(x) = \prod_{i=1}^n (x-x_i)
+> \end{align*}
+> $$
+
+接下来，我们将阐述产生这样的式子的思想：
+我们希望这样的式子会有如下形式：
+\[L_nf(x) = \sum_{i=1}^n y_il_i\]其中$l_i$是一个关于$x$的函数，满足
+\[ l_i(x_j) = 
+    \left\{
+    \begin{align*}
+    1,\quad & i=j \\
+    0,\quad& i \not = j
+    \end{align*}
+    \right.
+    \]
+将任一$x_i$带入，可以发现$n$个零点，从而确定$l_i$的形式，再乘上某个常数，就可以满足$l_i$的定义。
+接下来的步骤便是显然的。
+
+#### 误差分析
+
+> **Theorem 3.2.2**
+> 设$f$在$[a,b]$上$n+1$阶连续可导，那么
+> \[ f(x) - L_nf(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!}F(x)\]其中$F(x)$定义见*Lagrange插值多项式*定义。
+>
+> **Corollary**
+> 令$M_{n+1} := \max_{a\leq x\leq b} \left| f^{(n+1)}(x)\right|$， 则
+> \[ \left|f(x) - L_nf(x)\right| \leq \frac{M_{n+1}}{(n+1)!}\left|F(x)\right|\]
+> 令$h := \max_{1\leq j\leq n}\left|x_j-x_{j-1}\right|$, 则
+> \[ \left|f(x) - L_nf(x)\right| \leq \frac{h^{n+1}}{4(n+1)}M_{n+1}\]
