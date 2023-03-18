@@ -216,14 +216,97 @@
 而我们已知的限制有：
 * $n+1$个已知点
 * $n-1$个中间点的连续性、一阶导连续性和二阶导连续性（$3n-3$个已知限制）
-* 边界条件：
-  * $S'(x_0) = f'(x_0)$, $S'(x_n) = f'(x_n)$
-  * $S''(x_0) = f''(x_0)$, $S''(x_n) = f''(x_n)$
+* 边界条件，根据实际情况的不同，常见的有：
+  * $S'(x_0) = f'(x_0)$, $S'(x_n) = f'(x_n)$（第一种边界条件）
+  * $S''(x_0) = f''(x_0)$, $S''(x_n) = f''(x_n)$（第二种边界条件）
   * $S(x_0^+) = S(x_n^-)$，$S'(x_0^+) = S'(x_n^-)$，$S''(x_0^+) = S''(x_n^-)$
 
 #### 构造
 
-假设$S''(x_j)=M_j$，其中$M_j$未知。
-因为$S''(x)$在$[x_k,x_{k+1}]$上是一次的，故可以轻易求出$S''(x)$的表达式
-$$S''(x) = M_j\frac{x-x_{j+1}}{x_j-x_{j+1}}+M_{j+1}\frac{x-x_{j}}{x_{j+1}-x_j}$$
+* 第一类边界条件：
+  > 假设$S''(x_j)=M_j$，其中$M_j$未知。
+  > 因为$S''(x)$在$[x_k,x_{k+1}]$上是一次的，故可以轻易求出$S''(x)$的表达式
+  > $$S''(x) = M_j\frac{x-x_{j+1}}{x_j-x_{j+1}}+M_{j+1}\frac{x-x_{j}}{x_{j+1}-x_j}$$ 利用两次不定积分，结合区间的边界条件，可以确定两次积分中产生的两个常数项。接下来，考虑利用一阶导连续可得一个非齐次线性方程式。这样，插值函数便得解了。
+* 第二类边界条件：
+  > 根据定义对线性方程组中变量取特殊值即可。
 
+上面所说的线性方程组为：
+记
+$$
+A = \left(\begin{array}{ccccccc}
+      2 & \lambda_0 & 0 & \ldots & 0 & 0 & 0\\
+      \mu_1 & 2 & \lambda_1 & \ldots & 0 & 0 & 0\\
+      \vdots & \vdots & \vdots & & \vdots & \vdots & \vdots\\
+      0 & 0 & 0 & \ldots & \mu_{n-1} & 2 & \lambda_{n-1} \\
+      0 & 0 & 0 & \ldots & 0 & \mu_n & 2 \\
+    \end{array}\right) \\
+    M = (M_0,M_1,\ldots,M_n)^T, D=(d_0,d_1,\ldots,d_n)^T
+$$
+其中
+$$
+\begin{align*}
+  h_i = & \,x_{i+1} - x_i\\
+  \mu_i = & \,\displaystyle\frac{h_{i-1}}{h_{i-1}+h_i},\quad \lambda_i = \displaystyle\frac{h_{i}}{h_{i-1}+h_i}\\
+  d_i =& \,6f[x_{i-1},x_i,x_{i+1}]
+\end{align*}
+$$
+
+注：$\lambda_0$与$\mu_n$的具体取值取决于初值条件。
+
+#### 误差分析
+
+> ***Theorem 3.2.4***
+> 设$f\in\mathcal{C}^4[a,b]$，$S(x)$为满足第一类或第二类边界条件的三次样条插值函数。令$h\colonequals \max\left|x_k-x_{k+1}\right| $，则：
+> $$\left|f^{(k)}(x)-S^{(k)}(x)\right| \leq C_k\max \left|f^{(4)}(x)\right|\, h^{4-k},\quad k=0,1,2$$ 其中$C_0=\frac{5}{384},\: C_1=\frac{1}{24},\: C_2=\frac{3}{8}$
+
+
+# 3. 函数逼近
+
+我们的主要目的，就是找一个简单的，已于计算的$p(x)$和一个metric，使得在该metric下，$f(x)$与$p(x)$的距离最小。
+
+## 3.1 线性空间
+
+### 3.1.1 赋范线性空间
+
+设$V$为一个定义在$F$上的线性空间，若存在函数$f: V \rightarrow \mathbb{R}$，满足：
+1. 正定性
+2. $f(ax)=f(a)f(x)$
+3. 三角不等式
+4. $f^{-1}(0)={0}$
+则记$f(a)$为$\lVert a \rVert$，称其为定义在$V$上的**范数**，并称定义了范数的$V$为**赋范空间**
+
+从而可以在$\mathbb{R}^n$上定义一个平凡的范数：
+> for all $x = (x_1,x_2,\ldots,x_n)$, the $\text{norm}^n$ of $x$ is $$\lVert x\rVert = (\sum_{i=1}^n \left|x\right|^n)^{1/n}$$
+> for all integrable $f$, the $\text{norm}^n$ of $f$ is $$\lVert f\rVert _n = (\int \left|f\right|^n)^{1/n}$$
+
+进而有加权范以及无穷范：
+> 设$w(x) > 0$则 $$\lVert f\rVert _{w.n} = (\int \left|f\right|^n w)^{1/n}$$ 且 $$
+>  \lVert x\rVert _{\infin} = \max \left|x_i\right| \\
+>  \lVert f\rVert _{\infin} = \max \left|f\right|
+>$$
+
+注：可以定义加权内积，即在度量矩阵中，对原有定义加权。例如，设$\varepsilon_1,\varepsilon_2,\ldots,\varepsilon_n$为$\mathbb{R}^n$的一组基，那么可以将原有的$(\varepsilon_i,\varepsilon_j)=a$变为$(\varepsilon_i,\varepsilon_j)=aw_{ij}$；设$\varepsilon_1,\varepsilon_2,\ldots,\varepsilon_n$为$\mathbb{R}^{\mathbb{R}^n}$的一组基，那么可以将原有的$(\varepsilon_i,\varepsilon_j)=\int\varepsilon_i\varepsilon_j $变为$(\varepsilon_i,\varepsilon_j)=\int\varepsilon_i\varepsilon_jw$
+
+### 3.1.2 最佳逼近
+
+最佳逼近
+: 设$f\in \mathcal{C}[a,b]$，$H_n$是由实值函数张成的维度为$n$的赋范空间。若有$p^*\in H_n$使\[\lVert f-p^*\rVert=\min_{p\in H_n} \lVert f-p\rVert\]则称$p^*$是$f$在赋范空间$H_n$上的**最佳逼近**
+特别地，若范数为$\lVert x\rVert_{\infin}$，则称其为**最佳一致逼近**；若范数为$\lVert x\rVert_2$，则称其为**最佳平方逼近**；若范数为$\lVert x\rVert_w$，则称其为**最佳加权逼近**
+
+于是
+> **Theorem 3.1.1(Weierstrass)**
+> Suppose f is continuous on $[a,b]$. Then for any $\varepsilon > 0$, there exists a polonomial $p(x)\in P_\infin$,such that\[\lVert f-p\rVert_\infin < \varepsilon\]
+
+最小二乘拟合
+: 设$f\in\mathcal{C}[a,b]$, $y_i=f(x_i),\, i\in[0,m]$，那么$p^*\in H_n$是$f$的最小二乘拟合当且仅当：
+$$ \lVert f-p^*\rVert_{w.2} = \min_{p\in H_n}\lVert f-p\rVert_{w.2}$$
+在此，我们将范数定义为
+$$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
+
+## 3.2 正交多项式
+
+显然地，多项式空间是由$1,x,x^2,\ldots$张成的。根据施密特正交化，可以得到一个多项式空间的正交基。也就是说：正交多项式由内积决定（原因参考施密特正交化的步骤）。
+
+正交族
+: 设函数$\varphi_1,v\varphi_2,\ldots,\varphi_n$为内积空间$V$的一组基，若$(\phi_i,\phi_j) = \delta_{ij}$，那么称其为一个正交族；
+若内积$(*,*)$（$<*,*>$）还使用了权重定义，那么称其为加权正交族。
