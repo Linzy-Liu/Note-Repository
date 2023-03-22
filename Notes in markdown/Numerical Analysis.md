@@ -308,5 +308,119 @@ $$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
 显然地，多项式空间是由$1,x,x^2,\ldots$张成的。根据施密特正交化，可以得到一个多项式空间的正交基。也就是说：正交多项式由内积决定（原因参考施密特正交化的步骤）。
 
 正交族
-: 设函数$\varphi_1,v\varphi_2,\ldots,\varphi_n$为内积空间$V$的一组基，若$(\phi_i,\phi_j) = \delta_{ij}$，那么称其为一个正交族；
+: 设函数$\varphi_1,\varphi_2,\ldots,\varphi_n$为内积空间$V$的一组基，若$(\varphi_i,\varphi_j) = \delta_{ij}$，那么称其为一个正交族；
 若内积$(*,*)$（$<*,*>$）还使用了权重定义，那么称其为加权正交族。
+
+假设$\varphi_n$是$[a,b]$上$n$次多项式，$\rho(x)$为权函数。若$\left\{\varphi_n(x)\right\} _{n=0}^\infty$在$(*,*)_\rho$正交族中，那么称$\varphi_n$为$[a,b]$上带权$\rho(x)$的**正交多项式**。
+
+**性质**
+假设$\left\{\varphi_n(x)\right\}_{n=0}^N$是由$1,x,\ldots,x^n$经施密特正交化依次得到的一组正交多项式
+1. $\left\{\varphi_n(x)\right\}_{n=0}^N$线性无关。
+2. 任一不超过$N$次的多项式可由$\left\{\varphi_n(x)\right\}_{n=0}^N$线性表出。
+3. $\varphi_n$与任一次数小于$n$的多项式正交。
+
+> **Theorem 3.2.1**
+> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的首一正交多项式，那么下式成立：
+> $$
+\varphi_{n+1}=(x-\alpha_n)\varphi_n - \beta_n\varphi_{n-1},\quad n=0,1,\ldots\\
+> $$其中
+> $$
+> \begin{align*}
+>   \varphi_0 &= 1,&\varphi_{-1}&=0\\
+>   \alpha_n &= \frac{(x\varphi_n,\varphi_n)_\rho}{(\varphi_n,\varphi_n)_\rho},&\beta_n &= \frac{(\varphi_n,\varphi_n)_\rho}{(\varphi_{n-1},\varphi_{n-1})_\rho}
+> \end{align*}
+> $$
+
+> **Theorem 3.2.2**
+> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的正交多项式,则$\varphi_n$在$[a,b]$上有不同的零点。
+
+（上述$\left\{\varphi_n(x)\right\}_{n=0}^\infty$都是由$1,x,\ldots,x^n$经施密特正交化依次得到的, 而一般实践中，可以有$T^TATx$一样的变换，但注意各个定理推导时的前提条件。）
+
+### 3.2.1 勒让德多项式
+
+勒让德多项式
+: 我们称在$[-1,1]$上，权函数为$\rho(x)\equiv 1$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为勒让德多项式。
+
+表达式：
+\[p_0(x)=1,\quad p_n(x) = \frac{1}{2^nn!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
+
+性质:
+* $$\int_{-1}^1p_n(x)p_m(x) = \left\{
+  \begin{align*}
+    0&,& m &\not ={n}\\
+    \frac{2}{2n+1}&,& m &= n
+  \end{align*}
+  \right.$$
+* $$p_n(-x) = (-1)^np_n(x)$$
+* $$(n+1)p_{n+1}(x)=(2n+1)p_n(x)-np_{n-1}(x)$$
+
+### 3.2.2 切比雪夫多项式
+
+切比雪夫多项式
+: 我们称在$[-1,1]$上，权函数为$\rho(x) = (1-x^2)^{-1/2}$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为切比雪夫多项式。
+
+表达式：
+$$T_n(x)=\cos(n\arccos x), \left|x\right|\leq 1$$
+
+性质：
+* $$T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$$
+* $$\int_{-1}^1T_n(x)T_m(x)\rho(x) = \left\{
+  \begin{align*}
+    0&,& m &\not ={n}\\
+    \frac{\pi}{2}&,& m &= n \not ={0}\\
+    \pi &,& m &= n = 0
+  \end{align*}
+  \right.$$
+* $T_{2k}$仅含偶数项，$T_{2k-1}$仅含奇数项
+* $T_n(x)$在$[-1,1]$上有$n$个零点。（具体值可由通用表达式推得）
+* $T_n(x)$的首项系数为$2^{n-1}$
+
+那么我们记$\hat{T}_n(x) = 2^{1-n}T_n(x)$,可得定理如下：
+
+> **Theorem 3.2.3**
+> $$ \max_{-1\leq x\leq 1} \left|\hat{T}_n(x)\right|\leq \max_{-1\leq x\leq 1} \left|\hat{p}_n(x)\right|$$ 其中$\hat{p}_n(x)$为首一$n$次多项式
+>
+
+鉴于切比雪夫多项式良好的性质，我们考虑将其应用于插值多项式中。在$[-1,1]$上，我们称多项式$T_n(x)$的所有零点为切比雪夫点，利用这些点进行插值，可以让误差最小：
+> **Corollary**
+> 设已知函数$f\in\mathcal{C}^{n+1}[-1,1]$在$n$个切比雪夫点上的点值，得到了插值函数$L_n(x)$，那么：
+> $$ \max_{-1\leq x\leq 1} \left|f(x)-L_n(x)\right|\leq \frac{1}{2^n(n+1)!}\lVert f^{(n+1)}(x)\rVert_\infty$$
+
+对于一般的**闭区间**，考虑变换：（应该没有人想对着任意闭集做变换吧）
+$$t = [(b-a)x+a+b]/2,\quad x\in[-1,1]$$
+上面的引理的形式在此时会变成：
+$$\max_{a\leq x\leq b} \left|f(x)-L_n(x)\right|\leq \frac{(b-a)^{n+1}}{2^{2n+1}}\,\frac{\lVert f^{(n+1)}(x)\rVert_\infty}{(n+1)!}$$
+
+## 3.3 最佳平方逼近
+
+### 3.3.1 讨论域
+
+我们在本节，主要想解决这样的一个问题：
+对于$\mathcal{C}[a,b]$上的函数$f$和函数组$\left\{\varphi_k\right\}_{k=0}^n$，是否存在一个$\left\{\varphi_k\right\}_{k=0}^n$的线性组合$S^*(x)$，使得对于任一一个线性组合$S(x)$：
+\[\lVert f(x)-S^*(x)\rVert_2^2 = \min \lVert f(x)-S(x)\rVert_2^2\]
+如果存在，它的具体形式如何？
+
+### 3.3.2 最佳平方逼近
+
+由上可知，该问题的等价形式为：
+$$I(a_0,a_1,\ldots,a_n)=\int_a^b \rho(x)\left[\sum_{k=0}^na_k\varphi_k(x) - f(x)\right]^2\,dx$$
+求其驻点：
+$$
+\begin{align*}
+  & \frac{\partial I}{\partial a_j} = 2\int_a^b \rho(x)\left[\sum_{k=0}^na_k\varphi_k(x) - f(x)\right]\varphi_j(x) \,dx = 0, \quad j=0,1,\ldots,n\\
+  \iff & \sum_{k=0}^n (\varphi_k,\varphi_j)_\rho\,a_k = (f,\varphi_j)_\rho, \quad j=0,1,\ldots,n
+\end{align*}
+$$
+
+记度量矩阵$\left[(\varphi_i,\varphi_j)\right]$为$T$，记向量$\beta=\left[ (f,\varphi_0),\ldots,(f,\varphi_n)\right]^T$, 则驻点$a=(a_0,a_1,\ldots,a_n)^T$即为
+\[Ta=\beta\]的解。因为该度量阵是由线性无关组生成的，该方程组仅有唯一解。从而可得解$a^*$
+
+易于验证，该解是使$S^*(x):=\sum_{k=0}^n a^*_k\varphi_k(x)$成为$f(x)$的最佳平方逼近的解。从而其误差为：
+$$
+\begin{align*}
+  \lVert\delta(x)\rVert _2^2 &= (f(x)-S^*(x),f(x)-S^*(x))\\
+  &= (f,f)-(S^*,f)\\
+  &= \lVert f(x)\rVert _2^2 - \beta^Ta^*
+\end{align*}
+$$
+
