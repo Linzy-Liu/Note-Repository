@@ -181,7 +181,246 @@
 
 重节点均差
 : $$f[x_0,x_0] \colonequals \lim_{x_1\rightarrow x_0} f[x_1,x_0]$$
-类似地，$$f[x_0,x_0,x_0]\colonequals\lim_{(x1,x_2)\rightarrow(0,0)}f[x_0,x_1,x_2]$$
+类似地，$$f[x_0,x_0,x_0]\colonequals\lim_{(x_1,x_2)\rightarrow(0,0)}f[x_0,x_1,x_2]$$
 
 显然由均差性质可得，$f[x_0,x_0,\ldots,x_0] = \frac{f^{(k)}(x_0)}{k!}$
+
+从而，我们得以定义Hermitee插值。
+> 假设已知点$x_0,x_1,\ldots,x_n$，并分别给出了其中$x_{k_1},x_{k_2},\ldots,x_{k_m}$的$s_1,s_2,\ldots,s_m$阶导数，那么：
+> 我们称关于$x_1,x_2,\ldots,x_n$的牛顿插值为*Hermitee插值*，其中$x_{k_i}$重复了$s_i$次
+
+举例说明：已知$f(x_0),f(x_1),f(x_2),f'(x_1)$，那么该式的Hermitee插值即为关于$x_0,x_1,x_1,x_2$的牛顿插值。
+
+### 3.2.4 分段低次插值
+
+龙格现象
+: 插值多项式的次数越高，误差未必越好
+例子：设$f(x)=\frac{1}{1+x^2}$, $x_i:-5,-4,\ldots,4,5$, 那么其Lagrange插值$L_{10}f(x)$在边缘会出现无法忍受的误差。
+
+正因这种情况，我们提出了新的插值方法。这个方法来自于一个非常简单的想法：为什么我们不将已知点用直线连起来呢？
+把这种想法变成严谨的表述，就变成了：
+> 插值函数$I_h(x)\quad(h = \max\left|x_k-x_{k+1}\right| )$满足
+> \[I(x_k)=y_k\\ I_h(x) \text{ is linear on } [x_k, x_{k+1}] \]
+> 
+但我们不想止步于此。进一步地，不妨认为$I_h(x)$在区间$[x_k,x_{k+1}]$是一个非线性函数，例如二次、三次函数，或三角、指数函数。同样地，我们可以在每个小分段上进行*Newton*,*Lagrange*,*Hermitee*插值。这样的插值至少保证了其插值函数的连续性。
+
+### 3.2.5 三次样条插值
+
+三次样条函数
+: 若$S(x)\in \mathcal{C}^2[a,b]$在每个$[a,b]$都是三次多项式，那么就称$S(x)$是一个三次样条函数。
+若同时满足$S(x_k) = f(x_k)$，那么称$S(x)$为三次样条插值函数。
+
+#### 自由度分析
+
+每一个三次函数有四个系数，那么对于$n+1$个点，便具有$n$个区间，即有$4n$个未知系数。
+而我们已知的限制有：
+* $n+1$个已知点
+* $n-1$个中间点的连续性、一阶导连续性和二阶导连续性（$3n-3$个已知限制）
+* 边界条件，根据实际情况的不同，常见的有：
+  * $S'(x_0) = f'(x_0)$, $S'(x_n) = f'(x_n)$（第一种边界条件）
+  * $S''(x_0) = f''(x_0)$, $S''(x_n) = f''(x_n)$（第二种边界条件）
+  * $S(x_0^+) = S(x_n^-)$，$S'(x_0^+) = S'(x_n^-)$，$S''(x_0^+) = S''(x_n^-)$
+
+#### 构造
+
+* 第一类边界条件：
+  > 假设$S''(x_j)=M_j$，其中$M_j$未知。
+  > 因为$S''(x)$在$[x_k,x_{k+1}]$上是一次的，故可以轻易求出$S''(x)$的表达式
+  > $$S''(x) = M_j\frac{x-x_{j+1}}{x_j-x_{j+1}}+M_{j+1}\frac{x-x_{j}}{x_{j+1}-x_j}$$ 利用两次不定积分，结合区间的边界条件，可以确定两次积分中产生的两个常数项。接下来，考虑利用一阶导连续可得一个非齐次线性方程式。这样，插值函数便得解了。
+* 第二类边界条件：
+  > 根据定义对线性方程组中变量取特殊值即可。
+
+上面所说的线性方程组为：
+记
+$$
+A = \left(\begin{array}{ccccccc}
+      2 & \lambda_0 & 0 & \ldots & 0 & 0 & 0\\
+      \mu_1 & 2 & \lambda_1 & \ldots & 0 & 0 & 0\\
+      \vdots & \vdots & \vdots & & \vdots & \vdots & \vdots\\
+      0 & 0 & 0 & \ldots & \mu_{n-1} & 2 & \lambda_{n-1} \\
+      0 & 0 & 0 & \ldots & 0 & \mu_n & 2 \\
+    \end{array}\right) \\
+    M = (M_0,M_1,\ldots,M_n)^T, D=(d_0,d_1,\ldots,d_n)^T
+$$
+其中
+$$
+\begin{align*}
+  h_i = & \,x_{i+1} - x_i\\
+  \mu_i = & \,\displaystyle\frac{h_{i-1}}{h_{i-1}+h_i},\quad \lambda_i = \displaystyle\frac{h_{i}}{h_{i-1}+h_i}\\
+  d_i =& \,6f[x_{i-1},x_i,x_{i+1}]
+\end{align*}
+$$
+
+注：$\lambda_0$与$\mu_n$的具体取值取决于初值条件。
+
+#### 误差分析
+
+> ***Theorem 3.2.4***
+> 设$f\in\mathcal{C}^4[a,b]$，$S(x)$为满足第一类或第二类边界条件的三次样条插值函数。令$h\colonequals \max\left|x_k-x_{k+1}\right| $，则：
+> $$\left|f^{(k)}(x)-S^{(k)}(x)\right| \leq C_k\max \left|f^{(4)}(x)\right|\, h^{4-k},\quad k=0,1,2$$ 其中$C_0=\frac{5}{384},\: C_1=\frac{1}{24},\: C_2=\frac{3}{8}$
+
+
+# 3. 函数逼近
+
+我们的主要目的，就是找一个简单的，已于计算的$p(x)$和一个metric，使得在该metric下，$f(x)$与$p(x)$的距离最小。
+
+## 3.1 线性空间
+
+### 3.1.1 赋范线性空间
+
+设$V$为一个定义在$F$上的线性空间，若存在函数$f: V \rightarrow \mathbb{R}$，满足：
+1. 正定性
+2. $f(ax)=f(a)f(x)$
+3. 三角不等式
+4. $f^{-1}(0)={0}$
+则记$f(a)$为$\lVert a \rVert$，称其为定义在$V$上的**范数**，并称定义了范数的$V$为**赋范空间**
+
+从而可以在$\mathbb{R}^n$上定义一个平凡的范数：
+> for all $x = (x_1,x_2,\ldots,x_n)$, the $\text{norm}^n$ of $x$ is $$\lVert x\rVert = (\sum_{i=1}^n \left|x\right|^n)^{1/n}$$
+> for all integrable $f$, the $\text{norm}^n$ of $f$ is $$\lVert f\rVert _n = (\int \left|f\right|^n)^{1/n}$$
+
+进而有加权范以及无穷范：
+> 设$w(x) > 0$则 $$\lVert f\rVert _{w.n} = (\int \left|f\right|^n w)^{1/n}$$ 且 $$
+>  \lVert x\rVert _{\infin} = \max \left|x_i\right| \\
+>  \lVert f\rVert _{\infin} = \max \left|f\right|
+>$$
+
+注：可以定义加权内积，即在度量矩阵中，对原有定义加权。例如，设$\varepsilon_1,\varepsilon_2,\ldots,\varepsilon_n$为$\mathbb{R}^n$的一组基，那么可以将原有的$(\varepsilon_i,\varepsilon_j)=a$变为$(\varepsilon_i,\varepsilon_j)=aw_{ij}$；设$\varepsilon_1,\varepsilon_2,\ldots,\varepsilon_n$为$\mathbb{R}^{\mathbb{R}^n}$的一组基，那么可以将原有的$(\varepsilon_i,\varepsilon_j)=\int\varepsilon_i\varepsilon_j $变为$(\varepsilon_i,\varepsilon_j)=\int\varepsilon_i\varepsilon_jw$
+
+### 3.1.2 最佳逼近
+
+最佳逼近
+: 设$f\in \mathcal{C}[a,b]$，$H_n$是由实值函数张成的维度为$n$的赋范空间。若有$p^*\in H_n$使\[\lVert f-p^*\rVert=\min_{p\in H_n} \lVert f-p\rVert\]则称$p^*$是$f$在赋范空间$H_n$上的**最佳逼近**
+特别地，若范数为$\lVert x\rVert_{\infin}$，则称其为**最佳一致逼近**；若范数为$\lVert x\rVert_2$，则称其为**最佳平方逼近**；若范数为$\lVert x\rVert_w$，则称其为**最佳加权逼近**
+
+于是
+> **Theorem 3.1.1(Weierstrass)**
+> Suppose f is continuous on $[a,b]$. Then for any $\varepsilon > 0$, there exists a polonomial $p(x)\in P_\infin$,such that\[\lVert f-p\rVert_\infin < \varepsilon\]
+
+最小二乘拟合
+: 设$f\in\mathcal{C}[a,b]$, $y_i=f(x_i),\, i\in[0,m]$，那么$p^*\in H_n$是$f$的最小二乘拟合当且仅当：
+$$ \lVert f-p^*\rVert_{w.2} = \min_{p\in H_n}\lVert f-p\rVert_{w.2}$$
+在此，我们将范数定义为
+$$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
+
+## 3.2 正交多项式
+
+显然地，多项式空间是由$1,x,x^2,\ldots$张成的。根据施密特正交化，可以得到一个多项式空间的正交基。也就是说：正交多项式由内积决定（原因参考施密特正交化的步骤）。
+
+正交族
+: 设函数$\varphi_1,\varphi_2,\ldots,\varphi_n$为内积空间$V$的一组基，若$(\varphi_i,\varphi_j) = \delta_{ij}$，那么称其为一个正交族；
+若内积$(*,*)$（$<*,*>$）还使用了权重定义，那么称其为加权正交族。
+
+假设$\varphi_n$是$[a,b]$上$n$次多项式，$\rho(x)$为权函数。若$\left\{\varphi_n(x)\right\} _{n=0}^\infty$在$(*,*)_\rho$正交族中，那么称$\varphi_n$为$[a,b]$上带权$\rho(x)$的**正交多项式**。
+
+**性质**
+假设$\left\{\varphi_n(x)\right\}_{n=0}^N$是由$1,x,\ldots,x^n$经施密特正交化依次得到的一组正交多项式
+1. $\left\{\varphi_n(x)\right\}_{n=0}^N$线性无关。
+2. 任一不超过$N$次的多项式可由$\left\{\varphi_n(x)\right\}_{n=0}^N$线性表出。
+3. $\varphi_n$与任一次数小于$n$的多项式正交。
+
+> **Theorem 3.2.1**
+> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的首一正交多项式，那么下式成立：
+> $$
+\varphi_{n+1}=(x-\alpha_n)\varphi_n - \beta_n\varphi_{n-1},\quad n=0,1,\ldots\\
+> $$其中
+> $$
+> \begin{align*}
+>   \varphi_0 &= 1,&\varphi_{-1}&=0\\
+>   \alpha_n &= \frac{(x\varphi_n,\varphi_n)_\rho}{(\varphi_n,\varphi_n)_\rho},&\beta_n &= \frac{(\varphi_n,\varphi_n)_\rho}{(\varphi_{n-1},\varphi_{n-1})_\rho}
+> \end{align*}
+> $$
+
+> **Theorem 3.2.2**
+> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的正交多项式,则$\varphi_n$在$[a,b]$上有不同的零点。
+
+（上述$\left\{\varphi_n(x)\right\}_{n=0}^\infty$都是由$1,x,\ldots,x^n$经施密特正交化依次得到的, 而一般实践中，可以有$T^TATx$一样的变换，但注意各个定理推导时的前提条件。）
+
+### 3.2.1 勒让德多项式
+
+勒让德多项式
+: 我们称在$[-1,1]$上，权函数为$\rho(x)\equiv 1$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为勒让德多项式。
+
+表达式：
+\[p_0(x)=1,\quad p_n(x) = \frac{1}{2^nn!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
+
+性质:
+* $$\int_{-1}^1p_n(x)p_m(x) = \left\{
+  \begin{align*}
+    0&,& m &\not ={n}\\
+    \frac{2}{2n+1}&,& m &= n
+  \end{align*}
+  \right.$$
+* $$p_n(-x) = (-1)^np_n(x)$$
+* $$(n+1)p_{n+1}(x)=(2n+1)p_n(x)-np_{n-1}(x)$$
+
+### 3.2.2 切比雪夫多项式
+
+切比雪夫多项式
+: 我们称在$[-1,1]$上，权函数为$\rho(x) = (1-x^2)^{-1/2}$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为切比雪夫多项式。
+
+表达式：
+$$T_n(x)=\cos(n\arccos x), \left|x\right|\leq 1$$
+
+性质：
+* $$T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$$
+* $$\int_{-1}^1T_n(x)T_m(x)\rho(x) = \left\{
+  \begin{align*}
+    0&,& m &\not ={n}\\
+    \frac{\pi}{2}&,& m &= n \not ={0}\\
+    \pi &,& m &= n = 0
+  \end{align*}
+  \right.$$
+* $T_{2k}$仅含偶数项，$T_{2k-1}$仅含奇数项
+* $T_n(x)$在$[-1,1]$上有$n$个零点。（具体值可由通用表达式推得）
+* $T_n(x)$的首项系数为$2^{n-1}$
+
+那么我们记$\hat{T}_n(x) = 2^{1-n}T_n(x)$,可得定理如下：
+
+> **Theorem 3.2.3**
+> $$ \max_{-1\leq x\leq 1} \left|\hat{T}_n(x)\right|\leq \max_{-1\leq x\leq 1} \left|\hat{p}_n(x)\right|$$ 其中$\hat{p}_n(x)$为首一$n$次多项式
+>
+
+鉴于切比雪夫多项式良好的性质，我们考虑将其应用于插值多项式中。在$[-1,1]$上，我们称多项式$T_n(x)$的所有零点为切比雪夫点，利用这些点进行插值，可以让误差最小：
+> **Corollary**
+> 设已知函数$f\in\mathcal{C}^{n+1}[-1,1]$在$n$个切比雪夫点上的点值，得到了插值函数$L_n(x)$，那么：
+> $$ \max_{-1\leq x\leq 1} \left|f(x)-L_n(x)\right|\leq \frac{1}{2^n(n+1)!}\lVert f^{(n+1)}(x)\rVert_\infty$$
+
+对于一般的**闭区间**，考虑变换：（应该没有人想对着任意闭集做变换吧）
+$$t = [(b-a)x+a+b]/2,\quad x\in[-1,1]$$
+上面的引理的形式在此时会变成：
+$$\max_{a\leq x\leq b} \left|f(x)-L_n(x)\right|\leq \frac{(b-a)^{n+1}}{2^{2n+1}}\,\frac{\lVert f^{(n+1)}(x)\rVert_\infty}{(n+1)!}$$
+
+## 3.3 最佳平方逼近
+
+### 3.3.1 讨论域
+
+我们在本节，主要想解决这样的一个问题：
+对于$\mathcal{C}[a,b]$上的函数$f$和函数组$\left\{\varphi_k\right\}_{k=0}^n$，是否存在一个$\left\{\varphi_k\right\}_{k=0}^n$的线性组合$S^*(x)$，使得对于任一一个线性组合$S(x)$：
+\[\lVert f(x)-S^*(x)\rVert_2^2 = \min \lVert f(x)-S(x)\rVert_2^2\]
+如果存在，它的具体形式如何？
+
+### 3.3.2 最佳平方逼近
+
+由上可知，该问题的等价形式为：
+$$I(a_0,a_1,\ldots,a_n)=\int_a^b \rho(x)\left[\sum_{k=0}^na_k\varphi_k(x) - f(x)\right]^2\,dx$$
+求其驻点：
+$$
+\begin{align*}
+  & \frac{\partial I}{\partial a_j} = 2\int_a^b \rho(x)\left[\sum_{k=0}^na_k\varphi_k(x) - f(x)\right]\varphi_j(x) \,dx = 0, \quad j=0,1,\ldots,n\\
+  \iff & \sum_{k=0}^n (\varphi_k,\varphi_j)_\rho\,a_k = (f,\varphi_j)_\rho, \quad j=0,1,\ldots,n
+\end{align*}
+$$
+
+记度量矩阵$\left[(\varphi_i,\varphi_j)\right]$为$T$，记向量$\beta=\left[ (f,\varphi_0),\ldots,(f,\varphi_n)\right]^T$, 则驻点$a=(a_0,a_1,\ldots,a_n)^T$即为
+\[Ta=\beta\]的解。因为该度量阵是由线性无关组生成的，该方程组仅有唯一解。从而可得解$a^*$
+
+易于验证，该解是使$S^*(x):=\sum_{k=0}^n a^*_k\varphi_k(x)$成为$f(x)$的最佳平方逼近的解。从而其误差为：
+$$
+\begin{align*}
+  \lVert\delta(x)\rVert _2^2 &= (f(x)-S^*(x),f(x)-S^*(x))\\
+  &= (f,f)-(S^*,f)\\
+  &= \lVert f(x)\rVert _2^2 - \beta^Ta^*
+\end{align*}
+$$
 
