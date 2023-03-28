@@ -12,3 +12,5 @@ Mainly used for storing Linzy Liu's notes
    * 遗传算法
 4. 数值分析
 5. Java代码(初学者训练用)
+6. 机器/深度学习
+7. 其他Python代码(自用)
