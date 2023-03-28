@@ -332,7 +332,7 @@ $$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
 > $$
 
 > **Theorem 3.2.2**
-> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的正交多项式,则$\varphi_n$在$[a,b]$上有不同的零点。
+> 设$\left\{\varphi_n(x)\right\}_{n=0}^\infty$是$[a,b]$上带权$\rho(x)$的正交多项式,则$\varphi_n$在$[a,b]$上有不同的$n$个零点。
 
 （上述$\left\{\varphi_n(x)\right\}_{n=0}^\infty$都是由$1,x,\ldots,x^n$经施密特正交化依次得到的, 而一般实践中，可以有$T^TATx$一样的变换，但注意各个定理推导时的前提条件。）
 
@@ -342,17 +342,17 @@ $$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
 : 我们称在$[-1,1]$上，权函数为$\rho(x)\equiv 1$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为勒让德多项式。
 
 表达式：
-\[p_0(x)=1,\quad p_n(x) = \frac{1}{2^nn!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
+\[P_0(x)=1,\quad P_n(x) = \frac{n!}{(2n)!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
 
 性质:
-* $$\int_{-1}^1p_n(x)p_m(x) = \left\{
+* $$\int_{-1}^1P_n(x)P_m(x) = \left\{
   \begin{align*}
     0&,& m &\not ={n}\\
     \frac{2}{2n+1}&,& m &= n
   \end{align*}
   \right.$$
-* $$p_n(-x) = (-1)^np_n(x)$$
-* $$(n+1)p_{n+1}(x)=(2n+1)p_n(x)-np_{n-1}(x)$$
+* $$P_n(-x) = (-1)^nP_n(x)$$
+* $$(n+1)P_{n+1}(x)=(2n+1)xP_n(x)-nP_{n-1}(x)$$
 
 ### 3.2.2 切比雪夫多项式
 
@@ -415,7 +415,16 @@ $$
 记度量矩阵$\left[(\varphi_i,\varphi_j)\right]$为$T$，记向量$\beta=\left[ (f,\varphi_0),\ldots,(f,\varphi_n)\right]^T$, 则驻点$a=(a_0,a_1,\ldots,a_n)^T$即为
 \[Ta=\beta\]的解。因为该度量阵是由线性无关组生成的，该方程组仅有唯一解。从而可得解$a^*$
 
-易于验证，该解是使$S^*(x):=\sum_{k=0}^n a^*_k\varphi_k(x)$成为$f(x)$的最佳平方逼近的解。从而其误差为：
+易于验证，该解是使$S^*(x):=\sum_{k=0}^n a^*_k\varphi_k(x)$成为$f(x)$的最佳平方逼近的解。
+
+**性质**
+1. $(f,\varphi_i)_\rho=(S^*,\varphi_i)_\rho,\quad i=0,1,\ldots,n$
+   $\rArr (f-S^*,S)=0$，$S$是任意$\left\{\varphi_k\right\}_{k=0}^n$的线性组合
+2. $\lVert f(x)-S^*(x)\rVert_{\rho.2}^2 \leq \lVert f(x)-S(x)\rVert_{\rho.2}^2$
+
+> 可以这样理解：所求的$S^*$实际上是$f$在线性空间$<\varphi_0,\varphi_1,\ldots,\varphi_n>$上的正交投影，它的余项是与整个空间正交的。
+
+从而其误差为：
 $$
 \begin{align*}
   \lVert\delta(x)\rVert _2^2 &= (f(x)-S^*(x),f(x)-S^*(x))\\
@@ -423,4 +432,51 @@ $$
   &= \lVert f(x)\rVert _2^2 - \beta^Ta^*
 \end{align*}
 $$
+
+### 3.3.3 正交函数族的最佳平方逼近
+
+显而易见的是，度量阵需要计算$(n+1)(n+2)$次积分，且还涉及解线性方程组，这样的计算是较为繁杂的。而我们希望得到一个较为简洁的计算方式。不难发现，对于一个正交基，
+其度量阵是一个对角阵，这使得得到矩阵和解矩阵所需的计算量大大减少。
+
+这样的解是：
+$$S^*(x)=\sum_{k=0}^n \frac{(f,\varphi_k)}{(\varphi_k,\varphi_k)}\varphi_k(x)$$
+
+同时，我们称按此形式展开的函数为$f$的**广义傅里叶级数**。
+
+由其误差可得*Bessel不等式*
+$$\sum_{k=0}^n (a_k^*\lVert \varphi_k(x)\rVert_2)^2 \leq \lVert f(x)\rVert_2^2$$
+
+> **Theorem 3.3.1**
+> 设$f\in \mathcal{C}[a,b]$，$S_n^*(x)$是$f(x)$在正交多项式族$\left\{\varphi_k\right\}_{k=0}^n$上的最佳平方逼近多项式。那么：
+> $$\lim_{n\rightarrow\infty}\lVert f(x)-S_n^*(x)\rVert_2 = 0$$
+
+> **Theorem 3.3.2**
+> 设$f\in \mathcal{C}^2[a,b]$，$S_n^*(x)$是$f(x)$在勒让德正交多项式族$\left\{p_k\right\}_{k=0}^n$上的最佳平方逼近多项式。那么:$\forall \epsilon > 0,\exists N=N(\epsilon)$，当$n>N$时，
+> $$\sup_{x\in[-1,1]} \left|f(x)-S^*(x)\right|\leq \frac{\epsilon}{\sqrt{n}}$$
+
+> **Theorem 3.3.3**
+> 在所有首一$n$次多项式中，勒让德多项式$\hat{P}_n(x)$在$[-1,1]$上的(不带权)平方范数最小，即：
+> $$\lVert\hat{P}_n(x)\rVert_2\leq\lVert p_n(x)\rVert_2$$
+>（由证明过程可知，这里实际上对于任一度量矩阵正定的正交多项式族中的$n$次项均成立。但显然勒让德多项式是易于计算的。）
+
+### 3.3.4 切比雪夫级数
+
+事实上即为当正交基为切比雪夫多项式的时候所得的广义傅里叶级数。鉴于切比雪夫多项式可以由变量代换$x=\cos\theta$变换成三角函数，且此时$f(x)$的切比雪夫级数恰为$f(\cos\theta)$的傅里叶级数。故可以引入傅里叶级数的原理来研究。
+
+其形式：
+$$\frac{C_0^*}{2}+\sum_{n=1}^\infty C_n^*T_n(x)$$
+其中：
+$$C_n^*(x)=\frac{2}{\pi}\int_{-1}^1 \frac{f(x)T_n(x)}{\sqrt{1-x^2}}\,dx$$
+
+
+## 3.4 曲线拟合的最小二乘法
+
+在这里，已知有数个已知的点值。我们希望找到一个多项式$\hat{p}(x)$使得在这些点上，均方误最小。若采用离散内积，那么可以表示为：
+\[\lVert f(x)-\hat{p}(x)\rVert_2^2 = \min \lVert f(x)-p(x)\rVert_2^2\]可以很容易地发现，这个表达式和我们在上文讨论的最佳平方逼近的目标没有什么差别。
+再结合现在所采用的离散内积和连续内积在对参数求偏导时，行为是类似的这一事实，我们完全可以在重定义内积为离散内积后，应用前面所讨论的定理。
+
+例如：对[一般基底的最小二乘逼近](#332-最佳平方逼近)和[正交基的最小二乘逼近](#333-正交函数族的最佳平方逼近)
+
+
+
 
