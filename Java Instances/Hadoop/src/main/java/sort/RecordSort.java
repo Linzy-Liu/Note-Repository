@@ -7,7 +7,6 @@ import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-
 import java.io.IOException;
 
 public class RecordSort
@@ -17,7 +16,7 @@ public class RecordSort
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException
         {
             String tmp = value.toString();
-            String[] words = tmp.split(" ");
+            String[] words = tmp.split("\t");
             int val = Integer.parseInt(words[1]);
             context.write(new IntWritable(val), new Text(words[0]));
         }
@@ -41,7 +40,6 @@ public class RecordSort
         job.setJarByClass(RecordSort.class);
         job.setMapperClass(SortMapper.class);
         job.setReducerClass(SortReducer.class);
-        job.setCombinerClass(SortReducer.class);
         job.setMapOutputKeyClass(IntWritable.class);
         job.setMapOutputValueClass(Text.class);
         job.setOutputKeyClass(Text.class);
