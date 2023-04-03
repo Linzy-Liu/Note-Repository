@@ -1,6 +1,7 @@
-\documentclass{ctexbook}
+\documentclass{book}
 \usepackage{amsmath, amsthm, amssymb, mathrsfs,anyfontsize, bbm}
 \usepackage[colorlinks, bookmarksopen=true, bookmarksnumbered=true]{hyperref}
+\linespread{1.5}
 
 \begin{document}
 
@@ -11,14 +12,27 @@
 \newtheorem{thm}{Theorem}[section] \newtheorem{lema}{Lemma}[chapter] \newtheorem{cor}{Corollary}[chapter]
 \newtheorem{prop}{Property}[chapter] \newtheorem{fact}{Fact}[chapter] 
 
-\frontmatter
-\tableofcontents
+%\frontmatter
+%\tableofcontents
 
 \mainmatter
 
-\chapter{}
+\chapter*{Premiliar}
 
+\begin{define}(Machine Learning)
+    A computer program is said to \textbf{learn} from experience $E$ with respect to task $T$ as measured by $P$, if its performance on $T$,
+    as measured by $P$, improves with experience $E$.
+\end{define}
 
+\par
+Traditionally, machine learning can be divided into two major categories: \textbf{supervised learning} and \textbf{unsupervised learning}. These two concepts are defined as follows:
+if the input \textit{X} and label \textit{Y} are given to let the machine learn the mapping from \textit{X} to \textit{Y}, this process is called \textbf{supervised learning}. When
+\textit{Y} is continuous, this problem is called a \textbf{regression} problem; when \textit{Y} is discrete, it is called a \textbf{classification} problem. If only the input \textit{X}
+is given and the machine constructs a mapping which reveal the ``interesting'' stucture of $X$, then such process is called \textbf{unsupervised learning}.
+
+Nowadays, machine learning has fairly wide applications. That makes many specific subjects contained in Machine Learning. Such as Deep Learning, Reinforced Learning, etc.
+
+\input{ML/Chap.01.tex}
 
 \end{document}
 

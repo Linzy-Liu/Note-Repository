@@ -1,0 +1,69 @@
+\chapter{Linear Regression}
+
+Before the discussion of Linear Regression, we have to make a rigorous description of the concept of supervised learning. The neccesssary notations along with their terms will be listed here:
+The input, which is usually called \textbf{features}, will be denoted by $x^{(i)}$, and the output \textbf{target} will be denoted by $y^{(i)}$. Refering to the definition of supervosed learning,
+a given pair $(x^{(i)},y^{(i)})$ is a \textbf{training example}. Then the finite set of different training example will be called \textbf{training set}. Let $\mathcal{X}$ denote the space of input,
+and $\mathcal{Y}$ denote the set of output. 
+
+Now the learning problem can be expressed in such way: Taking advantage of the training set, we want to learn a ``good'' mapping $h$ so that $h(x)$ could predict $y$ well. And such $h$ is called
+\textbf{hypothesis}. And our task is to design some algorithm to take advantage of the training set effectively. 
+
+For a linear regression, we tend to find a hypothesis with the form similar to affine functions:
+\[h_\theta(x) = \theta_0+\theta_1x_1+\theta_2x_2\]
+To make it more simply and more generalized, we will give the form below
+\[h(x)=\theta^Tx\]
+where the vectors $x = (1,x_1,\ldots,x_n)$, and \textbf{weight} $\theta = (\theta_0, \theta_1,\ldots, \theta_n)$.
+
+Obviously, when the form $h$ is clear, we'll raise a question, which kind of mapping can be seen as a ``good'' mapping? A measure is needed with no doubt. And such measure is called \textbf{cost~funtion}.
+In this chapter, the cost function will be defined as 
+\[J(\theta)=\frac{1}{2}\sum_{i=1}^{n}(h(x^{(i)})-y^{(i)})^2\]
+which give rise to the ordinary least square regression model. WIth cost function in hand, we now know what kind of functions is needed and how to measure their quality. The last thing we need to do is
+to calcute the best weight vector under the given measure. 
+
+\section{LMS algorithm}
+
+Considering the \textbf{gradient~decent} algorithm, which starts with some initial $\theta$, and repeatedly performs the updates 
+\begin{equation}
+    \label{LR: LMS rule}
+    \theta_j := \theta_j - \alpha\frac{\partial J}{\partial \theta_j}
+\end{equation}
+where $\alpha$ denotes the \textbf{learning~rate}. Such algorithm is simple and natural. Given the cost function, the update rule \ref{LR: LMS rule} can be calcutated specifically
+\[\theta_j:=\theta_j+\alpha\sum_{i=1}^{n}(y^{(i)}-h(x^{(i)}))x^{(i)}_j \]
+In a slightly more succinct way, we could write it in the vector form
+\begin{equation}
+    \label{LR: batch}
+    \theta := \theta + \alpha\sum_{i=1}^{n}(y^{(i)}-h(x^{(i)}))x^{(i)}
+\end{equation}
+The rule is called \textbf{LMS} update rule(LMS stands for ``least mean square''), and is also known as \textbf{Widrow-Hoff} learning rule. Such method looks at every example in the entire training
+set on every step, and is also called \textbf{batch gradient decent}. On a regular basis, similar to the discussion on Newton iteration method, the convergence of such update rule is needed to be 
+considered. Given that $J$ is a convex quadratic function, the optimization problem we have posed here has only one global, and no other local, optima. Thus for a not too large learning rate $\alpha$,
+the gradient decent always converges.  
+In application, batch gradient decent always comes up with a problem, the update will be rather costly when the size of training set $n$ goes large. Therefore, we try to seperate it into many sub-problems,
+\begin{equation}
+    \label{LR: stochastic}
+    \theta := \theta + \alpha(y^{(i)}-h(x^{(i)}))x^{(i)}, \text{ for $i$ in }1,\ldots,n
+\end{equation}
+and such rule is called \textbf{stochastic gradient decent}. There is no difference between the form of \ref{LR: batch} and \ref{LR: stochastic}, however, their process are totally different. The definition
+of hypothesis $h(x)$ implies that $h(x)$ changes whenever the features changes, which means that such seperation makes sense. Although there's no equivalence between stochastic gradient decent and
+batch gradient decent, the former one can finally get a reasonably good approximation to the true minimum.
+
+\small By slowly letting the learning rate $\alpha$ decrease to zero as the algorithm runs, it is also possible to ensure that the parameters will converge to the global minimum rather than merely
+oscillate around the minimum.
+
+\section{Normal Equations}
+
+\subsection{Matrix Derivative}
+At first, we want to introduce an operation $\nabla $, which denotes the derivative of a real-valued function $f: \mathbb{R}^{n\times m} \rightarrow \mathbb{R}$ as 
+\[\nabla_A f(A) := \left[
+\begin{array}{cccc}
+    \frac{\partial f}{\partial a_{11}} & \frac{\partial f}{\partial a_{12}} & \ldots & \frac{\partial f}{\partial a_{1m}}\\
+    \frac{\partial f}{\partial a_{21}} & \frac{\partial f}{\partial a_{22}} & \ldots & \frac{\partial f}{\partial a_{2m}}\\
+    \vdots & \vdots & & \vdots\\
+    \frac{\partial f}{\partial a_{n1}} & \frac{\partial f}{\partial a_{n2}} & \ldots & \frac{\partial f}{\partial a_{nm}}
+\end{array}\right]
+\]
+where $A$ is a $n \times m$ matrix with the element located in row $i$ column $j$ denoted by $a_{ij}$.
+
+
+
+ 
