@@ -64,6 +64,49 @@ At first, we want to introduce an operation $\nabla $, which denotes the derivat
 \]
 where $A$ is a $n \times m$ matrix with the element located in row $i$ column $j$ denoted by $a_{ij}$.
 
+To make the illustrations clear, we will take a brief look at the property of matrix derivative.
+\begin{prop}
+    Suppose $A$ is a $1 \times m$ matrix, and $x \in \mathbb{R}^m$.Then
+    \[\nabla_x Ax = A^T,\quad\nabla_x x^T(A^TA)x = 2A^TAx\]
+\end{prop}
+
+\subsection{Least Square Revisit}
+
+Now we want to write $J(\theta)$ in the form of linear algerbra. For a given training set, we define the \textbf{design matrix} as a $n\times (m+1)$ matrix. 
+\[X = \left[
+    \begin{array}{cc}
+        1 & (x^{(1)})^T \\
+        1 & (x^{(2)})^T \\
+        \vdots & \vdots\\
+        1 & (x^{(n)})^T
+    \end{array}
+\right]\]
+and the output can be also written as 
+\[ y = \left[
+    \begin{aligned}
+        & y^{(1)}\\
+        & y^{(2)}\\
+        & \vdots\\
+        & y^{(n)}
+    \end{aligned}
+\right]\]
+Hence, the error can be written as $h_\theta(x) - y = X\theta - y$, that is to say 
+\[J(\theta) = \frac{1}{2}(X\theta - y)^T(X\theta - y)\]
+
+Therefore, we could try to minimize $J(\theta)$ by matrix derivative.
+\begin{align*}
+    \nabla_\theta J(\theta) &= \nabla_\theta \frac{1}{2}(X\theta - y)^T(X\theta - y)\\
+                            &= \nabla_\theta \frac{1}{2}(\theta^TX^TX\theta - 2(X\theta)^Ty + y^Ty)\\
+                            &= X^TX\theta - X^Ty
+\end{align*}
+Finally we set this derivative to zero and obtain the \textbf{normal equation}
+\begin{equation}
+    \label{LR: normeq}
+    X^TX\theta = X^Ty
+\end{equation}
+
+
+
 
 
  
