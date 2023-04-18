@@ -122,4 +122,18 @@ where $w^{(i)}$ are non-negative values \textbf{weights}. A fairly standard choi
 Note that the point $x$ is the paticular one which we are trying to predict. And such weight has fairly close dependency on $x$. The parameter $\tau$, which is called \textbf{bandwidth}, controls
 how quickly the weight decreases as the distance between $x^{(i)}$ and $x$ increases.
 
- 
+\section{Logistic Regression}
+
+Classification problem is a family of problems which we want to predict discrete output $y$ according to input $x$. Considering its complexity, we will begin with
+\textbf{binary~classification~problem}, which implies that $y$ has only two probable values:0 and 1.In classification problem, given input $x^{(i)}$, the corresponding $y^{(i)}$ is also called
+\textbf{label}.
+
+\begin{define}[Sigmoid Function]
+    Let $\sigma(x)$ denote the Sigmoid function, then:
+    \[\sigma(x)=\frac{1}{1+e^{-x}}\]
+\end{define}
+
+Let the hypothesis in Logistic regression be $h_\theta(x) = g(\theta^Tx)$. It receives an input $x$ and gives the probability of $y=1$. Therefore, we can apply the MLE to the optimization of 
+feature $\theta$. Similar to stochastic gradient ascent, the update rule of Logistic regression is 
+\[\theta_j := \theta_j + \alpha(h_\theta(x^{(i)})-y^{(i)})x^{(i)}_j\]
+Both of them holds an indentical form $\theta := \theta + \alpha\nabla l(\theta)$.
