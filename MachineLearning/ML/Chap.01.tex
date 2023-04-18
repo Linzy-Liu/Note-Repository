@@ -105,8 +105,21 @@ Finally we set this derivative to zero and obtain the \textbf{normal equation}
     X^TX\theta = X^Ty
 \end{equation}
 
+Under \textbf{Maximum Likelihood Estimation}, the least-squares regression can be justified as a very natural method. Such natual comes from the consistency between the target function of these
+two different methods. And let us take a brief look at the process of MLE. We try to assume that for a given $i$, the output $y^{(i)}$ obeys the Gaussian distribution whose mean is given by
+$\theta^Tx^{(i)}$. To make it more natural, we further assume that these outputs are distributed iid. Then the likelihood function $L(\theta)$ can be calculated easily.
 
+\section{Locally weighted linear regression}
 
-
+In this section, we will try to discuss a \textbf{non-parametric} algorithm, LWR(Locally weighted linear regression). The concept of parametric can be illustrated as ``Once fitted, no more training''.
+In contrast, it is neccesssary for the collection of non-parametric algorithm to keep the training set around when making predictions. To speak clearly, the target function will be listed here.
+\begin{equation}
+    \label{LR: LWR}
+    \sum_{i=1}^{n}w^{(i)}(\theta^Tx^{(i)}-y^{(i)})^2
+\end{equation}
+where $w^{(i)}$ are non-negative values \textbf{weights}. A fairly standard choice for the weights is 
+\[w^{(i)}=\exp\left(-\frac{(x-x^{(i)})^T(x-x^{(i)})}{2\tau^2}\right)\]
+Note that the point $x$ is the paticular one which we are trying to predict. And such weight has fairly close dependency on $x$. The parameter $\tau$, which is called \textbf{bandwidth}, controls
+how quickly the weight decreases as the distance between $x^{(i)}$ and $x$ increases.
 
  
