@@ -81,8 +81,6 @@
 
 ## 2.3 解线性方程
 
-### 2.3.1 直接解线性方程组
-
 > 鉴于高斯消元是高代的基础操作，在此不做赘述。但易得，该过程的乘除法次数约为$\frac{n^3}{3}$,加减法次数为$\frac{n^3}{3}$
 
 我们还有这样的定理：
@@ -212,6 +210,45 @@ $\textbf{Theorem 2.4.1}(范数的连续性)$ $\mathbb{R}^n$上的范数是$\math
 $\textbf{Theorem 2.4.2}(范数的等价性)$  对于$\mathbb{R}^n$上的两种范数$\lVert x\rVert_s,\lVert x\rVert_r$，总存在$c_1,c_2>0$，使得
 \[c_1\lVert x\rVert_s\leq \lVert x\rVert_r \leq c_2\lVert x\rVert_s\]
 
+$\textbf{Theorem 2.4.3}(范数的收敛性)$ 对于任意一种向量范数，都有下式成立：
+$$\lim_{k\rightarrow\infty}x^{(k)}=x^* \lrArr \lim_{k\rightarrow\infty} \lVert x^{(k)}-x^*\rVert=0$$
+
+矩阵范数
+: 设函数$\lVert X\rVert : \mathbb{R}^{n\times n}\rightarrow\mathbb{R}$若满足：
+    1. 正规性
+    2. $\forall c\in \mathbb{R}$，$\lVert cA\rVert=\left|c\right|\lVert A\rVert$
+    3. $\lVert AB\rVert\leq \lVert A\rVert\lVert B\rVert$
+    4. $\lVert A+B\rVert\leq \lVert A\rVert+\lVert B\rVert$
+  那么称$\lVert X\rVert$为一个**矩阵范数**
+
+很容易可以验证**Frobenius范数**$$\lVert A\rVert_F:=\left(\sum a_{ij}^2\right)^\frac{1}{2}$$是矩阵范数
+为了免去范数的验证并利用已经构建的范数，我们尝试使用向量范数诱导产生矩阵范数：
+
+算子范数
+: 设$x\in \mathbb{R}^n,\, A\in\mathbb{R}^{n\times n}$, 对于一个给定的向量范数$\lVert x\rVert_v$，我们相应地定义一个矩阵范数：
+$$\lVert A\rVert_v = \max_{x \not ={0}}\frac{\lVert Ax\rVert_v}{\lVert x\rVert_v}$$
+由这样定义的矩阵范数被称为**算子范数**或**从属范数**
+
+从实际操作上，我们也可以认为这样的算子范数是由$\lVert x\rVert_v$诱导的范数。但出于严谨性，需要证明这个式子所定义的函数是一个矩阵范数。
+接下来，就可以由此产生一些常用矩阵范数了：
+1. \[\lVert A\rVert_\infty = \max_{i}\sum_{j=1}^n \left|a_{ij}\right|\]
+2. \[\lVert A\rVert_1 = \max_{j}\sum_{i=1}^n \left|a_{ij}\right|\]
+3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的最大特征值。
+
+$\textbf{Theorem 2.4.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
+$$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
+$$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
+
+$\textbf{Theorem 2.4.5}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
+$$(I\plusmn B)^{-1}\leq \frac{1}{1-\lVert B\rVert}$$
+
+$\textbf{Theorem 2.4.6}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$b$有个小扰动$\delta b$，设$A(x+\delta x)=b+\delta b$，则
+$$\frac{\lVert\delta x\rVert}{\lVert x\rVert} \leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta b\rVert}{\lVert b\rVert}$$
+
+$\textbf{Theorem 2.4.6}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
+$$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}$$
+
+同时，注意到这些上界都有共同项$\lVert A\rVert \lVert A^{-1}\rVert$，我们称这些共同项为$A$的**条件数**，记作$cond(A)$
 
 # 3. 插值法
 
