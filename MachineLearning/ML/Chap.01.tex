@@ -1,4 +1,4 @@
-\chapter{Linear Regression}
+\chapter{Linear Regression and Classification}
 
 Before the discussion of Linear Regression, we have to make a rigorous description of the concept of supervised learning. The neccesssary notations along with their terms will be listed here:
 The input, which is usually called \textbf{features}, will be denoted by $x^{(i)}$, and the output \textbf{target} will be denoted by $y^{(i)}$. Refering to the definition of supervosed learning,
@@ -122,7 +122,7 @@ where $w^{(i)}$ are non-negative values \textbf{weights}. A fairly standard choi
 Note that the point $x$ is the paticular one which we are trying to predict. And such weight has fairly close dependency on $x$. The parameter $\tau$, which is called \textbf{bandwidth}, controls
 how quickly the weight decreases as the distance between $x^{(i)}$ and $x$ increases.
 
-\section{Logistic Regression}
+\section{Classification}
 
 Classification problem is a family of problems which we want to predict discrete output $y$ according to input $x$. Considering its complexity, we will begin with
 \textbf{binary~classification~problem}, which implies that $y$ has only two probable values:0 and 1.In classification problem, given input $x^{(i)}$, the corresponding $y^{(i)}$ is also called
@@ -133,7 +133,17 @@ Classification problem is a family of problems which we want to predict discrete
     \[\sigma(x)=\frac{1}{1+e^{-x}}\]
 \end{define}
 
+\subsection{Logistic Regression}
 Let the hypothesis in Logistic regression be $h_\theta(x) = g(\theta^Tx)$. It receives an input $x$ and gives the probability of $y=1$. Therefore, we can apply the MLE to the optimization of 
 feature $\theta$. Similar to stochastic gradient ascent, the update rule of Logistic regression is 
 \[\theta_j := \theta_j + \alpha(h_\theta(x^{(i)})-y^{(i)})x^{(i)}_j\]
 Both of them holds an indentical form $\theta := \theta + \alpha\nabla l(\theta)$.
+
+\subsection{Fisher Scoring}
+
+\textbf{Fisher Scoring} focus on the same hypothesis as Logistic regression, $h_\theta(x) = g(\theta^Tx)$. Hence they have identical likelihood functions. Now, we want to find another method to
+optimize the likelihood function. And we have found that Newton iteration method could be a good choice. It can be write as 
+\[\theta := \theta - \frac{l'(\theta)}{l''(\theta)}\]
+When $\theta$ is a vector, we will write it as 
+\[\theta:=\theta-H^{-1}\nabla_\theta l(\theta)\]
+where $H$ denote the Hessi matrix of real-valued function $\theta$.  
