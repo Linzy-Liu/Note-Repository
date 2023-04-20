@@ -30,10 +30,21 @@ if the input \textit{X} and label \textit{Y} are given to let the machine learn 
 \textit{Y} is continuous, this problem is called a \textbf{regression} problem; when \textit{Y} is discrete, it is called a \textbf{classification} problem. If only the input \textit{X}
 is given and the machine constructs a mapping which reveal the ``interesting'' stucture of $X$, then such process is called \textbf{unsupervised learning}.
 
+On a regular basis, a machine learninig task will be solved by following the task below. Before learning, a finite training set should be well prepared. Then we shall select a proper hypothesis and
+decide what strategy should be taken into consideration. Here, the strategy often denotes the way we evaluate the hypothesis. Next, the learning task has been transformed into a optimization problem. So searching for proper algorithm could be a critical task. Finally,
+we use prediction as our standard of evaluation.
+
+To numerically evaluate the hypothesis, \textbf{loss function} is needed. As described in its name, such function gives us a way to know exactly how much loss have been made by the current hypothesis.
+The expectation of loss function is called \textbf{expected loss} or \textbf{risk function}. Howerver, given that we do not know the probability distribution of traning set in most of the time, we take \textbf{empirial expected loss}
+instead. In fact, the strategy of minimizing risk function will result in ill-formed problem when the scale of training set is quite small. Such phenomenon is called ``\textbf{over-fitting}''. For this 
+reason, we induct the concept of \textbf{Regularization}. Usually, the regulization of a risk function implies that a \textbf{regularizer} or a \textbf{penalty term} will be added. Traditionally, 
+penalty term always follows the rule, ``more complexity, more penalty''.
+
 Nowadays, machine learning has fairly wide applications. That makes many specific subjects contained in Machine Learning. Such as Deep Learning, Reinforced Learning, etc.
 
 \input{ML/Chap.01.tex}
 \input{ML/Chap.02.tex}
+\input{ML/Chap.Perceptron.tex}
 
 \end{document}
 

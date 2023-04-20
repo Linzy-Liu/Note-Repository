@@ -239,6 +239,8 @@ $\textbf{Theorem 2.4.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$
 $$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
 $$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
 
+同时，由此可证对于一个$n$阶对称阵$A$，有$\rho(A)=\lVert A\rVert_2$
+
 $\textbf{Theorem 2.4.5}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
 $$(I\plusmn B)^{-1}\leq \frac{1}{1-\lVert B\rVert}$$
 
@@ -246,9 +248,9 @@ $\textbf{Theorem 2.4.6}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，�
 $$\frac{\lVert\delta x\rVert}{\lVert x\rVert} \leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta b\rVert}{\lVert b\rVert}$$
 
 $\textbf{Theorem 2.4.6}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
-$$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}$$
+$$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \frac{\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}{1-\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}$$
 
-同时，注意到这些上界都有共同项$\lVert A\rVert \lVert A^{-1}\rVert$，我们称这些共同项为$A$的**条件数**，记作$cond(A)$
+同时，注意到这些上界都有共同项$\lVert A\rVert_n \lVert A^{-1}\rVert_n$，我们称这些共同项为$A$的**条件数**，记作$cond(A)_n$
 
 # 3. 插值法
 

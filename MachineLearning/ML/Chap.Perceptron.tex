@@ -1,0 +1,18 @@
+\chapter{Perceptron}
+
+\begin{define}[Perceptron]
+    Suppose feature space $\mathcal{X}\subset\mathbb{R}^n$, the output space $\mathcal{Y}={\pm 1}$ denotes the class of feature. When the hypothesis holds the form
+    \[f(x)= \text{sign}(w^Tx+b)\]
+    we call such model as \textbf{perceptron}. Here, $x$ is a feature, $w\in \mathbb{R}^n$ stands for weight, and $b \in \mathbb{R}$ is called bias.
+\end{define}
+
+The idea of this model is to find a proper hyperplane to separate the feature space into two parts, which implies that we clssified the features by setting a linear boundary.
+
+\begin{define}[linearly separatable]
+    In the perceptron model, for a given training set 
+    \[T={(x_i,y_i):x_i\in \mathcal{X},y_i\in\mathcal{y},\quad i=1,2,\ldots,N}\]
+    If there exists a hyperplane $S$
+    \[w^Tx+b=0\]
+    that could separate the positive feature $f(x_i)>0$ from the others completely, we call the training set $T$ as \textbf{linearly separatable data set}. 
+\end{define}
+
