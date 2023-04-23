@@ -134,14 +134,14 @@ Classification problem is a family of problems which we want to predict discrete
 \end{define}
 
 \subsection{Logistic Regression}
-Let the hypothesis in Logistic regression be $h_\theta(x) = g(\theta^Tx)$. It receives an input $x$ and gives the probability of $y=1$. Therefore, we can apply the MLE to the optimization of 
+Let the hypothesis in Logistic regression be $h_\theta(x) = \sigma(\theta^Tx)$. It receives an input $x$ and gives the probability of $y=1$. Therefore, we can apply the MLE to the optimization of 
 feature $\theta$. Similar to stochastic gradient ascent, the update rule of Logistic regression is 
 \[\theta_j := \theta_j + \alpha(h_\theta(x^{(i)})-y^{(i)})x^{(i)}_j\]
 Both of them holds an indentical form $\theta := \theta + \alpha\nabla l(\theta)$.
 
 \subsection{Fisher Scoring}
 
-\textbf{Fisher Scoring} focus on the same hypothesis as Logistic regression, $h_\theta(x) = g(\theta^Tx)$. Hence they have identical likelihood functions. Now, we want to find another method to
+\textbf{Fisher Scoring} focus on the same hypothesis as Logistic regression, $h_\theta(x) = \sigma(\theta^Tx)$. Hence they have identical likelihood functions. Now, we want to find another method to
 optimize the likelihood function. And we have found that Newton iteration method could be a good choice. It can be write as 
 \[\theta := \theta - \frac{l'(\theta)}{l''(\theta)}\]
 When $\theta$ is a vector, we will write it as 

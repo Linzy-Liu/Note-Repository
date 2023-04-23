@@ -233,24 +233,83 @@ $$\lVert A\rVert_v = \max_{x \not ={0}}\frac{\lVert Ax\rVert_v}{\lVert x\rVert_v
 接下来，就可以由此产生一些常用矩阵范数了：
 1. \[\lVert A\rVert_\infty = \max_{i}\sum_{j=1}^n \left|a_{ij}\right|\]
 2. \[\lVert A\rVert_1 = \max_{j}\sum_{i=1}^n \left|a_{ij}\right|\]
-3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的最大特征值。
+3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的绝对值的最大特征值。
 
-$\textbf{Theorem 2.4.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
+$\textbf{Theorem 2.4.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的绝对值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
 $$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
 $$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
+即\[\rho(A)=\inf_v \lVert A\rVert_v\]
 
 同时，由此可证对于一个$n$阶对称阵$A$，有$\rho(A)=\lVert A\rVert_2$
 
-$\textbf{Theorem 2.4.5}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
+## 2.5 误差与残差
+
+一般来说，实际测量的数据总会存在误差，因而我们不希望测量数据的微小扰动显著地影响到解。
+$\textbf{Theorem 2.5.1}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
 $$(I\plusmn B)^{-1}\leq \frac{1}{1-\lVert B\rVert}$$
 
-$\textbf{Theorem 2.4.6}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$b$有个小扰动$\delta b$，设$A(x+\delta x)=b+\delta b$，则
+$\textbf{Theorem 2.5.2}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$b$有个小扰动$\delta b$，设$A(x+\delta x)=b+\delta b$，则
 $$\frac{\lVert\delta x\rVert}{\lVert x\rVert} \leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta b\rVert}{\lVert b\rVert}$$
 
-$\textbf{Theorem 2.4.6}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
+$\textbf{Theorem 2.5.3}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
 $$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \frac{\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}{1-\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}$$
 
-同时，注意到这些上界都有共同项$\lVert A\rVert_n \lVert A^{-1}\rVert_n$，我们称这些共同项为$A$的**条件数**，记作$cond(A)_n$
+同时，注意到这些上界都有共同项$\lVert A\rVert_n \lVert A^{-1}\rVert_n$，我们称这些共同项为$A$的**条件数**，记作$cond(A)_n$。可以发现，条件数对扰动的放大作用是十分显著的。因此，我们考虑找出一些条件数的特点。
+对于任意可逆矩阵$A$，
+1. $cond(A)_v\geq 1$
+2. $\forall c\in \mathbb{R},\quad cond(cA)_v=cond(A)_v$
+3. 设$R$为正交阵，则$cond(R)_2=1$，且\[cond(AR)_2=cond(RA)_2=cond(A)_2\]
+
+且我们知道，\[cond(A)_2=\sqrt{\frac{\lambda_{max} (A^TA)}{\lambda_{min}(AA^T)}}\]
+特别地，当$A$为对称阵时，$$cond(A)_2=\frac{\max \Lambda}{\min \Lambda}$$其中$\Lambda$代表$A$的所有特征值的集合。
+
+以下为几种条件数特别大的情形：
+1. $A$的规模很大
+2. $detA$与0的距离很近
+3. $A$有两行的值十分接近
+4. $A$的元素之间数量级相差过大
+
+$\textbf{Theorem 2.5.4}(事后误差估计)$ 设$A$为可逆阵，$x$为$Ax=b$的精确解，$\bar{x}$为其近似解。那么有：
+$$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A\bar{x}\rVert}{\lVert x\rVert}$$
+
+## 2.6 解线性方程组的迭代法
+
+### 2.6.1 迭代法思路
+/*关于迭代法的描述*/
+
+### 2.6.2 迭代法的敛散性
+
+$\textbf{Theorem 2.6.1}$ 设$A$为一个实矩阵，$\left\{A^{(k)}\right\}$为一个实矩阵列，则以下命题等价
+   1. $$\lim_{k\rightarrow\infty} A^{(k)}=A$$
+   2. $$\lVert A^{(k)}-A\rVert_\infty \rightarrow 0$$
+   3. 对任一矩阵范数$\lVert A \rVert_t$ $$\lVert A^{(k)}-A\rVert_t \rightarrow 0$$
+   4. $$\forall x \in \mathbb{R}^n,\quad A^{(k)}x\rightarrow Ax$$
+
+$\textbf{Theorem 2.6.2}$ 以下命题等价：
+   1. $\lim_{k\rightarrow\infty} B^k = 0$
+   2. $\rho(B) < 1$
+   3. 存在一个算子范数使$\lVert B\rVert < 1$
+
+从而我们可以得到一个**推论**：$x^{(k+1)}=Bx^{(k)}+f$对任一初值$x^{(0)}$收敛的充要条件是$\rho(B)<1$
+
+$\textbf{Theorem 2.6.3}$ 设$x=Bx+f$，且找到满足$\lVert B\rVert = q < 1$的算子范数，则
+   1. $x^{(k+1)}=Bx^{(k)}+f$ 在任一初值$x^{(0)}$下均收敛至$x^*$
+   2. $\lVert x^{(k)}-x^*\rVert \leq q^k \lVert x^{(0)}-x^*\rVert$
+   3. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q}{1-q} \lVert x^{(k)}-x^{(k-1)}\rVert$$
+   4. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q^k}{1-q} \lVert x^{(1)}-x^{(0)}\rVert $$
+
+$\textbf{Theorem 2.6.3}$ 对于任一算子范数，
+$$\lim_{k\rightarrow\infty} \lVert B^k\rVert^{1/k} = \rho(B)$$
+
+### 2.6.3 收敛速度
+
+已知等式$\epsilon^{(k)}= B^k\epsilon^{(0)}$，一般地，我们希望$\epsilon^{(k)}$尽快趋于0，因而产生了一种评价收敛速度的方式：
+
+收敛速度
+: 我们称$R_k=-\ln \lVert B^k\rVert^{1/k}$为平均收敛速度，$R=-\ln\rho(B)$为渐进收敛速度。
+
+这样的式子是由下式推出的：
+$$\frac{\lVert\epsilon^{(k)}\rVert}{\lVert\epsilon^{(0)}\rVert} \leq \lVert B^k\rVert < \sigma$$
 
 # 3. 插值法
 

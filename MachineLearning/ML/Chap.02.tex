@@ -2,7 +2,79 @@
 
 \begin{define}[Exponential family]
     We say that a class of distributions in exponential family if its pdf can be wriiten in the form
-    \[p(y:\eta)=b(y)e^{\eta^TT(y)-a(\eta)}\]
+    \[p(y;\eta)=b(y)e^{\eta^TT(y)-a(\eta)}\]
 \end{define}
 Here, $\eta$ is called \textbf{canonical~parameter}, $T(y)$ is the \textbf{sufficient statistic} of $y$. And $a(\eta)$ is the \textbf{log partition function}, which essentially plays a role of a 
-normalization constant. 
+normalization constant. The exponetial family covers a wide range of models, and naturally introduces the \textit{Sigmoid function} in the previous chapter. And we are going to illustrate these content below.
+
+To be more generalized, we can put a \textbf{dispension parameter} $\tau$ into the formula:
+\[p(y;\eta,\tau)=b(y,\tau)e^{(\eta^TT(y)-a(\eta))/c(\tau)}\]
+
+\section{Consturcting GLMs}
+
+Consider a classification or regression problem where we would like to predict the value of some random variable $y$ as a function of $x$. To derive a GLM for this problem, we will make the following
+three assumptions about the conditional distribution of $y$ given $x$ and about our model:
+\begin{enumerate}
+    \item Given $x$ and $\theta$, the distribution of $y$ follows some exponetial family distribution with parameter $\eta$, said, $y|x;\theta \sim \text{Exponetialfamily}(\eta)$
+    \item Since the output $y$ is not a certain value but a random variable, we would like our prediction $h(x)$ by our learned hypothesis $h$ satisfy $h(x)=\mathbb{E}(T(y)|x)$
+    \item The canonical parameter $\eta$ and the features $x$ are related linearly, said $\eta = \theta^Tx$
+\end{enumerate}
+
+The GLM as a family of models holds many desirable properties, such as ease of learning. Furthermore, they are often very effective for building different types of distributions over $y$. And wwe will
+give some instances in the coming section.
+
+\section{Instances of GLM}
+
+\subsection{Least square regression}
+
+As illustrated in Chapter1, the least square can be seen as the model below:
+Suppose target variable $y$ (also called \textbf{response variable} in GLM terminology) is continuous, and we model the conditional distribution $y$ of given $x$ as $\mathcal{N}(\mu,\sigma^2)$.
+Then we have 
+\[y|x;\mu,\sigma = \frac{1}{\sqrt{2\pi}\sigma}\exp\left\{-\frac{(y-\mu)^2}{2\sigma^2}\right\}\]
+It can be written as 
+\[y|x;\mu,\sigma = \frac{1}{\sqrt{2\pi}\sigma}\exp\left\{-\frac{y^2}{2\sigma^2}\right\}\exp\left\{\frac{\mu y-\mu^2}{2\sigma^2}\right\}\]
+And we could let
+$$
+\begin{aligned}
+    T(y) &= y\\
+    \eta &= \mu\\
+    c(\tau) &= 2\sigma^2\\
+    b(y,\tau) &= \frac{1}{\sqrt{\pi c(\tau)}}\exp\left\{-\frac{y^2}{c(\tau)}\right\}\\
+    a(\eta) &= \mu^2
+\end{aligned}
+$$
+And the hypothesis $h_\theta(x)$ could be $\mathbb{E}(y|x) = \mu = \theta^Tx$, which follows the Assumption 3.
+
+\section{Logistic Regression}
+
+We now consider the binary classification problem: The target output $y$ is a discrete variable with possible value 0 and 1. And we can write its pmf:
+$$
+    \begin{aligned}
+        p(y;\phi)&=\phi^y(1-\phi)^{1-y}\\
+                &= \exp\left\{y\ln\left(\frac{\phi}{1-\phi}\right)+\ln(1-\phi)\right\}
+    \end{aligned}
+$$
+We can easily see that $\eta = \ln\left(\phi/(1-\phi)\right)$, namely $\phi = \sigma(\eta)$.This gives us a interpretation of why we use Sigmoid function as hypothesis in Logistic regression.
+
+We can get the abstract form of the transformation above. Let $g$ denote $\mathbb{E}(T(y);\eta)$, then we would call $g$ a \textbf{canonical response function}, and $g^{-1}$ would be called a 
+\textbf{canonical link function}.
+
+\subsection{Softmax regression}
+Finally, we want to introduce a new regression based on GLM. Such regression is designed to solve the multiple classification problem. Here we want to classify $k$ classes. 
+The best way to parameterize such problem is to look at its pdf or pmf. Consider the number of its parameter. Naturally, we would assert that it has $k$ parameters for it has $k$ classes. However,
+There's a constrain $\sum \phi_i = 1$, so we could use $k-1$ parameters to parameterize the model.
+So we can write it as
+\[p(y|x;\mathbf{\phi}) = \left(1-\sum_{i=1}^{k-1}\phi_i\right)^{\chi_{y=k}}\prod_{i=1}^{k-1} \phi_i^{\chi_\{i\}}\]
+To illustrate that it is a member of exponential family, we denote:
+\begin{align*}
+    \phi_k &= 1 - \sum_{i=1}^{k-1} \phi_i 
+    T(y) &= \left(\chi(y)_{1}, \chi(y)_{2}, \ldots, \chi(y)_{k-1}\right)^T\\
+    \eta &= \left(\ln\left(\frac{\phi_1}{\phi_k}\right), \ln\left(\frac{\phi_2}{\phi_k}\right), \ldots, \ln\left(\frac{\phi_{k-1}}{\phi_k}\right)\right)\\
+    a(\eta) &= -\ln\phi_k\\
+\end{align*}
+Then it could be clear that \textbf{softmax regression} is a GLM. As we have done before, $\eta_i = \theta_i^Tx$ At the same time, we define:
+\begin{define}[softmax function]
+    \[\phi(\eta) = \frac{e^\eta_i}{1+\sum_{i=1}^{k-1}e^\eta_i}\]
+\end{define}
+And the hypothesis of it would be $\mathbb{E}(T(y)|\eta) = (\phi_1,\phi_2,\ldots,\phi_{k-1})^T$, and the cost function would be MLE.
+
