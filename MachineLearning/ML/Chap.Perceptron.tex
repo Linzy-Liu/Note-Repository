@@ -1,5 +1,7 @@
 \chapter{Perceptron}
 
+\section{The definition of percetron}
+
 \begin{define}[Perceptron]
     Suppose feature space $\mathcal{X}\subset\mathbb{R}^n$, the output space $\mathcal{Y}={\pm 1}$ denotes the class of feature. When the hypothesis holds the form
     \[f(x)= \text{sign}(w^Tx+b)\]
@@ -16,3 +18,36 @@ The idea of this model is to find a proper hyperplane to separate the feature sp
     that could separate the positive feature $f(x_i)>0$ from the others completely, we call the training set $T$ as \textbf{linearly separatable data set}. 
 \end{define}
 
+Then, the cost function will be gained naturally. As what we have seen before, the cost function should satisfy the property of smooth. So the sum of distance between training point and the hyperplane
+could be considered. Let $M$ denote the points that are classified incorrectly.
+\[-\frac{1}{\lVert w\rVert}\sum_{x_i\in M} y_i(w^Tx_i+b)\]
+(? subject to $\lVert w\rVert=1$?)And the cost function will be like
+\[L(w,b)=\sum_{x_i\in M} y_i(w^Tx_i+b)\]
+By minimizing $L(w,b)$, the construction of perceptron is complete.
+
+\section{The convergence of perceptron}
+
+\begin{thm}[Novikoff]
+    Suppose training set $T=\{(x_i,y_i):x_i=1,2,\ldots,N\}$ can be sperated linearly, and $x_i\in \mathbb{R}^n$, $y_i\in{\pm 1}$, then
+    \begin{enumerate}
+        \item There exists hyperplane $w_{opt}^Tx+b_opt=0$ subjected to $\lVert w_{opt}\rVert=1$ that could separate the training set without error. And there exists $\gamma > 0$, for all 
+        $i=1,2,\ldots,N$, \[y_i(w_{opt}^Tx_i+b_opt)>\gamma\]
+        \item Let $\hat{x}$ denote $(x^T,1)^T$, and $R=\max_{i}\lVert \hat{x}\rVert$, then the number of points that are classified incorrectly $k$ satisfy inequation\[k<\left(\frac{R}{\gamma}\right)^2\]
+    \end{enumerate}  
+\end{thm}
+
+\section{The dual form of Perceptron}
+
+To ease the calculating load, we try to improve the stochastic gradient acent of the empirical cost function $L(w,b)$. We know that the update rule is
+\begin{align*}
+    w &:= w+\alpha y_ix_i\\
+    b &:= b+\alpha y_i
+\end{align*}
+So we could write the final parameter as $w=\sum_{i=1}^N \beta_iy_ix_i$. So $f$ can be written as 
+\[f(x)= \text{sign}(\sum_{i=1}^N \beta_iy_ix_i^Tx+b)\]
+Then update rule becomes as the formula below: for every $y_if(x_i) \leq 0$,
+\begin{align*}
+    \beta_i &:= \beta_i+\alpha\\
+    b &:= b+\alpha y_i
+\end{align*}
+Given that $x$ only exists as $x_i^Tx_j$, we define \textbf{Gram Matrix} $G=[x_i^Tx_j]_{N\times N}$ to simplify our calculation.

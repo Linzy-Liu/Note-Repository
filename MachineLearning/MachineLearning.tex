@@ -35,16 +35,21 @@ decide what strategy should be taken into consideration. Here, the strategy ofte
 we use prediction as our standard of evaluation.
 
 To numerically evaluate the hypothesis, \textbf{loss function} is needed. As described in its name, such function gives us a way to know exactly how much loss have been made by the current hypothesis.
-The expectation of loss function is called \textbf{expected loss} or \textbf{risk function}. Howerver, given that we do not know the probability distribution of traning set in most of the time, we take \textbf{empirial expected loss}
-instead. In fact, the strategy of minimizing risk function will result in ill-formed problem when the scale of training set is quite small. Such phenomenon is called ``\textbf{over-fitting}''. For this 
-reason, we induct the concept of \textbf{Regularization}. Usually, the regulization of a risk function implies that a \textbf{regularizer} or a \textbf{penalty term} will be added. Traditionally, 
-penalty term always follows the rule, ``more complexity, more penalty''.
+The expectation of loss function is called \textbf{expected loss} or \textbf{risk function}. Howerver, given that we do not know the probability distribution of traning set in most of the time, we take 
+\textbf{empirial expected loss} instead. That is to said, we try to calculate its expectation as what we have done in calculating sample mean. In fact, the strategy of minimizing risk function will 
+result in ill-formed problem when the scale of training set is quite small. Such phenomenon is called ``\textbf{over-fitting}''. For this reason, we induct the concept of \textbf{Regularization}.
+Usually, the regulization of a risk function implies that a \textbf{regularizer} or a \textbf{penalty term} will be added. Traditionally, penalty term always follows the rule, ``more complexity,
+more penalty''.
+
+In application, we are often interested in its ability to solve other similar problems. And such ability is usually called \textbf{generalization ability}. Then we would naturally regard
+\textbf{generalization error} as the measure of the ability. Given that the generalization error can not decided by a specific formula, we often use \textbf{generalization error bound} to research on it.
 
 Nowadays, machine learning has fairly wide applications. That makes many specific subjects contained in Machine Learning. Such as Deep Learning, Reinforced Learning, etc.
 
 \input{ML/Chap.01.tex}
 \input{ML/Chap.02.tex}
 \input{ML/Chap.Perceptron.tex}
+\input{ML/Chap.DecTr.tex}
 
 \end{document}
 
