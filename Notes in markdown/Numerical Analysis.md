@@ -311,6 +311,71 @@ $$\lim_{k\rightarrow\infty} \lVert B^k\rVert^{1/k} = \rho(B)$$
 这样的式子是由下式推出的：
 $$\frac{\lVert\epsilon^{(k)}\rVert}{\lVert\epsilon^{(0)}\rVert} \leq \lVert B^k\rVert < \sigma$$
 
+### 2.6.4 迭代法的设计
+
+如果需要实现这样的迭代法，我们需要设计一些满足$x=Bx+f$的矩阵$B$和向量$f$，使得我们的计算过程具有一些良好的性质。
+
+#### 矩阵分裂法
+
+注意到$A=D-L-U$，其中$D$为$A$的主对角线，$L$为$A$的除主对角线的下三角部分，$U$为$A$的除主对角线的上三角部分。
+
+那么对于$Ax=b$，稍作变换后有
+\[x=D^{-1}(L+U)x+D^{-1}b\]这种构造被称为**Jacobi迭代法**
+而构造\[x=(D-L)^{-1}Ux+(D-L)^{-1}b\]被称为**Gauss-Seidel迭代法**
+
+可以认为，后者是前者的改进版本。在这里我们不会将它们在实际中的具体迭代公式写出，但会解释这一点。上面二者在实际中采用的迭代步骤分别为：
+$$
+\begin{align*}
+  Dx^{(k+1)} &= (L+U)x^{(k)}+b\\
+  Dx^{(k+1)} &= Lx^{(k+1)} + Ux^{(k)} + b
+\end{align*}
+$$
+可以发现，虽然事实上二者做的是同一分解，但后者的每一分量的更新都会利用前面刚刚更新的分量，从而减少所需存储量和计算量。
+
+接下来，我们需要了解其敛散性。
+
+对角占优矩阵
+: 若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|>\sum_{j\not ={i}}\left|a_{ij}\right|\]则称其为**严格对角占优矩阵**
+  若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|\geq\sum_{j\not ={i}}\left|a_{ij}\right|\]且至少有一个等式严格成立，那么称其为**弱对角占优矩阵**
+
+可约矩阵
+: 对于$A\in \mathbb{R}^{n\times n}$，如果存在置换矩阵$P$使得
+  $$P^TAP=\left(\begin{array}{cc}
+    A_{11} & A_{12}\\
+    0 & A_{22}
+  \end{array}\right)$$
+  其中$A_{11}$为方阵，那么称$A$为**可约矩阵**。反之则为**不可约矩阵**
+
+$\textbf{Theorem 2.6.4}(对角占优定理)$ 若$A$为严格对角占优矩阵或不可约弱对角占优矩阵，则$Ax=b$存在唯一解，且Jacobi迭代法、Gauss-Seidel迭代法均收敛。
+
+$\textbf{Theorem 2.6.5}$ 设矩阵$A$对称，且主对角元均为正数，则：
+  1. Jacobi法收敛的充要条件是$A$和$2D-A$正定。
+  2. Gauss-Seidel法收敛的充要条件是$A$正定。
+
+#### 超松弛迭代法(SOR)
+
+考虑将分裂矩阵设置为$M=(D-\omega L)/\omega$，那么有分解
+$$A=\frac{1}{\omega}(D-\omega L) + \frac{1}{\omega}[(\omega-1)D-\omega U]$$从而有
+$$x = (D-\omega L)^{-1}[(1-\omega)D+\omega U]x+\omega(D-\omega L)^{-1}b$$令
+$$
+\begin{align*}
+  L_\omega &= (D-\omega L)^{-1}[(1-\omega)D+\omega U]\\
+  f &= \omega(D-\omega L)^{-1}b 
+\end{align*}
+$$可见迭代矩阵$B=L_\omega$。当$\omega<1$时，被称为低松弛法；当$\omega>1$时，被称为超松弛法。
+
+实际上，我们的迭代公式都由下面的式子产生：
+$$ Dx^{(k+1)} = Dx^{(k)} + \omega \left(b + Lx^{(k+1)} + Ux^{(k)} - Dx^{(k)}\right) $$ 这一方法可被视为是对 Gauss-Seidel迭代法的一种修正。即，当我们迭代至$x^{(k)}$时，首先利用Gauss-Seidel迭代法得到分量 $\hat{x}^{(k+1)}_j$，而后SOR的这一分量将由 $x^{(k+1)}_j = x_j^{(k)} + \omega(\hat{x}^{(k+1)}_j-x_j^{(k)})$ 计算得到。
+
+在下面，我们将讨论敛散性。我们引入SOR的动机是加快迭代法收敛的速度，但这并不代表SOR迭代法内的所有矩阵均能收敛。首先，存在这样的必要条件：
+
+$\textbf{Theorem 2.6.6}$ 若解线性方程组$Ax=b$的SOR迭代法收敛，则$0<\omega<2$
+
+$\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
+1. $A$为正定阵，且$0<\omega<2$，则解$Ax=b$的SOR迭代法收敛。
+2. $A$为严格对角占优矩阵或不可约弱对角占优矩阵，且$0<\omega\leq 1$
+则解$Ax=b$的SOR迭代法收敛。
+
 # 3. 插值法
 
 ## 3.1 为什么需要插值法
