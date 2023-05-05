@@ -275,7 +275,9 @@ $$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A
 ## 2.6 解线性方程组的迭代法
 
 ### 2.6.1 迭代法思路
-/*关于迭代法的描述*/
+
+虽然我们已经得到了相对好用的直接解线性方程的方法，但在实际应用中，面对稀疏矩阵，存在着一些更好的解方程方法——迭代法。对于稀疏矩阵来说，矩阵相乘所需的计算花销是低于矩阵分解后逐行求解的。因此，我们产生了一个问题：能否通过不断自相乘的方式得到线性方程$Ax=b$的解。进一步地，我们提出问题：对于精确解$x^*$所满足的式子$x^*=Bx^*+f$，是否可以利用其将一个初始值$x^{(0)}$经过迭代$x^{(k+1)}=Bx^{(k)}+f$不断逼近精确解？答案是肯定的。记$\varepsilon_k = x_k-x^*$，那么
+$$ \lVert\varepsilon_k\rVert \leq B^k \lVert\varepsilon_0\rVert $$此时若$B^k\rightarrow 0$，则可以保证这样的想法得到实现。
 
 ### 2.6.2 迭代法的敛散性
 
@@ -375,6 +377,33 @@ $\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
 1. $A$为正定阵，且$0<\omega<2$，则解$Ax=b$的SOR迭代法收敛。
 2. $A$为严格对角占优矩阵或不可约弱对角占优矩阵，且$0<\omega\leq 1$
 则解$Ax=b$的SOR迭代法收敛。
+
+由上，我们知道有渐进收敛速度$-\ln\rho B$，因此让SOR收敛最快的$\omega_0$应当满足$\rho(L_{\omega_0}) = \min_{0<\omega<2}\rho(L_\omega)$，那么记$$J=D^{-1}(L+U)$$则让迭代过程最快的$\omega$为
+\[\omega_{opt} = \frac{2}{1+\sqrt{1-\rho^2(J)}}\]这样的$\omega$被称为最佳松弛因子公式。
+
+## 2.7 共轭梯度法
+
+### 2.7.1 最速下降法
+
+对于线性方程组$Ax=b$，令$\varphi(x)=\frac{1}{2}(Ax,x)-(b,x)$。当$A$为正定阵的时候，有以下定理：
+
+$\textbf{Theorem 2.7.1}$ $Ax^*=b$当且仅当$\varphi(x^*)=\min\varphi(x)$
+
+从而我们开始考虑构造一个点列$\left\{x_{(k)}\right\}$使得$\lim_{k\rightarrow\infty}\varphi(x_{(k)})=\varphi(x^*)$
+不妨找一个方向$p^{(k)}$，让更新法则变为$x^{(k+1)} = x^{(k)} + \alpha_kp^{(k)}$，但为了保证迭代速度，我们需要选取合适的步长与方向。按先优化步长，后优化方向的步骤，可以得到：
+$$
+\begin{aligned}
+  p^{(k)} &= -\nabla \varphi(x^{}) = r^{(k)} := b - Ax^{(k)}\\
+  \alpha_k &= \frac{(r^{(k)},r^{(k)})}{(Ar^{(k)},r^{(k)})}
+\end{aligned}
+$$ 还可以证明，$r^{(k)}$与$r^{(k+1)}$正交，
+
+其收敛速度为
+$$\lVert x^{(k)}-x^*\rVert_A \leq \left(\frac{cond(A)_2 - 1}{cond(A)_2 + 1}\right)^k\lVert x^{(0)}-x^*\rVert_A$$ 其中$\lVert u\rVert_A := \sqrt{(Au,u)}$
+
+### 2.7.2 共轭梯度法*
+
+\*待补充*\
 
 # 3. 插值法
 
