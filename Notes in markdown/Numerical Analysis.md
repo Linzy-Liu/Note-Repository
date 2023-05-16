@@ -63,347 +63,72 @@
 因此，我们每次只需要在已有区间取中点即可。在区间长度达到终止条件后，解即为终止时所得区间的终点。
 
 同时，对于一个定义在$[a,b]$的连续函数，我们的求解误差为：
-\[\lVert x_c - r\rVert < \frac{b-a}{2^{n+1}}\] 其中$x_c$为事实解，$r$为数值解，$n$为迭代次数。
+\[\lVert x_c - r\rVert < \frac{b-a}{2^{n+1}}\] 其中$x_c$为事实解，$r$为数值解，$n$为迭代次数。但该方法的缺点十分显著：收敛太慢。所以我们接下来将介绍更好的一些方法。
 
 ## 2.2 不动点迭代
 
+首先注意到，对于任一须求根的方程$f(x)=0$，总存在有限的变换使其转化为$x=g(x)$的形式。这样的存在性是易于说明的，比如：$x=x+f(x)$就是一类。从而我们现在可以转而研究不动点迭代的问题。
 望文生义，不动点即为满足$g(x)=x$的实数$x$。一般而言，我们采用不动点迭代来寻找不动点：
 \[x_{n+1} = f(x_n)\]但这样的迭代并不总是收敛。
-可以绘制**cobweb图**来直观地说明这一点。因此我们需要找到确保不动点迭代可行的前提。
+可以绘制**cobweb图**来直观地说明这一点。因此我们需要找到确保不动点迭代可行的前提，即确保这个迭代过程收敛的条件。
 
 ### 2.2.1 敛散性
 
 注意到：
-> ***压缩映像原理***
-> 设$f$在$E \subset \mathbb{R}$上可微，且数列$\{x_n\}_{n=1}^\infty$由$x_{n+1} = f(x_n)$定义，若
-> \[\sup |f'(x)| \leq r < 1\]则数列收敛。
+$\textbf{Theorem 2.2.1}\left(压缩映像原理\right)$设$f$在$E \subset \mathbb{R}$上可微，且数列$\{x_n\}_{n=1}^\infty$由$x_{n+1} = f(x_n)$定义，若
+ \[\sup |f'(x)| \leq r < 1\]则数列收敛。
 
+注：若$f'$在收敛点$x^*$的邻域上连续且在$x^*$处绝对值小于1，那么存在一个邻域使其上的任意一个点都会迭代至$x^*$
 
-## 2.3 解线性方程
+这一定理的离散版本是：
+$\textbf{Theorem 2.2.1*}\left(压缩映像原理\right)$ 设对于数列$\{x_n\}$，存在正数$L<1$，使得\[\left|x_{n+1}-x_n\right| < L\left|x_n-x_{n-1}\right|\]则数列收敛。
 
-> 鉴于高斯消元是高代的基础操作，在此不做赘述。但易得，该过程的乘除法次数约为$\frac{n^3}{3}$,加减法次数为$\frac{n^3}{3}$
+从而我们的敛散性是可以得到保证的。同时，我们为了收敛序列的唯一性，考虑以下定理：
+$\textbf{Theorem 2.2.2}$ 设$\varphi\in\mathcal{C}[a,b]$，且：
+  1. 对于任一$x\in [a,b]$，有$a\leq \varphi(x)\leq b$
+  2. 存在正数$L<1$，对于任意$a\leq x,y \leq b$， 有$$\left|\varphi(x)-\varphi(y)\right|\leq L\left|x-y\right|$$
+  则$\varphi$在$[a,b]$上存在唯一的不动点。
+并且，由这一定理可以立马得到以下推论：
+$\textbf{Corollary}$ 设$\varphi\in\mathcal{C}[a,b]$满足定理2.2.2中的两个条件，记该唯一的不动点为$x^*$，那么对于任意的由初始点$x_0\in[a,b]$产生的数列$\{x_n\}_{n=1}^\infty$，有上界估计
+  $$\left|x^*-x_k\right|\leq \frac{L^k}{1-L}\left|x_1-x_0\right|$$
 
-我们还有这样的定理：
-$\textbf{Theorem 2.3.1}\quad$ 矩阵$A$主对角线上的所有元素$a_{ii}$非零当且仅当$A$的各阶顺序主子式非零。
+收敛阶
+: 设由$x_{n+1}=\varphi(x_n)$收敛于$\varphi$的不动点$x^*$，记$e_k=x_k-x^*$ 。若当$k\rightarrow\infty$时，满足：
+$$\frac{e_{k+1}}{e_k^p}\rightarrow C$$其中$C\not ={0}$，那么称该迭代过程是$\textbf{p}$**阶收敛**的。
 
+$\textbf{Theorem 2.2.3}$ 设$p$为正整数，且迭代过程为$x_{n+1}=\varphi(x_n)$。若$\varphi^{(p)}$在所求解$x^*$的一个领域中连续，且满足
+$$ \varphi(x^*)=\varphi'(x^*)=\ldots=\varphi^{(p-1)}(x^*)\\ \varphi^{(p)}(x^*)\not ={0}$$ 那么该迭代过程在$x^*$邻域是$p$阶收敛的。
 
-$\textbf{Theorem 2.3.2}\left(LU分解\right)\quad$ 设$A$为$n$阶矩阵，若$A$的各阶顺序主子式$D_i$非零，那么$A$可以分解为一个单位下三角矩阵$L$和上三角矩阵$U$，且这样的分解是唯一的
-\[A=LU\]
+由上可见，为了寻求一个收敛且速度极快的序列，选取一个好的迭代函数是必要的。
 
-注：单位下三角矩阵即主对角线上都是$1$的三角阵
+### 2.2.2 迭代收敛的加速方法
 
-那么，在$LU$分解下求逆的复杂度为$n^3$，同时$LU$分解对于解$Ax=b_k$这样的一系列的非齐次线性方程组的情况十分友好，可以将复杂度由$M\frac{n^3}{3}$减为$\frac{n^3}{3}+Mn^2$
-但鉴于对于数值计算，存在一种情况：主对角线上的元素过小，导致明显的精度折损。为了避免这种情况，我们需要事先将合适的元素换至对角线上。这样，我们就有改进版的$LU$分解：
-$\textbf{Theorem 2.3.3}\left(LU分解\right)\quad$ 设$A$为$n$阶矩阵，若$A$的各阶顺序主子式$D_i$非零，那么经过合适的调换顺序后$A$可以分解为一个单位下三角矩阵$L$和上三角矩阵$U$，且这样的分解是唯一的
-\[PA=LU\]其对应的消元法叫*列主元素消元法*
-
-从而由以上两种消元法得到两种解方程的方式：**直接三角分解法**（*Doolittle算法*）和**选主元的三角分解法**
-一般而言，需要解方程：
-$$
-\left\{
-\begin{align*}
-  Ly &= \beta\\
-  Ux &= y
-\end{align*}\right.$$
-对于选主元的三角分解法，将$\beta$换为$P\beta$即可。而在算法实践中，可以根据这些消元过程推导得到对应的公式，有需要可以手推或看书。
-
-#### 平方根法
-
-由合同变换的过程可以很容易地得到以下结论：
-
-$\textbf{Theorem 2.3.4}$ 设$A$为$n$阶对称阵，且$A$的各阶顺序主子式非零，那么$A$存在唯一的分解：
-\[A=L^TDL\]其中$L$为单位上三角阵，$D$为对称阵。
-
-进一步地，若$A$正定，则$D$存在分解$\sqrt{D}\,\sqrt{D}$，进而可以得到推论：
-$\textbf{Corollary}$ 设$A$为$n$阶正定阵，那么存在一个实可逆上三角矩阵$L_1$，使得：
-\[A=L_1^TL_1\]这样的$L_1$在不管对角线正负号的前提下是唯一的。
-
-对于这一分解，其所需的乘除次数约为$n^3/6$。鉴于这一计算涉及开平方根，我们尝试改进平方根法：即利用定理2.3.4的分解$A=L^TDL$，令$T=L^TD$，那么可以采用相似的算法计算得$T$与$L$。在这里相较于前者仅仅是多了一个额外计算
-对角线元素$d_i$的步骤。和$LU$分解一样，两者都可以写在同一个矩阵里。
-
-#### 追赶法
-
-我们在一些特殊情况会解这样的线性方程组：（比如三次样条插值）
-\[Ax=f\]其中
-$$
-A = \left[
-  \begin{array}{ccccc}
-    b_1 & c_1 & & & \\
-    a_2 & b_2 & c_2 & & \\
-     & \ddots & \ddots & \ddots & & \\
-     & &  a_{n-1} & b_{n-1} & c_{n-1}\\
-     & & & a_n & b_n 
-  \end{array}
-\right]\\
-f = (f_1,f_2,\ldots,f_n)^T
-$$
-且这样的矩阵$A$满足：
-1. $\left|b_1\right|>\left|c_1\right|>0$，$\left|b_n\right|>\left|a_n\right|>0$
-2. $\left|b_i\right|\geq \left|a_i\right|+\left|c_i\right|$
-
-显然，这样的矩阵$A$是可以分解为$A=LU$的
-$$
-A = \left[
-  \begin{array}{ccccc}
-    b_1 & c_1 & & & \\
-    a_2 & b_2 & c_2 & & \\
-     & \ddots & \ddots & \ddots & & \\
-     & &  a_{n-1} & b_{n-1} & c_{n-1}\\
-     & & & a_n & b_n 
-  \end{array}
-\right] = \left[
-  \begin{array}{cccc}
-    \alpha_1 & & &\\
-    \gamma_2 & \alpha_2 & &\\ 
-     & \ddots & \ddots & \\
-     & & \gamma_n & \alpha_n 
-  \end{array}
-\right]
-\left[
-  \begin{array}{cccc}
-    1 & \beta_1 & & \\
-    & 1 & \ddots & \\
-    & & \ddots  & \beta_{n-1}\\
-    & & & 1
-  \end{array}
-\right]
-$$
-从而有方程组：
-$$
-\left\{
-\begin{align*}
-  b_1 &= \alpha_1, & c_1 &= \alpha_1\beta_1\\
-  a_i &= \gamma_i, & b_i &= \gamma_i\beta_{i-1}+\alpha_i\\
-  c_i &= \alpha_i\beta_i
-\end{align*}
-\right.
-$$
-化简得
-$$
-\left\{
-\begin{align*}
-  \alpha_i &= b_i - a_i\beta_{i-1}\\
-  \beta_i &= c_i/(a_i\beta_{i-1})\\
-  \gamma_i &= a_i
-\end{align*}
-\right.
-$$
-我们发现，只需要一个额外的可以自迭代的变量$\beta$即可求解。于是求解步骤变为：求出$\{\beta_i\}$——求解$Ly=f$——求解$Ux=y$。总共仅需$5n-4$次乘除法。后续若更换$f$也仅需额外的$3n-2$次乘除计算。
-最后，还有定理：
-$\textbf{Theorem 2.3.5}$ 设有线性方程组$Ax=f$，$A$满足本小节开头的三对角线矩阵条件，那么$A$可逆且：
-1. $0<\left|\beta_i\right|<1, i=1,2,\ldots,n$
-2. $0<\left|b_i\right|-\left|a_i\right|<\left|\alpha_i\right|<\left|b_i\right|+\left|a_i\right|,\quad i=2,3\ldots,n$
-3. 这样的定理保证了一个已知的边界估计，让计算中不至于因极端值而损失精度
-
-## 2.4 向量范数
-
-范数的定义将会在[4.1.1](#411-赋范线性空间)介绍，这里阐述一下内积的定义：
-内积
-: 若函数$(*,*):\,\mathbb{C}^n\times\mathbb{C}^n\rightarrow\mathbb{R}$满足：$\forall a,b \in \mathbb{R}, f,g,h\in \mathbb{C}^n$
-  1. $(af+bg,h)=a(f,h)+b(g,h)$
-  2. $(f,g) = \bar{(g,f)}$
-  3. $(a,a)=0 \lrArr a=0$
-
-同时，我们给出以下定理：
-$\textbf{Theorem 2.4.1}(范数的连续性)$ $\mathbb{R}^n$上的范数是$\mathbb{R}^n$上的连续函数。
-
-$\textbf{Theorem 2.4.2}(范数的等价性)$  对于$\mathbb{R}^n$上的两种范数$\lVert x\rVert_s,\lVert x\rVert_r$，总存在$c_1,c_2>0$，使得
-\[c_1\lVert x\rVert_s\leq \lVert x\rVert_r \leq c_2\lVert x\rVert_s\]
-
-$\textbf{Theorem 2.4.3}(范数的收敛性)$ 对于任意一种向量范数，都有下式成立：
-$$\lim_{k\rightarrow\infty}x^{(k)}=x^* \lrArr \lim_{k\rightarrow\infty} \lVert x^{(k)}-x^*\rVert=0$$
-
-矩阵范数
-: 设函数$\lVert X\rVert : \mathbb{R}^{n\times n}\rightarrow\mathbb{R}$若满足：
-    1. 正规性
-    2. $\forall c\in \mathbb{R}$，$\lVert cA\rVert=\left|c\right|\lVert A\rVert$
-    3. $\lVert AB\rVert\leq \lVert A\rVert\lVert B\rVert$
-    4. $\lVert A+B\rVert\leq \lVert A\rVert+\lVert B\rVert$
-  那么称$\lVert X\rVert$为一个**矩阵范数**
-
-很容易可以验证**Frobenius范数**$$\lVert A\rVert_F:=\left(\sum a_{ij}^2\right)^\frac{1}{2}$$是矩阵范数
-为了免去范数的验证并利用已经构建的范数，我们尝试使用向量范数诱导产生矩阵范数：
-
-算子范数
-: 设$x\in \mathbb{R}^n,\, A\in\mathbb{R}^{n\times n}$, 对于一个给定的向量范数$\lVert x\rVert_v$，我们相应地定义一个矩阵范数：
-$$\lVert A\rVert_v = \max_{x \not ={0}}\frac{\lVert Ax\rVert_v}{\lVert x\rVert_v}$$
-由这样定义的矩阵范数被称为**算子范数**或**从属范数**
-
-从实际操作上，我们也可以认为这样的算子范数是由$\lVert x\rVert_v$诱导的范数。但出于严谨性，需要证明这个式子所定义的函数是一个矩阵范数。
-接下来，就可以由此产生一些常用矩阵范数了：
-1. \[\lVert A\rVert_\infty = \max_{i}\sum_{j=1}^n \left|a_{ij}\right|\]
-2. \[\lVert A\rVert_1 = \max_{j}\sum_{i=1}^n \left|a_{ij}\right|\]
-3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的绝对值的最大特征值。
-
-$\textbf{Theorem 2.4.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的绝对值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
-$$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
-$$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
-即\[\rho(A)=\inf_v \lVert A\rVert_v\]
-
-同时，由此可证对于一个$n$阶对称阵$A$，有$\rho(A)=\lVert A\rVert_2$
-
-## 2.5 误差与残差
-
-一般来说，实际测量的数据总会存在误差，因而我们不希望测量数据的微小扰动显著地影响到解。
-$\textbf{Theorem 2.5.1}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
-$$(I\plusmn B)^{-1}\leq \frac{1}{1-\lVert B\rVert}$$
-
-$\textbf{Theorem 2.5.2}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$b$有个小扰动$\delta b$，设$A(x+\delta x)=b+\delta b$，则
-$$\frac{\lVert\delta x\rVert}{\lVert x\rVert} \leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta b\rVert}{\lVert b\rVert}$$
-
-$\textbf{Theorem 2.5.3}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
-$$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \frac{\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}{1-\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}$$
-
-同时，注意到这些上界都有共同项$\lVert A\rVert_n \lVert A^{-1}\rVert_n$，我们称这些共同项为$A$的**条件数**，记作$cond(A)_n$。可以发现，条件数对扰动的放大作用是十分显著的。因此，我们考虑找出一些条件数的特点。
-对于任意可逆矩阵$A$，
-1. $cond(A)_v\geq 1$
-2. $\forall c\in \mathbb{R},\quad cond(cA)_v=cond(A)_v$
-3. 设$R$为正交阵，则$cond(R)_2=1$，且\[cond(AR)_2=cond(RA)_2=cond(A)_2\]
-
-且我们知道，\[cond(A)_2=\sqrt{\frac{\lambda_{max} (A^TA)}{\lambda_{min}(AA^T)}}\]
-特别地，当$A$为对称阵时，$$cond(A)_2=\frac{\max \Lambda}{\min \Lambda}$$其中$\Lambda$代表$A$的所有特征值的集合。
-
-以下为几种条件数特别大的情形：
-1. $A$的规模很大
-2. $detA$与0的距离很近
-3. $A$有两行的值十分接近
-4. $A$的元素之间数量级相差过大
-
-$\textbf{Theorem 2.5.4}(事后误差估计)$ 设$A$为可逆阵，$x$为$Ax=b$的精确解，$\bar{x}$为其近似解。那么有：
-$$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A\bar{x}\rVert}{\lVert x\rVert}$$
-
-## 2.6 解线性方程组的迭代法
-
-### 2.6.1 迭代法思路
-
-虽然我们已经得到了相对好用的直接解线性方程的方法，但在实际应用中，面对稀疏矩阵，存在着一些更好的解方程方法——迭代法。对于稀疏矩阵来说，矩阵相乘所需的计算花销是低于矩阵分解后逐行求解的。因此，我们产生了一个问题：能否通过不断自相乘的方式得到线性方程$Ax=b$的解。进一步地，我们提出问题：对于精确解$x^*$所满足的式子$x^*=Bx^*+f$，是否可以利用其将一个初始值$x^{(0)}$经过迭代$x^{(k+1)}=Bx^{(k)}+f$不断逼近精确解？答案是肯定的。记$\varepsilon_k = x_k-x^*$，那么
-$$ \lVert\varepsilon_k\rVert \leq B^k \lVert\varepsilon_0\rVert $$此时若$B^k\rightarrow 0$，则可以保证这样的想法得到实现。
-
-### 2.6.2 迭代法的敛散性
-
-$\textbf{Theorem 2.6.1}$ 设$A$为一个实矩阵，$\left\{A^{(k)}\right\}$为一个实矩阵列，则以下命题等价
-   1. $$\lim_{k\rightarrow\infty} A^{(k)}=A$$
-   2. $$\lVert A^{(k)}-A\rVert_\infty \rightarrow 0$$
-   3. 对任一矩阵范数$\lVert A \rVert_t$ $$\lVert A^{(k)}-A\rVert_t \rightarrow 0$$
-   4. $$\forall x \in \mathbb{R}^n,\quad A^{(k)}x\rightarrow Ax$$
-
-$\textbf{Theorem 2.6.2}$ 以下命题等价：
-   1. $\lim_{k\rightarrow\infty} B^k = 0$
-   2. $\rho(B) < 1$
-   3. 存在一个算子范数使$\lVert B\rVert < 1$
-
-从而我们可以得到一个**推论**：$x^{(k+1)}=Bx^{(k)}+f$对任一初值$x^{(0)}$收敛的充要条件是$\rho(B)<1$
-
-$\textbf{Theorem 2.6.3}$ 设$x=Bx+f$，且找到满足$\lVert B\rVert = q < 1$的算子范数，则
-   1. $x^{(k+1)}=Bx^{(k)}+f$ 在任一初值$x^{(0)}$下均收敛至$x^*$
-   2. $\lVert x^{(k)}-x^*\rVert \leq q^k \lVert x^{(0)}-x^*\rVert$
-   3. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q}{1-q} \lVert x^{(k)}-x^{(k-1)}\rVert$$
-   4. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q^k}{1-q} \lVert x^{(1)}-x^{(0)}\rVert $$
-
-$\textbf{Theorem 2.6.3}$ 对于任一算子范数，
-$$\lim_{k\rightarrow\infty} \lVert B^k\rVert^{1/k} = \rho(B)$$
-
-### 2.6.3 收敛速度
-
-已知等式$\epsilon^{(k)}= B^k\epsilon^{(0)}$，一般地，我们希望$\epsilon^{(k)}$尽快趋于0，因而产生了一种评价收敛速度的方式：
-
-收敛速度
-: 我们称$R_k=-\ln \lVert B^k\rVert^{1/k}$为平均收敛速度，$R=-\ln\rho(B)$为渐进收敛速度。
-
-这样的式子是由下式推出的：
-$$\frac{\lVert\epsilon^{(k)}\rVert}{\lVert\epsilon^{(0)}\rVert} \leq \lVert B^k\rVert < \sigma$$
-
-### 2.6.4 迭代法的设计
-
-如果需要实现这样的迭代法，我们需要设计一些满足$x=Bx+f$的矩阵$B$和向量$f$，使得我们的计算过程具有一些良好的性质。
-
-#### 矩阵分裂法
-
-注意到$A=D-L-U$，其中$D$为$A$的主对角线，$L$为$A$的除主对角线的下三角部分，$U$为$A$的除主对角线的上三角部分。
-
-那么对于$Ax=b$，稍作变换后有
-\[x=D^{-1}(L+U)x+D^{-1}b\]这种构造被称为**Jacobi迭代法**
-而构造\[x=(D-L)^{-1}Ux+(D-L)^{-1}b\]被称为**Gauss-Seidel迭代法**
-
-可以认为，后者是前者的改进版本。在这里我们不会将它们在实际中的具体迭代公式写出，但会解释这一点。上面二者在实际中采用的迭代步骤分别为：
-$$
-\begin{align*}
-  Dx^{(k+1)} &= (L+U)x^{(k)}+b\\
-  Dx^{(k+1)} &= Lx^{(k+1)} + Ux^{(k)} + b
-\end{align*}
-$$
-可以发现，虽然事实上二者做的是同一分解，但后者的每一分量的更新都会利用前面刚刚更新的分量，从而减少所需存储量和计算量。
-
-接下来，我们需要了解其敛散性。
-
-对角占优矩阵
-: 若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|>\sum_{j\not ={i}}\left|a_{ij}\right|\]则称其为**严格对角占优矩阵**
-  若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|\geq\sum_{j\not ={i}}\left|a_{ij}\right|\]且至少有一个等式严格成立，那么称其为**弱对角占优矩阵**
-
-可约矩阵
-: 对于$A\in \mathbb{R}^{n\times n}$，如果存在置换矩阵$P$使得
-  $$P^TAP=\left(\begin{array}{cc}
-    A_{11} & A_{12}\\
-    0 & A_{22}
-  \end{array}\right)$$
-  其中$A_{11}$为方阵，那么称$A$为**可约矩阵**。反之则为**不可约矩阵**
-
-$\textbf{Theorem 2.6.4}(对角占优定理)$ 若$A$为严格对角占优矩阵或不可约弱对角占优矩阵，则$Ax=b$存在唯一解，且Jacobi迭代法、Gauss-Seidel迭代法均收敛。
-
-$\textbf{Theorem 2.6.5}$ 设矩阵$A$对称，且主对角元均为正数，则：
-  1. Jacobi法收敛的充要条件是$A$和$2D-A$正定。
-  2. Gauss-Seidel法收敛的充要条件是$A$正定。
-
-#### 超松弛迭代法(SOR)
-
-考虑将分裂矩阵设置为$M=(D-\omega L)/\omega$，那么有分解
-$$A=\frac{1}{\omega}(D-\omega L) + \frac{1}{\omega}[(\omega-1)D-\omega U]$$从而有
-$$x = (D-\omega L)^{-1}[(1-\omega)D+\omega U]x+\omega(D-\omega L)^{-1}b$$令
-$$
-\begin{align*}
-  L_\omega &= (D-\omega L)^{-1}[(1-\omega)D+\omega U]\\
-  f &= \omega(D-\omega L)^{-1}b 
-\end{align*}
-$$可见迭代矩阵$B=L_\omega$。当$\omega<1$时，被称为低松弛法；当$\omega>1$时，被称为超松弛法。
-
-实际上，我们的迭代公式都由下面的式子产生：
-$$ Dx^{(k+1)} = Dx^{(k)} + \omega \left(b + Lx^{(k+1)} + Ux^{(k)} - Dx^{(k)}\right) $$ 这一方法可被视为是对 Gauss-Seidel迭代法的一种修正。即，当我们迭代至$x^{(k)}$时，首先利用Gauss-Seidel迭代法得到分量 $\hat{x}^{(k+1)}_j$，而后SOR的这一分量将由 $x^{(k+1)}_j = x_j^{(k)} + \omega(\hat{x}^{(k+1)}_j-x_j^{(k)})$ 计算得到。
-
-在下面，我们将讨论敛散性。我们引入SOR的动机是加快迭代法收敛的速度，但这并不代表SOR迭代法内的所有矩阵均能收敛。首先，存在这样的必要条件：
-
-$\textbf{Theorem 2.6.6}$ 若解线性方程组$Ax=b$的SOR迭代法收敛，则$0<\omega<2$
-
-$\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
-1. $A$为正定阵，且$0<\omega<2$，则解$Ax=b$的SOR迭代法收敛。
-2. $A$为严格对角占优矩阵或不可约弱对角占优矩阵，且$0<\omega\leq 1$
-则解$Ax=b$的SOR迭代法收敛。
-
-由上，我们知道有渐进收敛速度$-\ln\rho B$，因此让SOR收敛最快的$\omega_0$应当满足$\rho(L_{\omega_0}) = \min_{0<\omega<2}\rho(L_\omega)$，那么记$$J=D^{-1}(L+U)$$则让迭代过程最快的$\omega$为
-\[\omega_{opt} = \frac{2}{1+\sqrt{1-\rho^2(J)}}\]这样的$\omega$被称为最佳松弛因子公式。
-
-## 2.7 共轭梯度法
-
-### 2.7.1 最速下降法
-
-对于线性方程组$Ax=b$，令$\varphi(x)=\frac{1}{2}(Ax,x)-(b,x)$。当$A$为正定阵的时候，有以下定理：
-
-$\textbf{Theorem 2.7.1}$ $Ax^*=b$当且仅当$\varphi(x^*)=\min\varphi(x)$
-
-从而我们开始考虑构造一个点列$\left\{x_{(k)}\right\}$使得$\lim_{k\rightarrow\infty}\varphi(x_{(k)})=\varphi(x^*)$
-不妨找一个方向$p^{(k)}$，让更新法则变为$x^{(k+1)} = x^{(k)} + \alpha_kp^{(k)}$，但为了保证迭代速度，我们需要选取合适的步长与方向。按先优化步长，后优化方向的步骤，可以得到：
+首先介绍Aitken(埃特金)加速收敛法的思想。现已知迭代公式$x_1=\varphi(x_0)$，而后我们*自然*地认为$\varphi'$在我们想要探究的区域上变化不大，那么就有：
 $$
 \begin{aligned}
-  p^{(k)} &= -\nabla \varphi(x^{}) = r^{(k)} := b - Ax^{(k)}\\
-  \alpha_k &= \frac{(r^{(k)},r^{(k)})}{(Ar^{(k)},r^{(k)})}
+  x_1-x^* &= \varphi'(\xi)(x_0-x^*) \approx L(x_0-x^*)\\
+  x_2 - x^* &\approx  L(x_1-x^*)
 \end{aligned}
-$$ 还可以证明，$r^{(k)}$与$r^{(k+1)}$正交，
+$$
+联立得解：$$x^*\approx x_0 - \frac{(x_1-x_0)^2}{x_2-2x_1+x_0}$$
+那么便有迭代式：$$\bar{x}_{k+1} = x_0 - \frac{(x_{k+1}-x_k)^2}{x_{k+2}-2x_{k+1}+x_k}$$
 
-其收敛速度为
-$$\lVert x^{(k)}-x^*\rVert_A \leq \left(\frac{cond(A)_2 - 1}{cond(A)_2 + 1}\right)^k\lVert x^{(0)}-x^*\rVert_A$$ 其中$\lVert u\rVert_A := \sqrt{(Au,u)}$
+可以证明，$\frac{\bar{x}_{k+1}-x^*}{x_k - x^*} \rightarrow 0$，这说明${\bar{x}_{k+1}}$的收敛是快于原迭代式的。
+接下来，我们考虑将二者结合起来：因为注意到单凭埃特金加速法是基于一个现有的收敛序列进行的加速计算，而我们需要一个可自迭代的递推式，故我们考虑如下递推式：
+$$
+\begin{aligned}
+  y_k &= \varphi(x_k),& z_k = \varphi(y)\\
+  x_{k+1} &= x_k - \frac{(x_k-y_k)^2}{z_k-2y_k+x_k}
+\end{aligned}
+$$
+在几何上，我们可以理解为，我们对原迭代中的两个误差$\varepsilon(x_k),\varepsilon(y_k)$进行了一次线性插值，然后令$x_{k+1}$取其零点。
+最终可以整合得迭代式
+$$x_{k+1} = x_k - \frac{(\varphi(x)-x)^2}{\varphi(\varphi(x))-2\varphi(x)+x}$$
 
-### 2.7.2 共轭梯度法*
+$\textbf{Theorem 2.2.4}$ 设$x^*$为上式定义的迭代过程的不动点，则$x^*$为$\varphi(x)$的不动点；若$x^*$为$\varphi(x)$的不动点，且$\varphi''$存在，$\varphi'(x^*)\not ={1}$，那么上述迭代过程二阶收敛。
 
-\*待补充*\
+## 2.3 牛顿法
+
 
 # 3. 插值法
 
@@ -806,7 +531,7 @@ $$C_n^*(x)=\frac{2}{\pi}\int_{-1}^1 \frac{f(x)T_n(x)}{\sqrt{1-x^2}}\,dx$$
 再结合现在所采用的离散内积和连续内积在对参数求偏导时，行为是类似的这一事实，我们完全可以在重定义内积为离散内积后，应用前面所讨论的定理。
 
 当然，在此处与“函数线性无关”所对应的条件是“*Harr条件*”
-例如：对[一般基底的最小二乘逼近](#332-最佳平方逼近)和[正交基的最小二乘逼近](#333-正交函数族的最佳平方逼近)
+例如：对[一般基底的最小二乘逼近](#432-最佳平方逼近)和[正交基的最小二乘逼近](#433-正交函数族的最佳平方逼近)
 
 
 # 5. 数值积分
@@ -937,4 +662,331 @@ $$R_n[f] = \frac{f^{(2n+2)}(\eta)}{(2n+2)!}\int_a^bw_{n+1}^2(x)\rho(x)\,dx$$
 1. 稳定性：高斯求积公式的所有求积系数$A_k$都是正数。
 2. 高斯求积公式是收敛的，即\[\int_a^bf(x)\rho(x)\,dx=\lim_{n\rightarrow\infty}\sum_{k=0}^n f(x_k)A_k\]
 
+# 6 解线性方程
+
+## 6.1 LU分解
+
+> 鉴于高斯消元是高代的基础操作，在此不做赘述。但易得，该过程的乘除法次数约为$\frac{n^3}{3}$,加减法次数为$\frac{n^3}{3}$
+
+我们还有这样的定理：
+$\textbf{Theorem 6.1.1}\quad$ 矩阵$A$主对角线上的所有元素$a_{ii}$非零当且仅当$A$的各阶顺序主子式非零。
+
+
+$\textbf{Theorem 6.1.2}\left(LU分解\right)\quad$ 设$A$为$n$阶矩阵，若$A$的各阶顺序主子式$D_i$非零，那么$A$可以分解为一个单位下三角矩阵$L$和上三角矩阵$U$，且这样的分解是唯一的
+\[A=LU\]
+
+注：单位下三角矩阵即主对角线上都是$1$的三角阵
+
+那么，在$LU$分解下求逆的复杂度为$n^3$，同时$LU$分解对于解$Ax=b_k$这样的一系列的非齐次线性方程组的情况十分友好，可以将复杂度由$M\frac{n^3}{3}$减为$\frac{n^3}{3}+Mn^2$
+但鉴于对于数值计算，存在一种情况：主对角线上的元素过小，导致明显的精度折损。为了避免这种情况，我们需要事先将合适的元素换至对角线上。这样，我们就有改进版的$LU$分解：
+$\textbf{Theorem 6.1.3}\left(LU分解\right)\quad$ 设$A$为$n$阶矩阵，若$A$的各阶顺序主子式$D_i$非零，那么经过合适的调换顺序后$A$可以分解为一个单位下三角矩阵$L$和上三角矩阵$U$，且这样的分解是唯一的
+\[PA=LU\]其对应的消元法叫*列主元素消元法*
+
+从而由以上两种消元法得到两种解方程的方式：**直接三角分解法**（*Doolittle算法*）和**选主元的三角分解法**
+一般而言，需要解方程：
+$$
+\left\{
+\begin{align*}
+  Ly &= \beta\\
+  Ux &= y
+\end{align*}\right.$$
+对于选主元的三角分解法，将$\beta$换为$P\beta$即可。而在算法实践中，可以根据这些消元过程推导得到对应的公式，有需要可以手推或看书。
+
+### 6.1.1 平方根法
+
+由合同变换的过程可以很容易地得到以下结论：
+
+$\textbf{Theorem 6.1.4}$ 设$A$为$n$阶对称阵，且$A$的各阶顺序主子式非零，那么$A$存在唯一的分解：
+\[A=L^TDL\]其中$L$为单位上三角阵，$D$为对称阵。
+
+进一步地，若$A$正定，则$D$存在分解$\sqrt{D}\,\sqrt{D}$，进而可以得到推论：
+$\textbf{Corollary}$ 设$A$为$n$阶正定阵，那么存在一个实可逆上三角矩阵$L_1$，使得：
+\[A=L_1^TL_1\]这样的$L_1$在不管对角线正负号的前提下是唯一的。
+
+对于这一分解，其所需的乘除次数约为$n^3/6$。鉴于这一计算涉及开平方根，我们尝试改进平方根法：即利用定理2.3.4的分解$A=L^TDL$，令$T=L^TD$，那么可以采用相似的算法计算得$T$与$L$。在这里相较于前者仅仅是多了一个额外计算
+对角线元素$d_i$的步骤。和$LU$分解一样，两者都可以写在同一个矩阵里。
+
+### 6.1.2 追赶法
+
+我们在一些特殊情况会解这样的线性方程组：（比如三次样条插值）
+\[Ax=f\]其中
+$$
+A = \left[
+  \begin{array}{ccccc}
+    b_1 & c_1 & & & \\
+    a_2 & b_2 & c_2 & & \\
+     & \ddots & \ddots & \ddots & & \\
+     & &  a_{n-1} & b_{n-1} & c_{n-1}\\
+     & & & a_n & b_n 
+  \end{array}
+\right]\\
+f = (f_1,f_2,\ldots,f_n)^T
+$$
+且这样的矩阵$A$满足：
+1. $\left|b_1\right|>\left|c_1\right|>0$，$\left|b_n\right|>\left|a_n\right|>0$
+2. $\left|b_i\right|\geq \left|a_i\right|+\left|c_i\right|$
+
+显然，这样的矩阵$A$是可以分解为$A=LU$的
+$$
+A = \left[
+  \begin{array}{ccccc}
+    b_1 & c_1 & & & \\
+    a_2 & b_2 & c_2 & & \\
+     & \ddots & \ddots & \ddots & & \\
+     & &  a_{n-1} & b_{n-1} & c_{n-1}\\
+     & & & a_n & b_n 
+  \end{array}
+\right] = \left[
+  \begin{array}{cccc}
+    \alpha_1 & & &\\
+    \gamma_2 & \alpha_2 & &\\ 
+     & \ddots & \ddots & \\
+     & & \gamma_n & \alpha_n 
+  \end{array}
+\right]
+\left[
+  \begin{array}{cccc}
+    1 & \beta_1 & & \\
+    & 1 & \ddots & \\
+    & & \ddots  & \beta_{n-1}\\
+    & & & 1
+  \end{array}
+\right]
+$$
+从而有方程组：
+$$
+\left\{
+\begin{align*}
+  b_1 &= \alpha_1, & c_1 &= \alpha_1\beta_1\\
+  a_i &= \gamma_i, & b_i &= \gamma_i\beta_{i-1}+\alpha_i\\
+  c_i &= \alpha_i\beta_i
+\end{align*}
+\right.
+$$
+化简得
+$$
+\left\{
+\begin{align*}
+  \alpha_i &= b_i - a_i\beta_{i-1}\\
+  \beta_i &= c_i/(a_i\beta_{i-1})\\
+  \gamma_i &= a_i
+\end{align*}
+\right.
+$$
+我们发现，只需要一个额外的可以自迭代的变量$\beta$即可求解。于是求解步骤变为：求出$\{\beta_i\}$——求解$Ly=f$——求解$Ux=y$。总共仅需$5n-4$次乘除法。后续若更换$f$也仅需额外的$3n-2$次乘除计算。
+最后，还有定理：
+$\textbf{Theorem 6.1.5}$ 设有线性方程组$Ax=f$，$A$满足本小节开头的三对角线矩阵条件，那么$A$可逆且：
+1. $0<\left|\beta_i\right|<1, i=1,2,\ldots,n$
+2. $0<\left|b_i\right|-\left|a_i\right|<\left|\alpha_i\right|<\left|b_i\right|+\left|a_i\right|,\quad i=2,3\ldots,n$
+3. 这样的定理保证了一个已知的边界估计，让计算中不至于因极端值而损失精度
+
+## 6.2 向量范数
+
+范数的定义将会在[4.1.1](#411-赋范线性空间)介绍，这里阐述一下内积的定义：
+内积
+: 若函数$(*,*):\,\mathbb{C}^n\times\mathbb{C}^n\rightarrow\mathbb{R}$满足：$\forall a,b \in \mathbb{R}, f,g,h\in \mathbb{C}^n$
+  1. $(af+bg,h)=a(f,h)+b(g,h)$
+  2. $(f,g) = \bar{(g,f)}$
+  3. $(a,a)=0 \lrArr a=0$
+
+同时，我们给出以下定理：
+$\textbf{Theorem 6.2.1}(范数的连续性)$ $\mathbb{R}^n$上的范数是$\mathbb{R}^n$上的连续函数。
+
+$\textbf{Theorem 6.2.2}(范数的等价性)$  对于$\mathbb{R}^n$上的两种范数$\lVert x\rVert_s,\lVert x\rVert_r$，总存在$c_1,c_2>0$，使得
+\[c_1\lVert x\rVert_s\leq \lVert x\rVert_r \leq c_2\lVert x\rVert_s\]
+
+$\textbf{Theorem 6.2.3}(范数的收敛性)$ 对于任意一种向量范数，都有下式成立：
+$$\lim_{k\rightarrow\infty}x^{(k)}=x^* \lrArr \lim_{k\rightarrow\infty} \lVert x^{(k)}-x^*\rVert=0$$
+
+矩阵范数
+: 设函数$\lVert X\rVert : \mathbb{R}^{n\times n}\rightarrow\mathbb{R}$若满足：
+    1. 正规性
+    2. $\forall c\in \mathbb{R}$，$\lVert cA\rVert=\left|c\right|\lVert A\rVert$
+    3. $\lVert AB\rVert\leq \lVert A\rVert\lVert B\rVert$
+    4. $\lVert A+B\rVert\leq \lVert A\rVert+\lVert B\rVert$
+  那么称$\lVert X\rVert$为一个**矩阵范数**
+
+很容易可以验证**Frobenius范数**$$\lVert A\rVert_F:=\left(\sum a_{ij}^2\right)^\frac{1}{2}$$是矩阵范数
+为了免去范数的验证并利用已经构建的范数，我们尝试使用向量范数诱导产生矩阵范数：
+
+算子范数
+: 设$x\in \mathbb{R}^n,\, A\in\mathbb{R}^{n\times n}$, 对于一个给定的向量范数$\lVert x\rVert_v$，我们相应地定义一个矩阵范数：
+$$\lVert A\rVert_v = \max_{x \not ={0}}\frac{\lVert Ax\rVert_v}{\lVert x\rVert_v}$$
+由这样定义的矩阵范数被称为**算子范数**或**从属范数**
+
+从实际操作上，我们也可以认为这样的算子范数是由$\lVert x\rVert_v$诱导的范数。但出于严谨性，需要证明这个式子所定义的函数是一个矩阵范数。
+接下来，就可以由此产生一些常用矩阵范数了：
+1. \[\lVert A\rVert_\infty = \max_{i}\sum_{j=1}^n \left|a_{ij}\right|\]
+2. \[\lVert A\rVert_1 = \max_{j}\sum_{i=1}^n \left|a_{ij}\right|\]
+3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的绝对值的最大特征值。
+
+$\textbf{Theorem 6.2.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的绝对值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
+$$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
+$$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
+即\[\rho(A)=\inf_v \lVert A\rVert_v\]
+
+同时，由此可证对于一个$n$阶对称阵$A$，有$\rho(A)=\lVert A\rVert_2$
+
+## 6.3 误差与残差
+
+一般来说，实际测量的数据总会存在误差，因而我们不希望测量数据的微小扰动显著地影响到解。
+$\textbf{Theorem 6.3.1}(扰动定理)$ 若$\lVert B\rVert < 1$，则$I\plusmn B$可逆，且
+$$(I\plusmn B)^{-1}\leq \frac{1}{1-\lVert B\rVert}$$
+
+$\textbf{Theorem 6.3.2}(右项扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$b$有个小扰动$\delta b$，设$A(x+\delta x)=b+\delta b$，则
+$$\frac{\lVert\delta x\rVert}{\lVert x\rVert} \leq \lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta b\rVert}{\lVert b\rVert}$$
+
+$\textbf{Theorem 6.3.3}(系数扰动)$ 设矩阵$A$可逆，向量$b$不为0，若$A$存在扰动$\delta A$，设$(A+\delta A)(x+\delta x)=b$，且$\lVert A\rVert\lVert\delta A\rVert\leq 1$，则
+$$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \frac{\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}{1-\lVert A\rVert \lVert A^{-1}\rVert\frac{\lVert\delta A\rVert}{\lVert A\rVert}}$$
+
+同时，注意到这些上界都有共同项$\lVert A\rVert_n \lVert A^{-1}\rVert_n$，我们称这些共同项为$A$的**条件数**，记作$cond(A)_n$。可以发现，条件数对扰动的放大作用是十分显著的。因此，我们考虑找出一些条件数的特点。
+对于任意可逆矩阵$A$，
+1. $cond(A)_v\geq 1$
+2. $\forall c\in \mathbb{R},\quad cond(cA)_v=cond(A)_v$
+3. 设$R$为正交阵，则$cond(R)_2=1$，且\[cond(AR)_2=cond(RA)_2=cond(A)_2\]
+
+且我们知道，\[cond(A)_2=\sqrt{\frac{\lambda_{max} (A^TA)}{\lambda_{min}(AA^T)}}\]
+特别地，当$A$为对称阵时，$$cond(A)_2=\frac{\max \Lambda}{\min \Lambda}$$其中$\Lambda$代表$A$的所有特征值的集合。
+
+以下为几种条件数特别大的情形：
+1. $A$的规模很大
+2. $detA$与0的距离很近
+3. $A$有两行的值十分接近
+4. $A$的元素之间数量级相差过大
+
+$\textbf{Theorem 6.3.4}(事后误差估计)$ 设$A$为可逆阵，$x$为$Ax=b$的精确解，$\bar{x}$为其近似解。那么有：
+$$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A\bar{x}\rVert}{\lVert x\rVert}$$
+
+## 6.4 解线性方程组的迭代法
+
+### 6.4.1 迭代法思路
+
+虽然我们已经得到了相对好用的直接解线性方程的方法，但在实际应用中，面对稀疏矩阵，存在着一些更好的解方程方法——迭代法。对于稀疏矩阵来说，矩阵相乘所需的计算花销是低于矩阵分解后逐行求解的。因此，我们产生了一个问题：能否通过不断自相乘的方式得到线性方程$Ax=b$的解。进一步地，我们提出问题：对于精确解$x^*$所满足的式子$x^*=Bx^*+f$，是否可以利用其将一个初始值$x^{(0)}$经过迭代$x^{(k+1)}=Bx^{(k)}+f$不断逼近精确解？答案是肯定的。记$\varepsilon_k = x_k-x^*$，那么
+$$ \lVert\varepsilon_k\rVert \leq B^k \lVert\varepsilon_0\rVert $$此时若$B^k\rightarrow 0$，则可以保证这样的想法得到实现。
+
+### 6.4.2 迭代法的敛散性
+
+$\textbf{Theorem 6.4.1}$ 设$A$为一个实矩阵，$\left\{A^{(k)}\right\}$为一个实矩阵列，则以下命题等价
+   1. $$\lim_{k\rightarrow\infty} A^{(k)}=A$$
+   2. $$\lVert A^{(k)}-A\rVert_\infty \rightarrow 0$$
+   3. 对任一矩阵范数$\lVert A \rVert_t$ $$\lVert A^{(k)}-A\rVert_t \rightarrow 0$$
+   4. $$\forall x \in \mathbb{R}^n,\quad A^{(k)}x\rightarrow Ax$$
+
+$\textbf{Theorem 6.4.2}$ 以下命题等价：
+   1. $\lim_{k\rightarrow\infty} B^k = 0$
+   2. $\rho(B) < 1$
+   3. 存在一个算子范数使$\lVert B\rVert < 1$
+
+从而我们可以得到一个**推论**：$x^{(k+1)}=Bx^{(k)}+f$对任一初值$x^{(0)}$收敛的充要条件是$\rho(B)<1$
+
+$\textbf{Theorem 6.4.3}$ 设$x=Bx+f$，且找到满足$\lVert B\rVert = q < 1$的算子范数，则
+   1. $x^{(k+1)}=Bx^{(k)}+f$ 在任一初值$x^{(0)}$下均收敛至$x^*$
+   2. $\lVert x^{(k)}-x^*\rVert \leq q^k \lVert x^{(0)}-x^*\rVert$
+   3. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q}{1-q} \lVert x^{(k)}-x^{(k-1)}\rVert$$
+   4. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q^k}{1-q} \lVert x^{(1)}-x^{(0)}\rVert $$
+
+$\textbf{Theorem 6.4.3}$ 对于任一算子范数，
+$$\lim_{k\rightarrow\infty} \lVert B^k\rVert^{1/k} = \rho(B)$$
+
+### 6.4.3 收敛速度
+
+已知等式$\epsilon^{(k)}= B^k\epsilon^{(0)}$，一般地，我们希望$\epsilon^{(k)}$尽快趋于0，因而产生了一种评价收敛速度的方式：
+
+收敛速度
+: 我们称$R_k=-\ln \lVert B^k\rVert^{1/k}$为平均收敛速度，$R=-\ln\rho(B)$为渐进收敛速度。
+
+这样的式子是由下式推出的：
+$$\frac{\lVert\epsilon^{(k)}\rVert}{\lVert\epsilon^{(0)}\rVert} \leq \lVert B^k\rVert < \sigma$$
+
+### 6.4.4 迭代法的设计
+
+如果需要实现这样的迭代法，我们需要设计一些满足$x=Bx+f$的矩阵$B$和向量$f$，使得我们的计算过程具有一些良好的性质。
+
+#### 矩阵分裂法
+
+注意到$A=D-L-U$，其中$D$为$A$的主对角线，$L$为$A$的除主对角线的下三角部分，$U$为$A$的除主对角线的上三角部分。
+
+那么对于$Ax=b$，稍作变换后有
+\[x=D^{-1}(L+U)x+D^{-1}b\]这种构造被称为**Jacobi迭代法**
+而构造\[x=(D-L)^{-1}Ux+(D-L)^{-1}b\]被称为**Gauss-Seidel迭代法**
+
+可以认为，后者是前者的改进版本。在这里我们不会将它们在实际中的具体迭代公式写出，但会解释这一点。上面二者在实际中采用的迭代步骤分别为：
+$$
+\begin{align*}
+  Dx^{(k+1)} &= (L+U)x^{(k)}+b\\
+  Dx^{(k+1)} &= Lx^{(k+1)} + Ux^{(k)} + b
+\end{align*}
+$$
+可以发现，虽然事实上二者做的是同一分解，但后者的每一分量的更新都会利用前面刚刚更新的分量，从而减少所需存储量和计算量。
+
+接下来，我们需要了解其敛散性。
+
+对角占优矩阵
+: 若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|>\sum_{j\not ={i}}\left|a_{ij}\right|\]则称其为**严格对角占优矩阵**
+  若对任一$i=1,2,\ldots,n$，均有\[\left|a_{ii}\right|\geq\sum_{j\not ={i}}\left|a_{ij}\right|\]且至少有一个等式严格成立，那么称其为**弱对角占优矩阵**
+
+可约矩阵
+: 对于$A\in \mathbb{R}^{n\times n}$，如果存在置换矩阵$P$使得
+  $$P^TAP=\left(\begin{array}{cc}
+    A_{11} & A_{12}\\
+    0 & A_{22}
+  \end{array}\right)$$
+  其中$A_{11}$为方阵，那么称$A$为**可约矩阵**。反之则为**不可约矩阵**
+
+$\textbf{Theorem 2.6.4}(对角占优定理)$ 若$A$为严格对角占优矩阵或不可约弱对角占优矩阵，则$Ax=b$存在唯一解，且Jacobi迭代法、Gauss-Seidel迭代法均收敛。
+
+$\textbf{Theorem 2.6.5}$ 设矩阵$A$对称，且主对角元均为正数，则：
+  1. Jacobi法收敛的充要条件是$A$和$2D-A$正定。
+  2. Gauss-Seidel法收敛的充要条件是$A$正定。
+
+#### 超松弛迭代法(SOR)
+
+考虑将分裂矩阵设置为$M=(D-\omega L)/\omega$，那么有分解
+$$A=\frac{1}{\omega}(D-\omega L) + \frac{1}{\omega}[(\omega-1)D-\omega U]$$从而有
+$$x = (D-\omega L)^{-1}[(1-\omega)D+\omega U]x+\omega(D-\omega L)^{-1}b$$令
+$$
+\begin{align*}
+  L_\omega &= (D-\omega L)^{-1}[(1-\omega)D+\omega U]\\
+  f &= \omega(D-\omega L)^{-1}b 
+\end{align*}
+$$可见迭代矩阵$B=L_\omega$。当$\omega<1$时，被称为低松弛法；当$\omega>1$时，被称为超松弛法。
+
+实际上，我们的迭代公式都由下面的式子产生：
+$$ Dx^{(k+1)} = Dx^{(k)} + \omega \left(b + Lx^{(k+1)} + Ux^{(k)} - Dx^{(k)}\right) $$ 这一方法可被视为是对 Gauss-Seidel迭代法的一种修正。即，当我们迭代至$x^{(k)}$时，首先利用Gauss-Seidel迭代法得到分量 $\hat{x}^{(k+1)}_j$，而后SOR的这一分量将由 $x^{(k+1)}_j = x_j^{(k)} + \omega(\hat{x}^{(k+1)}_j-x_j^{(k)})$ 计算得到。
+
+在下面，我们将讨论敛散性。我们引入SOR的动机是加快迭代法收敛的速度，但这并不代表SOR迭代法内的所有矩阵均能收敛。首先，存在这样的必要条件：
+
+$\textbf{Theorem 2.6.6}$ 若解线性方程组$Ax=b$的SOR迭代法收敛，则$0<\omega<2$
+
+$\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
+1. $A$为正定阵，且$0<\omega<2$，则解$Ax=b$的SOR迭代法收敛。
+2. $A$为严格对角占优矩阵或不可约弱对角占优矩阵，且$0<\omega\leq 1$
+则解$Ax=b$的SOR迭代法收敛。
+
+由上，我们知道有渐进收敛速度$-\ln\rho B$，因此让SOR收敛最快的$\omega_0$应当满足$\rho(L_{\omega_0}) = \min_{0<\omega<2}\rho(L_\omega)$，那么记$$J=D^{-1}(L+U)$$则让迭代过程最快的$\omega$为
+\[\omega_{opt} = \frac{2}{1+\sqrt{1-\rho^2(J)}}\]这样的$\omega$被称为最佳松弛因子公式。
+
+## 6.5 共轭梯度法
+
+### 6.5.1 最速下降法
+
+对于线性方程组$Ax=b$，令$\varphi(x)=\frac{1}{2}(Ax,x)-(b,x)$。当$A$为正定阵的时候，有以下定理：
+
+$\textbf{Theorem 2.7.1}$ $Ax^*=b$当且仅当$\varphi(x^*)=\min\varphi(x)$
+
+从而我们开始考虑构造一个点列$\left\{x_{(k)}\right\}$使得$\lim_{k\rightarrow\infty}\varphi(x_{(k)})=\varphi(x^*)$
+不妨找一个方向$p^{(k)}$，让更新法则变为$x^{(k+1)} = x^{(k)} + \alpha_kp^{(k)}$，但为了保证迭代速度，我们需要选取合适的步长与方向。按先优化步长，后优化方向的步骤，可以得到：
+$$
+\begin{aligned}
+  p^{(k)} &= -\nabla \varphi(x^{}) = r^{(k)} := b - Ax^{(k)}\\
+  \alpha_k &= \frac{(r^{(k)},r^{(k)})}{(Ar^{(k)},r^{(k)})}
+\end{aligned}
+$$ 还可以证明，$r^{(k)}$与$r^{(k+1)}$正交，
+
+其收敛速度为
+$$\lVert x^{(k)}-x^*\rVert_A \leq \left(\frac{cond(A)_2 - 1}{cond(A)_2 + 1}\right)^k\lVert x^{(0)}-x^*\rVert_A$$ 其中$\lVert u\rVert_A := \sqrt{(Au,u)}$
+
+### 6.5.2 共轭梯度法*
+
+\*待补充*\
 
