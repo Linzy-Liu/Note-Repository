@@ -97,7 +97,7 @@ $\textbf{Corollary}$ 设$\varphi\in\mathcal{C}[a,b]$满足定理2.2.2中的两�
 $$\frac{e_{k+1}}{e_k^p}\rightarrow C$$其中$C\not ={0}$，那么称该迭代过程是$\textbf{p}$**阶收敛**的。
 
 $\textbf{Theorem 2.2.3}$ 设$p$为正整数，且迭代过程为$x_{n+1}=\varphi(x_n)$。若$\varphi^{(p)}$在所求解$x^*$的一个领域中连续，且满足
-$$ \varphi(x^*)=\varphi'(x^*)=\ldots=\varphi^{(p-1)}(x^*)\\ \varphi^{(p)}(x^*)\not ={0}$$ 那么该迭代过程在$x^*$邻域是$p$阶收敛的。
+$$ \varphi(x^*)=\varphi'(x^*)=\ldots=\varphi^{(p-1)}(x^*)=0\\ \varphi^{(p)}(x^*)\not ={0}$$ 那么该迭代过程在$x^*$邻域是$p$阶收敛的。
 
 由上可见，为了寻求一个收敛且速度极快的序列，选取一个好的迭代函数是必要的。
 
