@@ -2,6 +2,14 @@ import numpy as np
 
 
 def interpolate(x: np.ndarray, y: np.ndarray, method = 'Lagrange', cond = None):
+	"""
+	Return the interpolation polynomial according to given x and y with different methods. The method will be Lagrange interpolation by default
+	:param x: The points x
+	:param y: The value of the function at x
+	:param method: Supports 'Lagrange', 'linear spline' and 'cubic spline'
+	:param cond: When 'cubic spline' is available, the condition cond is necessary. Here we use the first type of boundary condition.
+	:return: The interpolation polynomial .
+	"""
 	if method == 'Lagrange':
 		index = np.arange(len(x))
 		coef = [np.prod(x[i] - x[index != i]) for i in index]
@@ -64,6 +72,12 @@ def interpolate(x: np.ndarray, y: np.ndarray, method = 'Lagrange', cond = None):
 
 
 def Legendre_polynomial(deg, return_type = 'function'):
+	"""
+	Generate a Legendre polynomial in the given degree
+	:param deg: The degree of the polynomial
+	:param return_type: Supports 'function' and 'array'
+	:return: Returns the parameter of the polynomial or polynomial itself. The parameter follows the order from higher degree to lower degree
+	"""
 	if deg == 0:
 		coef = np.array([1])
 	elif deg == 1:
@@ -76,12 +90,11 @@ def Legendre_polynomial(deg, return_type = 'function'):
 			tmp = (2 * i + 1) / (i + 1) * np.r_[0, p_present] - i / (i + 1) * np.r_[p_last, [0, 0]]
 			p_last = p_present
 			p_present = tmp
-		coef = p_present
+		coef = p_present[-1::-1]
 
 	if return_type == 'function':
 		def f(x):
-			t = np.array([x ** i for i in range(deg + 1)])
-			return np.sum(t * coef)
+			return np.polyval(coef, x)
 
 		return f
 
@@ -92,6 +105,12 @@ def Legendre_polynomial(deg, return_type = 'function'):
 
 
 def Chebyshev_polynomial(deg: int, return_type = 'function'):
+	"""
+	Generate a Chebyshev polynomial in the given degree
+	:param deg: The degree of the polynomial
+	:param return_type: Supports 'function' and 'array'
+	:return: Returns the parameter of the polynomial or polynomial itself. The parameter follows the order from higher degree to lower degree
+	"""
 	if deg == 0:
 		coef = np.array([1])
 	elif deg == 1:
@@ -104,12 +123,11 @@ def Chebyshev_polynomial(deg: int, return_type = 'function'):
 			tmp = 2 * np.r_[0, p_present] - np.r_[p_last, [0, 0]]
 			p_last = p_present
 			p_present = tmp
-		coef = p_present
+		coef = p_present[-1::-1]
 
 	if return_type == 'function':
 		def f(x):
-			t = np.array([x ** i for i in range(deg + 1)])
-			return coef @ t
+			return np.polyval(coef, x)
 
 		return f
 
@@ -125,6 +143,14 @@ def product(f: np.ndarray, g: np.ndarray, x: np.ndarray, rho = np.array([1])):
 
 
 def fit_polynomial(deg: int, x: np.ndarray, y: np.ndarray, return_type = 'function'):
+	"""
+	Fit the discrete points (x, y) in polynomial space <1, x, ..., x^deg>
+	:param deg: The maximum degree of output polynomial.
+	:param x:
+	:param y:
+	:param return_type:  Returns the parameter of the polynomial or polynomial itself. The parameter follows the order from higher degree to lower degree
+	:return:
+	"""
 	space = np.array([x ** i for i in range(deg + 1)])
 	A = np.zeros((deg + 1, deg + 1))
 	for i in range(A.shape[0]):
@@ -133,12 +159,11 @@ def fit_polynomial(deg: int, x: np.ndarray, y: np.ndarray, return_type = 'functi
 	b = np.zeros(deg + 1)
 	for i in range(b.shape[0]):
 		b[i] = product(space[i], y, x)
-	param = np.linalg.solve(A, b)
+	param = np.linalg.solve(A, b)[-1::-1]
 
 	if return_type == 'function':
 		def f(x):
-			t = np.array([x ** i for i in range(deg + 1)])
-			return param @ t
+			return np.polyval(param, x)
 
 		return f
 
