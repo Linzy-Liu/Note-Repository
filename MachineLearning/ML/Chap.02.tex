@@ -17,7 +17,7 @@ three assumptions about the conditional distribution of $y$ given $x$ and about 
 \begin{enumerate}
     \item Given $x$ and $\theta$, the distribution of $y$ follows some exponetial family distribution with parameter $\eta$, said, $y|x;\theta \sim \text{Exponetialfamily}(\eta)$
     \item Since the output $y$ is not a certain value but a random variable, we would like our prediction $h(x)$ by our learned hypothesis $h$ satisfy $h(x)=\mathbb{E}(T(y)|x)$
-    \item The canonical parameter $\eta$ and the features $x$ are related linearly, said $\eta = \theta^Tx$
+    \item The canonical parameter $\eta$ and the features $x$ are related linearly, said $\eta = \theta^Tx$(In fact, the ``linear'' here could be replaced by ``affine'' instead. )
 \end{enumerate}
 
 The GLM as a family of models holds many desirable properties, such as ease of learning. Furthermore, they are often very effective for building different types of distributions over $y$. And wwe will
