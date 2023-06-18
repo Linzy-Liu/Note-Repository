@@ -48,7 +48,7 @@ def correlation_distance(x: np.ndarray, y: np.ndarray) -> float:
 	:param y: A numpy array of shape (n,)
 	:return: The correlation distance between x and y
 	"""
-	return np.corrcoef(x, y)[0, 1]
+	return 1 - np.corrcoef(x, y)[0, 1]
 
 
 def cosine_distance(x: np.ndarray, y: np.ndarray) -> float:
@@ -59,7 +59,33 @@ def cosine_distance(x: np.ndarray, y: np.ndarray) -> float:
 	:param y: A numpy array of shape (n,)
 	:return: The cosine distance between x and y
 	"""
-	return x @ y / (np.linalg.norm(x) * np.linalg.norm(y))
+	return 1 - x @ y / (np.linalg.norm(x) * np.linalg.norm(y))
+
+
+def translate_distance(distance_type: str, distance_param=None) -> callable:
+	"""
+	Translate the distance type to distance function.
+	:param distance_type: The type of distance function. It can be 'euclidean', 'minkowski', 'mahalanobis', 'correlation', 'cosine'
+	:param distance_param: The parameter of distance function. For 'minkowski', it is p; for 'mahalanobis', it is the inverse of covariance matrix; it is none for other distance functions
+	:return: A function that computes the distance between two vectors
+	"""
+	if distance_type == 'euclidean':
+		distance = lambda x, y: minkowski_distance(x, y, 2)
+	elif distance_type == 'minkowski':
+		if distance_param is None:
+			raise ValueError('Invalid distance parameter')
+		distance = lambda x, y: minkowski_distance(x, y, distance_param)
+	elif distance_type == 'mahalanobis':
+		if distance_param is None:
+			raise ValueError('Invalid distance parameter')
+		distance = lambda x, y: mahalanobis_distance(x, y, distance_param)
+	elif distance_type == 'correlation':
+		distance = correlation_distance
+	elif distance_type == 'cosine':
+		distance = cosine_distance
+	else:
+		raise ValueError('Invalid distance type')
+	return distance
 
 
 def cluster_distance(cluster1: np.ndarray, cluster2: np.ndarray, distance_func: callable, method='min') -> float:
@@ -120,25 +146,18 @@ class KMeans:
 		:return: None
 		"""
 		# Initialize distance function
-		if self._distance_type == 'minkowski':
-			distance = lambda x, y: minkowski_distance(x, y, self._distance_param)
-		elif self._distance_type == 'mahalanobis':
-			self._distance_param = np.linalg.inv(sample_covariance(X))
-			distance = lambda x, y: mahalanobis_distance(x, y, self._distance_param)
-		elif self._distance_type == 'correlation':
-			distance = correlation_distance
-		elif self._distance_type == 'cosine':
-			distance = cosine_distance
-		else:
-			raise ValueError('Invalid distance type')
+		if self._distance_type == 'mahalanobis':
+			self._distance_param = np.linalg.inv(np.cov(X.T))
+		distance = translate_distance(self._distance_type, self._distance_param)
 
 		# Initialize centroids with k-means++
 		if self._random_state is not None:
 			np.random.seed(self._random_state)
 		indices = [np.random.randint(0, X.shape[0])]
 		for _ in range(1, self._k):
-			temp_dis = [cluster_distance(x.reshape(1, -1), X[indices], distance) for x in X]
-			p = np.abs(temp_dis) / np.sum(np.abs(temp_dis))
+			temp_dis = np.array([cluster_distance(x.reshape(1, -1), X[indices], distance) for x in X])
+			p = temp_dis / np.sum(temp_dis)
+			p = (p + 1e-10) / np.sum(p + 1e-10)  # Avoid zero probability
 			num = np.random.choice(X.shape[0], p=p)
 			while num in indices:
 				num = np.random.choice(X.shape[0], p=p)
@@ -182,16 +201,8 @@ class KMeans:
 		"""
 		if self.centroids is None:
 			raise ValueError('You should fit the model first')
-		if self._distance_type == 'minkowski':
-			distance = lambda x, y: minkowski_distance(x, y, self._distance_param)
-		elif self._distance_type == 'mahalanobis':
-			distance = lambda x, y: mahalanobis_distance(x, y, self._distance_param)
-		elif self._distance_type == 'correlation':
-			distance = correlation_distance
-		elif self._distance_type == 'cosine':
-			distance = cosine_distance
-		else:
-			raise ValueError('Invalid distance type')
+		distance = translate_distance(self._distance_type, self._distance_param)
+
 		return np.array([np.argmin([distance(x, y) for y in self.centroids]) for x in X])
 
 
@@ -215,17 +226,7 @@ class HierarchicalCluster:
 
 	def fit(self, X: np.ndarray) -> None:
 		# Initialize distance function
-		if self._distance_type == 'minkowski':
-			distance = lambda x, y: minkowski_distance(x, y, self._distance_param)
-		elif self._distance_type == 'mahalanobis':
-			self._distance_param = np.linalg.inv(sample_covariance(X))
-			distance = lambda x, y: mahalanobis_distance(x, y, self._distance_param)
-		elif self._distance_type == 'correlation':
-			distance = correlation_distance
-		elif self._distance_type == 'cosine':
-			distance = cosine_distance
-		else:
-			raise ValueError('Invalid distance type')
+		distance = translate_distance(self._distance_type, self._distance_param)
 
 		# Initialize clusters
 		self.clusters = [[i] for i in range(X.shape[0])]
@@ -246,15 +247,36 @@ class HierarchicalCluster:
 			self.clusters.pop(j)
 
 
-def sse(X: np.ndarray, clusters: List[List[int]], centroids: np.ndarray) -> float:
+def sum_of_distance_error(X: np.ndarray, clusters: List[List[int]], centroids: np.ndarray,
+                          distance_type: str = 'euclidean', distance_param=None) -> float:
 	"""
-	Calculate the sum of squared error
+	Calculate the sum of distance error.
 
+	:param distance_type: The type of distance function. It can be 'euclidean', 'minkowski', 'mahalanobis', 'correlation', 'cosine'
+	:param distance_param: The parameter of distance function. For 'minkowski', it is p; for 'mahalanobis', it is the inverse of covariance matrix; it is None for other distance functions
 	:param X: A numpy array of shape (n, p) where each row represents a sample
 	:param clusters: A list of clusters, each cluster is a list of indices
 	:param centroids: A numpy array of shape (k, p) where each row represents a centroid
 	"""
 	res = 0
+	distance = translate_distance(distance_type, distance_param)
 	for i in range(len(clusters)):
-		res += np.sum((X[clusters[i]] - centroids[i])**2)
+		res += sum([distance(X[j], centroids[i]) for j in clusters[i]])
 	return res
+
+
+def get_distance_list(X: np.ndarray, distance_type: str = 'euclidean', distance_param=None) -> np.ndarray:
+	"""
+	Calculate the distance list.
+
+	:param X: A numpy array of shape (n, p) where each row represents a sample
+	:param distance_type: The type of distance function. It can be 'euclidean', 'minkowski', 'mahalanobis', 'correlation', 'cosine'
+	:param distance_param: The parameter of distance function. For 'minkowski', it is p; for 'mahalanobis', it is the inverse of covariance matrix; it is None for other distance functions
+	:return: A numpy array of shape (n, n) where each element represents the distance between two samples
+	"""
+	distance = translate_distance(distance_type, distance_param)
+	res = np.zeros([X.shape[0]] * 2)
+	for i in range(X.shape[0]):
+		for j in range(i + 1, X.shape[0]):
+			res[i, j] = distance(X[i], X[j])
+	return res + res.T

@@ -1,17 +1,27 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import random
+import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import cluster
 
-# seed = random.randint(0, 100000000)
-seed = 30907883
+seed = random.randint(0, 100000000)
+
+
+# seed = 30907883
 
 def find_proper_k_kmeans(data: np.ndarray, k_range: tuple = (2, 10), distance_type: str = 'euclidean',
                          distance_param=None):
+	"""
+	Find a proper k for k-means algorithm according to silhouette score and SSE
+
+	:param data: The data to be clustered
+	:param k_range: The range of k
+	:param distance_type: The type of distance, can be 'euclidean', 'minkowski', 'correlation', 'cosine' and 'mahalanobis'
+	:param distance_param: The parameter of distance, for 'minkowski' it's p, for 'mahalanobis' it's the inverse of covariance matrix
+	"""
 	score = []
 	SSE = []
 	for k in range(*k_range):
@@ -23,11 +33,12 @@ def find_proper_k_kmeans(data: np.ndarray, k_range: tuple = (2, 10), distance_ty
 		labels = np.zeros(data.shape[0])
 		for i in range(len(cls)):
 			labels[cls[i]] = i
-		score.append(silhouette_score(data, labels))
+		dis = cluster.get_distance_list(data, distance_type, distance_param)
+		score.append(silhouette_score(dis, labels, metric='precomputed'))
 
 		# Calculate SSE
 		centroids = model.centroids
-		SSE.append(cluster.sse(data, cls, centroids))
+		SSE.append(cluster.sum_of_distance_error(data, cls, centroids, distance_type, distance_param))
 
 	plt.rc('text', usetex=True)
 	fig = plt.figure()
@@ -49,6 +60,15 @@ def find_proper_k_kmeans(data: np.ndarray, k_range: tuple = (2, 10), distance_ty
 
 def find_proper_k_HC(data: np.ndarray, k_range: tuple = (2, 10), distance_type: str = 'euclidean', distance_param=None,
                      linkage='single'):
+	"""
+	Find a proper k for hierarchical clustering algorithm according to silhouette score and SSE
+
+	:param data: The data to be clustered
+	:param k_range: The range of k
+	:param distance_type: The type of distance, can be 'euclidean', 'minkowski', 'correlation', 'cosine' and 'mahalanobis'
+	:param distance_param: The parameter of distance, for 'minkowski' it's p, for 'mahalanobis' it's the inverse of covariance matrix
+	:param linkage: The type of linkage, can be 'single', 'complete', 'average', 'centroid'
+	"""
 	score = []
 	SSE = []
 	for k in range(*k_range):
@@ -64,8 +84,9 @@ def find_proper_k_HC(data: np.ndarray, k_range: tuple = (2, 10), distance_type: 
 		labels = np.zeros(data.shape[0])
 		for i in range(len(cls)):
 			labels[cls[i]] = i
-		score.append(silhouette_score(data, labels))
-		SSE.append(cluster.sse(data, cls, center))
+		dis = cluster.get_distance_list(data, distance_type, distance_param)
+		score.append(silhouette_score(dis, labels, metric='precomputed'))
+		SSE.append(cluster.sum_of_distance_error(data, cls, center, distance_type, distance_param))
 
 	plt.rc('text', usetex=True)
 	fig = plt.figure()
@@ -86,6 +107,14 @@ def find_proper_k_HC(data: np.ndarray, k_range: tuple = (2, 10), distance_type: 
 
 
 def get_result_kmeans(data_std: np.ndarray, k: int = 2, distance_type: str = 'euclidean', distance_param=None):
+	"""
+	Get the result of k-means algorithm. The result will be plotted in 2D space, and the silhouette score and SSE will be printed.
+
+	:param data_std: The data to be clustered
+	:param k: The number of clusters
+	:param distance_type: The type of distance, can be 'euclidean', 'minkowski', 'correlation', 'cosine' and 'mahalanobis'
+	:param distance_param: The parameter of distance, for 'minkowski' it's p, for 'mahalanobis' it's the inverse of covariance matrix
+	"""
 	model = cluster.KMeans(k=k, distance_type=distance_type, random_state=seed, distance_param=distance_param)
 	model.fit(data_std)
 	cls = model.clusters
@@ -95,8 +124,9 @@ def get_result_kmeans(data_std: np.ndarray, k: int = 2, distance_type: str = 'eu
 		label[cls[i]] = i
 
 	# Calculate scores
-	score = silhouette_score(data_std, label)
-	sse = cluster.sse(data_std, cls, center)
+	dis = cluster.get_distance_list(data_std, distance_type, distance_param)
+	score = silhouette_score(dis, label, metric='precomputed')
+	sse = cluster.sum_of_distance_error(data_std, cls, center, distance_type, distance_param)
 	print('Silhouette Score: {}'.format(score))
 	print('SSE: {}'.format(sse))
 
@@ -131,9 +161,10 @@ def get_result_HC(data_std: np.ndarray, k: int = 2, distance_type: str = 'euclid
 	center = np.zeros((k, data_std.shape[1]))
 	for i in range(k):
 		center[i] = np.mean(data_std[cls[i]], axis=0)
+	dis = cluster.get_distance_list(data_std, distance_type, distance_param)
 
-	print('SSE: {}'.format(cluster.sse(data_std, cls, center)))
-	print('Silhouette Score: {}'.format(silhouette_score(data_std, label)))
+	print('SSE: {}'.format(cluster.sum_of_distance_error(data_std, cls, center, distance_type, distance_param)))
+	print('Silhouette Score: {}'.format(silhouette_score(dis, label, metric='precomputed')))
 
 	tsne = TSNE(random_state=None)
 	tsne.fit_transform(data_std)
@@ -153,11 +184,12 @@ if __name__ == '__main__':
 	source = pd.read_excel('农村居民人均可支配收入来源2016.xlsx', index_col=0)
 	data = source.values
 
-	# data_std = StandardScaler().fit_transform(data)
-	data_std = MinMaxScaler().fit_transform(data)
+	data_std = StandardScaler().fit_transform(data)
+	# data_std = MinMaxScaler().fit_transform(data)
 
-	# find_proper_k_kmeans(data_std, k_range=(3, 10), distance_type='euclidean')
-	# get_result_kmeans(data_std, k=6, distance_type='euclidean')
+	S_inv = np.linalg.inv(np.cov(data_std.T))
+	# find_proper_k_kmeans(data_std, k_range=(3, 10), distance_type='mahalanobis', distance_param=S_inv)
+	get_result_kmeans(data_std, k=5, distance_type='mahalanobis', distance_param=S_inv)
 	# find_proper_k_HC(data_std, k_range=(2, 11), distance_type='euclidean', linkage='single')
-	get_result_HC(data_std, k=4, distance_type='euclidean', linkage='single')
+	# get_result_HC(data_std, k=4, distance_type='euclidean', linkage='single')
 	print('seed: {}'.format(seed))
