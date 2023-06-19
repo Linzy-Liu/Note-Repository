@@ -449,10 +449,10 @@ $$ \lVert f-p\rVert_{w.2} = \sqrt{\sum_{i=0}^m (f(x_i)-p(x_i))^2w(x_i)}$$
 : 我们称在$[-1,1]$上，权函数为$\rho(x)\equiv 1$的，由$1,x,x^2,\ldots$经施密特正交化得到的正交多项式为勒让德多项式。
 
 表达式：
-\[P_0(x)=1,\quad P_n(x) = \frac{n!}{(2n)!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
+\[P_0(x)=1,\quad P_n(x) = \frac{1}{2^nn!}\frac{d^n}{d\,x^n}\left((x^2-1)^n\right)\:(n=1,2,\ldots)\]
 
 性质:
-* $$\int_{-1}^1P_n(x)P_m(x) = \left\{
+* $$\int_{-1}^1P_n(x)P_m(x)\,dx = \left\{
   \begin{align*}
     0&,& m &\not ={n}\\
     \frac{2}{2n+1}&,& m &= n
@@ -471,7 +471,7 @@ $$T_n(x)=\cos(n\arccos x), \left|x\right|\leq 1$$
 
 性质：
 * $$T_{n+1}(x) = 2xT_n(x)-T_{n-1}(x)$$
-* $$\int_{-1}^1T_n(x)T_m(x)\rho(x) = \left\{
+* $$\int_{-1}^1T_n(x)T_m(x)\rho(x) \, dx = \left\{
   \begin{align*}
     0&,& m &\not ={n}\\
     \frac{\pi}{2}&,& m &= n \not ={0}\\
@@ -721,7 +721,7 @@ $$R_n[f] = \frac{f^{(2n+2)}(\eta)}{(2n+2)!}\int_a^bw_{n+1}^2(x)\rho(x)\,dx$$
 > 鉴于高斯消元是高代的基础操作，在此不做赘述。但易得，该过程的乘除法次数约为$\frac{n^3}{3}$,加减法次数为$\frac{n^3}{3}$
 
 我们还有这样的定理：
-$\textbf{Theorem 6.1.1}\quad$ 矩阵$A$主对角线上的所有元素$a_{ii}$非零当且仅当$A$的各阶顺序主子式非零。
+$\textbf{Theorem 6.1.1}\quad$ 矩阵$A$约化后的主对角线上的所有元素$a_{ii}'$非零当且仅当$A$的各阶顺序主子式非零。
 
 
 $\textbf{Theorem 6.1.2}\left(LU分解\right)\quad$ 设$A$为$n$阶矩阵，若$A$的各阶顺序主子式$D_i$非零，那么$A$可以分解为一个单位下三角矩阵$L$和上三角矩阵$U$，且这样的分解是唯一的
@@ -755,8 +755,7 @@ $\textbf{Theorem 6.1.4}$ 设$A$为$n$阶对称阵，且$A$的各阶顺序主子�
 $\textbf{Corollary}$ 设$A$为$n$阶正定阵，那么存在一个实可逆上三角矩阵$L_1$，使得：
 \[A=L_1^TL_1\]这样的$L_1$在不管对角线正负号的前提下是唯一的。
 
-对于这一分解，其所需的乘除次数约为$n^3/6$。鉴于这一计算涉及开平方根，我们尝试改进平方根法：即利用定理2.3.4的分解$A=L^TDL$，令$T=L^TD$，那么可以采用相似的算法计算得$T$与$L$。在这里相较于前者仅仅是多了一个额外计算
-对角线元素$d_i$的步骤。和$LU$分解一样，两者都可以写在同一个矩阵里。
+对于这一分解，其所需的乘除次数约为$n^3/6$。鉴于这一计算涉及开平方根，我们尝试改进平方根法：即利用**定理6.1.4**的分解$A=L^TDL$，令$T=L^TD$，那么可以采用相似的算法计算得$T$与$L$。在这里相较于前者仅仅是多了一个额外计算对角线元素$d_i$的步骤。和$LU$分解一样，两者都可以写在同一个矩阵里。
 
 ### 6.1.2 追赶法
 
@@ -804,8 +803,7 @@ A = \left[
     & & & 1
   \end{array}
 \right]
-$$
-从而有方程组：
+$$从而有方程组：
 $$
 \left\{
 \begin{align*}
@@ -814,8 +812,7 @@ $$
   c_i &= \alpha_i\beta_i
 \end{align*}
 \right.
-$$
-化简得
+$$化简得
 $$
 \left\{
 \begin{align*}
@@ -830,15 +827,16 @@ $$
 $\textbf{Theorem 6.1.5}$ 设有线性方程组$Ax=f$，$A$满足本小节开头的三对角线矩阵条件，那么$A$可逆且：
 1. $0<\left|\beta_i\right|<1, i=1,2,\ldots,n$
 2. $0<\left|b_i\right|-\left|a_i\right|<\left|\alpha_i\right|<\left|b_i\right|+\left|a_i\right|,\quad i=2,3\ldots,n$
-3. 这样的定理保证了一个已知的边界估计，让计算中不至于因极端值而损失精度
+这样的定理保证了一个已知的边界估计，让计算中不至于因极端值而损失精度
 
 ## 6.2 向量范数
 
 范数的定义将会在[4.1.1](#411-赋范线性空间)介绍，这里阐述一下内积的定义：
+
 内积
 : 若函数$(*,*):\,\mathbb{C}^n\times\mathbb{C}^n\rightarrow\mathbb{R}$满足：$\forall a,b \in \mathbb{R}, f,g,h\in \mathbb{C}^n$
   1. $(af+bg,h)=a(f,h)+b(g,h)$
-  2. $(f,g) = \bar{(g,f)}$
+  2. $(f,g) = \overline{(g,f)}}$
   3. $(a,a)=0 \lrArr a=0$
 
 同时，我们给出以下定理：
@@ -873,9 +871,7 @@ $$\lVert A\rVert_v = \max_{x \not ={0}}\frac{\lVert Ax\rVert_v}{\lVert x\rVert_v
 3. \[\lVert A\rVert_2 = \sqrt{\lambda_{max}(A^TA)}\]其中$\lambda_{max}(A)$表示$A$的绝对值的最大特征值。
 
 $\textbf{Theorem 6.2.4}(范数与谱半径)$ 我们定义**谱半径**为方阵$A$的特征值的绝对值的最大值$\rho(A):=\lambda_{max}(A)$，则有：
-$$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得
-$$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$
-即\[\rho(A)=\inf_v \lVert A\rVert_v\]
+$$\rho(A)\leq \lVert A\rVert$$且对于任意$\epsilon > 0$，总存在一个算子范数$\lVert A\rVert_\epsilon$，使得$$\lVert A\rVert_\epsilon \leq \rho(A) + \epsilon$$ 即\[\rho(A)=\inf_v \lVert A\rVert_v\]
 
 同时，由此可证对于一个$n$阶对称阵$A$，有$\rho(A)=\lVert A\rVert_2$
 
@@ -907,7 +903,7 @@ $$\frac{\lVert \delta x\rVert}{\lVert x\rVert}\leq \frac{\lVert A\rVert \lVert A
 4. $A$的元素之间数量级相差过大
 
 $\textbf{Theorem 6.3.4}(事后误差估计)$ 设$A$为可逆阵，$x$为$Ax=b$的精确解，$\bar{x}$为其近似解。那么有：
-$$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A\bar{x}\rVert}{\lVert x\rVert}$$
+$$\frac{\lVert x -\bar{x}\rVert}{\lVert x\rVert} \leq cond(A)\,\frac{\lVert  b-A\bar{x}\rVert}{\lVert b\rVert}$$
 
 ## 6.4 解线性方程组的迭代法
 
@@ -937,7 +933,7 @@ $\textbf{Theorem 6.4.3}$ 设$x=Bx+f$，且找到满足$\lVert B\rVert = q < 1$�
    3. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q}{1-q} \lVert x^{(k)}-x^{(k-1)}\rVert$$
    4. $$\lVert x^{(k)}-x^*\rVert \leq \frac{q^k}{1-q} \lVert x^{(1)}-x^{(0)}\rVert $$
 
-$\textbf{Theorem 6.4.3}$ 对于任一算子范数，
+$\textbf{Theorem 6.4.4}$ 对于任一算子范数，
 $$\lim_{k\rightarrow\infty} \lVert B^k\rVert^{1/k} = \rho(B)$$
 
 ### 6.4.3 收敛速度
@@ -985,9 +981,9 @@ $$
   \end{array}\right)$$
   其中$A_{11}$为方阵，那么称$A$为**可约矩阵**。反之则为**不可约矩阵**
 
-$\textbf{Theorem 2.6.4}(对角占优定理)$ 若$A$为严格对角占优矩阵或不可约弱对角占优矩阵，则$Ax=b$存在唯一解，且Jacobi迭代法、Gauss-Seidel迭代法均收敛。
+$\textbf{Theorem 6.4.5}(对角占优定理)$ 若$A$为严格对角占优矩阵或不可约弱对角占优矩阵，则$Ax=b$存在唯一解，且Jacobi迭代法、Gauss-Seidel迭代法均收敛。
 
-$\textbf{Theorem 2.6.5}$ 设矩阵$A$对称，且主对角元均为正数，则：
+$\textbf{Theorem 6.4.6}$ 设矩阵$A$对称，且主对角元均为正数，则：
   1. Jacobi法收敛的充要条件是$A$和$2D-A$正定。
   2. Gauss-Seidel法收敛的充要条件是$A$正定。
 
@@ -1008,9 +1004,9 @@ $$ Dx^{(k+1)} = Dx^{(k)} + \omega \left(b + Lx^{(k+1)} + Ux^{(k)} - Dx^{(k)}\rig
 
 在下面，我们将讨论敛散性。我们引入SOR的动机是加快迭代法收敛的速度，但这并不代表SOR迭代法内的所有矩阵均能收敛。首先，存在这样的必要条件：
 
-$\textbf{Theorem 2.6.6}$ 若解线性方程组$Ax=b$的SOR迭代法收敛，则$0<\omega<2$
+$\textbf{Theorem 6.4.7}$ 若解线性方程组$Ax=b$的SOR迭代法收敛，则$0<\omega<2$
 
-$\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
+$\textbf{Theorem 6.4.8}$ 设$Ax=b$，若：
 1. $A$为正定阵，且$0<\omega<2$，则解$Ax=b$的SOR迭代法收敛。
 2. $A$为严格对角占优矩阵或不可约弱对角占优矩阵，且$0<\omega\leq 1$
 则解$Ax=b$的SOR迭代法收敛。
@@ -1024,7 +1020,7 @@ $\textbf{Theorem 2.6.7}$ 设$Ax=b$，若：
 
 对于线性方程组$Ax=b$，令$\varphi(x)=\frac{1}{2}(Ax,x)-(b,x)$。当$A$为正定阵的时候，有以下定理：
 
-$\textbf{Theorem 2.7.1}$ $Ax^*=b$当且仅当$\varphi(x^*)=\min\varphi(x)$
+$\textbf{Theorem 6.5.1}$ $Ax^*=b$当且仅当$\varphi(x^*)=\min\varphi(x)$
 
 从而我们开始考虑构造一个点列$\left\{x_{(k)}\right\}$使得$\lim_{k\rightarrow\infty}\varphi(x_{(k)})=\varphi(x^*)$
 不妨找一个方向$p^{(k)}$，让更新法则变为$x^{(k+1)} = x^{(k)} + \alpha_kp^{(k)}$，但为了保证迭代速度，我们需要选取合适的步长与方向。按先优化步长，后优化方向的步骤，可以得到：
@@ -1040,7 +1036,7 @@ $$\lVert x^{(k)}-x^*\rVert_A \leq \left(\frac{cond(A)_2 - 1}{cond(A)_2 + 1}\righ
 
 ### 6.5.2 共轭梯度法*
 
-**待补充**
+~~不想补充~~
 
 # 7 常微分方程
 
@@ -1075,7 +1071,7 @@ $$
 \[T_{n+1}=y(x_{n+1}) - y_{n+1}\]
 若存在最大整数$p$使得显式单步法的局部截断误差满足$T_{n+1}=O(h^{p+1})$，那么称这一种单步法具有**p阶精度**，而在对应的展开$T_{n+1} = \psi(x,y)h^{p+1}+O(h^{p+2})$中，我们称$\psi(x,y)h^{p+1}$为局部截断误差主项。
 
-显然，这一指标可以用于刻画经历$n$步迭代后，所求数值解的误差上限。而回顾我们已经介绍过的数值方法，可以易于通过简单的泰勒展开证明：欧拉法和后退欧拉法具有1阶精度，梯形法具有二阶精度。
+显然，这一指标可以用于刻画经历$n$步迭代后，所求数值解的误差上限。而回顾我们已经介绍过的数值方法，可以易于通过简单的泰勒展开证明：欧拉法和后退欧拉法具有一阶精度，梯形法具有二阶精度。
 
 ## 7.3 龙格-库塔法
 
@@ -1094,7 +1090,7 @@ $$
 
 ### 7.3.2 二至四阶的显式R-K法
 
-可以发现，以上方法中，存在许多待定常数$c_i,\lambda_i,\mu_{ij}$。那么，我们可以在各阶的情况下，通过假定尽量高的代数精度来求解各常数项。这一分析往往通过泰勒展开进行（最终会以）
+可以发现，以上方法中，存在许多待定常数$c_i,\lambda_i,\mu_{ij}$。那么，我们可以在各阶的情况下，通过假定尽量高的代数精度来求解各常数项。这一分析往往通过泰勒展开进行
 下面，我们列出常用的二至四阶R-K法公式：
 
 二阶：($p=2$)
@@ -1182,7 +1178,7 @@ $$
 
 对于形如$$
 y_{n+k} = y_{n+k-1}+h\sum_{i=0}^k \beta_if_{n+i}
-$$的$k$步法，被称为**Adams方法**。当$\beta_k = 0$时，该方法为显式方法，反之则为隐式方法。显然，由于显示方法和隐式方法分别有$k$和$k+1$个自由度，这就意味着可以根据需要，通过泰勒展开计算出使显式方法精度至少为$k$的系数和隐式方法精度至少为$k+1$的各项系数。
+$$的$k$步法，被称为**Adams方法**。当$\beta_k = 0$时，该方法为显式方法，反之则为隐式方法。显然，由于显式方法和隐式方法分别有$k$和$k+1$个自由度，这就意味着可以根据需要，通过泰勒展开计算出使显式方法精度至少为$k$的系数和隐式方法精度至少为$k+1$的各项系数。
 
 ### 7.5.2 Milne方法和Simpson方法
 
