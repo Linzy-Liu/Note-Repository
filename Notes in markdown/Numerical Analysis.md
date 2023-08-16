@@ -836,7 +836,7 @@ $\textbf{Theorem 6.1.5}$ 设有线性方程组$Ax=f$，$A$满足本小节开头�
 内积
 : 若函数$(*,*):\,\mathbb{C}^n\times\mathbb{C}^n\rightarrow\mathbb{R}$满足：$\forall a,b \in \mathbb{R}, f,g,h\in \mathbb{C}^n$
   1. $(af+bg,h)=a(f,h)+b(g,h)$
-  2. $(f,g) = \overline{(g,f)}}$
+  2. $(f,g) = \overline{(g,f)}$
   3. $(a,a)=0 \lrArr a=0$
 
 同时，我们给出以下定理：
