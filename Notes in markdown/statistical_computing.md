@@ -33,3 +33,34 @@
 > 2. 直到$\mathit{X},\mathit{Y}$满足$Y \leq p(\mathit{X})/M(\mathit{X})$，那么令$\eta=\mathit{X}$
 > 
 > 则$\eta$的pdf为$p(z)$
+
+> $\mathbf{Corollary}$ 设$\eta$在有限区间$I=(a,b)$上取值，具有密度函数$p(z)$满足$\sup_{z\in I} p(z) = M < \infin$，那么若按以下步骤进行：
+> 1. 独立生成$\textit{X}\sim U(a,b)$与$Y\sim U(0,1)$
+> 2. 直到$\textit{X}$，$\textit{Y}$满足$\textit{Y}\leq p(\textit{X})/M$时，令$\eta = \textit{X}$
+> 
+> 则$\eta$的pdf为$p(z)$
+
+> $\mathbf{Corollary}$ 设随机变量$\eta$的概率密度$p(z)$可表为如下形式：$$p(z) = Lh(z)f(z)$$其中$L > 1$，$h(z) \in [0,1]$，$f(z)$为概率密度函数，那么：
+> 1. 独立生成$\textit{X}\sim f(x)$与$Y\sim U(0,1)$
+> 2. 直到$\mathit{X},\mathit{Y}$满足$Y \leq h(\mathit{X})$，那么令$\eta=\mathit{X}$
+> 
+> 则$\eta$的pdf为$p(z)$
+
+## 1.3 变换抽样法
+
+> $\mathbf{Theorem 1.3}$ 设随机变量$\xi$具有pdf $f(x)$，另有一函数$h(z)$严格单调，其反函数$h^{-1}$存在且可导，则$\eta = h(\xi)$的pdf为
+> $$p(z)=f(h^{-1}(z))\left|\frac{d\,h^{-1}(z)}{dz}\right|$$
+
+多元联合分布控制的随机变量同理，主打一个推导。
+
+## 1.4 复合抽样法
+
+该方法主要适用于所求分布的分布函数（或概率密度函数）可以用 个已知分布函数（或概率密度函数）的线性组合表示的情形。
+
+我们在此将其表述为：
+> 设随机变量$\eta$的分布函数和概率密度函数分别为$F(x)$，$f(x)$并且可以写成$$F(x) = \sum p_iF_i(x)$$或者$$f(x)=\sum p_if_i(x)$$
+> 其中，$\sum p_i = 1$，那么在复合抽样法中，我们可以考虑按下面的步骤生成随机数：
+> 1. 产生随机数$U\sim U(0,1)$，必然存在$J$，使得$U \in \left[\sum_{j=1}^{J-1}p_j, \sum_{j=1}^Jp_j\right)$
+> 2. 根据$F_J$或$f_J$产生随机数
+
+* 上面的方法可用全概率公式证明
