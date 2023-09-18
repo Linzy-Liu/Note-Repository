@@ -50,10 +50,30 @@ Assumptions MLR.1 through MLR.5 are collectively called **Gauss-Markov assumptio
 
 ***Theorem*** Under assumptions MLR.1 through MLR.5, conditional on the sample values of the independent variables, $$Var(\hat{\beta}_j) = \frac{\sigma^2}{SST_j(1-R_j^2)}$$where $SST_j$ is the total sample variation $SST_j=\sum_{i=1}^n(x_{ij}-\bar{x}_j)^2$ 
 
-And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^2\right)/df$，where $df$ denotes degrees of freedom. $df$ can be calculated by *(number of observations) - (number of estimated parameters)*
+And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^2\right)/df$，where $df$ denotes degrees of freedom. $df$ can be calculated by *(number of observations) - (number of estimated parameters) - 1*
 
 ***Theorem*** Under the **Gauss-Markov assumptions**, $\mathbb{E}(\hat{\sigma}^2)=\sigma^2$
 
 ***Theorem***(Gauss-Markov Theorem) Under the Gauss-Markov assumption, the OLS estimators are the best linear unbiased estimators of the regression coefficients. Namely, $$Var(\hat{\beta}_j)\leq Var(\tilde{\beta}_j)$$ for all $\tilde{\beta}_j=\sum_{i=1}^n w_{ij}y_i$ for which $\mathbb{E}(\tilde{\beta}_j) = \beta_j$
+
+**MLR.6** Normality of errors. That is to say, $u_i \sim N(0,\sigma^2)$
+> Under normality, OLS is the best (even nonlinear) unbiased estimator. This is ensured by the maximum likelihood property of OLS.
+
+In practice, we ensure the assumption by the Central Limit Theorem.
+**Corrollary** Under MLR.1-MLR.6, we have: $$\hat{\beta}_j \sim N(\beta_j, Var(\hat{\beta}_j))$$which is equivalent to $$ \frac{\hat{\beta}_j - \beta_j}{\sigma(\hat{\beta}_j)} \sim N(0,1)$$
+
+## Hypothesis testing
+
+Here we have two main types of hypothesis testing: **t-test** and **F-test**. ~~There is nothing different from the statistics we have learned before but the specific variables we are testing.~~
+
+### F-test
+
+For the **F-test**, we have null hypothesis $H_0: R^2=0$ against $H_1: R^2 \not ={0}$. And we have the test statistic $$F=\frac{SSE/k}{SSR/(n-k-1)}$$ which follows the F-distribution with $k$ and $n-k-1$ degrees of freedom. To remember this, we can receive the concept in the following way: given that $k$ is the number of independent variables, the model could explain $k$ obersevations at most, and the rest $n-k-1$ observations are explained by the residuals.
+
+And here we have the rejection region: $$F>F_{k,n-k-1}(\alpha)$$ We can also use the p-value to test the hypothesis. The p-value is the probability of observing a test statistic at least as extreme as the one computed from the sample data, assuming that the null hypothesis is true. And we reject the null hypothesis if the p-value is less than the significance level $\alpha$.
+
+### t-test
+
+For the **t-test**, we have null hypothesis $H_0: \beta_j=0$ against $H_1: \beta_j \not ={0}$. And we have the test statistic $$t=\frac{\hat{\beta}_j}{\sigma(\hat{\beta}_j)}$$ which follows the t-distribution with $n-k-1$ degrees of freedom. Here we compute $\sigma(\hat{\beta}_j)$ by $\sqrt{Var(\hat{\beta}_j)}$. And here we have the rejection region: $$|t|>t_{n-k-1}(\alpha/2)$$ where we want two-side test($H_1: \beta_j \not ={0}$) and $$ t>t_{n-k-1}(\alpha)$$ where we want one-side test($H_1: \beta_j > 0$ here).
 
 
