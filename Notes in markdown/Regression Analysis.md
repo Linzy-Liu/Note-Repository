@@ -38,8 +38,22 @@ And we define $R^2 = SSE/SST$. The $R^2$ could be compared if and only if:
 **MLR.1** Linear in parameters
 **MLR.2** Random sampling
 **MLR.3** No perfect collinearity
+* The collinearity could be measured by Variance Inflation Factor(VIF), which could be calculated by $VIF_j=\frac{1}{1-R_j^2}$
+
+
 **MLR.4** Zero conditional mean (The value of the explanatory variables must contain no information about the mean of the unobserved factors)
+* **Theorem**(Unbiasedness of OLS) If MLR.1-MLR.4 holds, then $\mathbb{E}(\hat{\beta}_j)=\beta_j$
 
-**Theorem**(Unbiasedness of OLS) If MLR.1-MLR.4 holds, then $\mathbb{E}(\hat{\beta}_j)=\beta_j$
+**MLR.5** Homoskedasticity. That is to say, $Var(u_i|x_i) = \sigma^2$, where $\sigma$ is a constant.
 
-**MLR.5** Homoscedasticity. That is to said, $Var(u_i|x_i) = \sigma^2$, where $\sigma$ is a constant.
+Assumptions MLR.1 through MLR.5 are collectively called **Gauss-Markov assumptions**
+
+***Theorem*** Under assumptions MLR.1 through MLR.5, conditional on the sample values of the independent variables, $$Var(\hat{\beta}_j) = \frac{\sigma^2}{SST_j(1-R_j^2)}$$where $SST_j$ is the total sample variation $SST_j=\sum_{i=1}^n(x_{ij}-\bar{x}_j)^2$ 
+
+And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^2\right)/df$，where $df$ denotes degrees of freedom. $df$ can be calculated by *(number of observations) - (number of estimated parameters)*
+
+***Theorem*** Under the **Gauss-Markov assumptions**, $\mathbb{E}(\hat{\sigma}^2)=\sigma^2$
+
+***Theorem***(Gauss-Markov Theorem) Under the Gauss-Markov assumption, the OLS estimators are the best linear unbiased estimators of the regression coefficients. Namely, $$Var(\hat{\beta}_j)\leq Var(\tilde{\beta}_j)$$ for all $\tilde{\beta}_j=\sum_{i=1}^n w_{ij}y_i$ for which $\mathbb{E}(\tilde{\beta}_j) = \beta_j$
+
+
