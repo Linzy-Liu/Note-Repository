@@ -76,4 +76,24 @@ And here we have the rejection region: $$F>F_{k,n-k-1}(\alpha)$$ We can also use
 
 For the **t-test**, we have null hypothesis $H_0: \beta_j=0$ against $H_1: \beta_j \not ={0}$. And we have the test statistic $$t=\frac{\hat{\beta}_j}{\sigma(\hat{\beta}_j)}$$ which follows the t-distribution with $n-k-1$ degrees of freedom. Here we compute $\sigma(\hat{\beta}_j)$ by $\sqrt{Var(\hat{\beta}_j)}$. And here we have the rejection region: $$|t|>t_{n-k-1}(\alpha/2)$$ where we want two-side test($H_1: \beta_j \not ={0}$) and $$ t>t_{n-k-1}(\alpha)$$ where we want one-side test($H_1: \beta_j > 0$ here).
 
+Some constants if the size of dataset is big enough:
 
+| significance | $\lvert t\rvert > t_{val}$ |
+| :----------: | :------------: |
+|     0.1      |      1.645     |
+|     0.05     |      1.96      |
+|     0.01     |      2.576     |
+
+## Complex hypothesis testing
+
+### Testing linear combinations of parameters
+
+For hypothesis like $H_0: \beta_j = a_j$ against $H_1: \beta_j \not = a_j$, we can use the t-test. And we have the test statistic $$t=\frac{\hat{\beta}_j-a_j}{\sigma(\hat{\beta}_j)}$$
+
+For hypothesis testing like $H_0: \beta_1 = \beta_2$ against $H_1: \beta_1 \not = \beta_2$, we can use the t-test. And we have the test statistic $$t=\frac{\hat{\beta}_1-\hat{\beta}_2}{\sqrt{Var(\hat{\beta}_1-\hat{\beta}_2)}}$$
+
+Here we neglect the degrees of freedom by increasing the size of dataset.
+
+### Testing restrictions on multiple parameters
+
+For hypothesis like $H_0: \beta_j = 0, j\in I_{restrict}$ against hypothesis $H_1: H_0 \text{ is false}$ where $k$ is a positive integer, we can use the F-test, where $I_{restrict} \subset \mathbb{N}$. Suppose the cardinal number of $I_{restrict}$ is $q$, then we have the test statistic $$F=\frac{(SSR_r-SSR_{ur})/q}{SSR_{ur}/(n - k - 1)} \sim F_{q, n-k-1}$$where $SSR_r$ is the sum of squared residuals from the restricted model and $SSR_{ur}$ is the sum of squared residuals from the unrestricted model.The restricted model is defined by the model with restriction that $\beta_j = 0$ for $j \in I_{restrict}$. 
