@@ -1,5 +1,3 @@
-本笔记仅用于简要记录，并不会阐述idea
-
 # Premiliar
 
 ## DataSets
@@ -97,3 +95,24 @@ Here we neglect the degrees of freedom by increasing the size of dataset.
 ### Testing restrictions on multiple parameters
 
 For hypothesis like $H_0: \beta_j = 0, j\in I_{restrict}$ against hypothesis $H_1: H_0 \text{ is false}$ where $k$ is a positive integer, we can use the F-test, where $I_{restrict} \subset \mathbb{N}$. Suppose the cardinal number of $I_{restrict}$ is $q$, then we have the test statistic $$F=\frac{(SSR_r-SSR_{ur})/q}{SSR_{ur}/(n - k - 1)} \sim F_{q, n-k-1}$$where $SSR_r$ is the sum of squared residuals from the restricted model and $SSR_{ur}$ is the sum of squared residuals from the unrestricted model.The restricted model is defined by the model with restriction that $\beta_j = 0$ for $j \in I_{restrict}$. 
+
+## Dummy Variables
+
+Dummy Variables
+:  A dummy variable is a variable that takes on the value 0 or 1 to indicate the absence or presence of some categorical effect that may be expected to shift the outcome.
+
+And the interpretation of the dummy variables is the difference between the group with dummy variable 1 and the group with dummy variable 0. The standard form of regression model with dummy variable is $$y_i = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2} + \ldots + \beta_kx_{ik} + \delta_1d_{i1} + \delta_2d_{i2} + \ldots + \delta_md_{im} + u_i$$ where $d_{ij}$ is the dummy variable for the $j$th group of the $i$th observation.
+Given that a category with 2 possible values has only one degree of freedom, we should beware of collinearity. And another cause of collinearity is that category itself may exclude some combinations of other independent variables.
+
+For the hypothesis testing of dummy variables, we can use the t-test. The t-test here makes no difference from the t-test we have learned before.
+
+### Chow test
+
+Chow test is used to test whether the coefficients of two groups are the same. The null hypothesis is $H_0:$ all betas for the associated independent variables are the same across two different groups.
+Then we have the statistc $$ F = \frac{(SSE_{pooled} - SSE_{subsamples})/k}{SSE_{subsamples}/(n-2k)} \sim F_{k, n-2k}$$where $k$ is the number of parameters and $n$ is the number of observations. $SSE_{pooled}$ is the sum of squared residuals from the regression model on all data and $SSE_{subsamples}$ is the sum of SSE of the regression model on each subsample. For example, if we have two groups, then we have $SSE_{subsamples} = SSE_1 + SSE_2$, and $SSE_{pooled}$ is the SSE of the regression model on the combination of two groups.
+
+### Dummy interaction variables
+
+The idea in interaction variable is that the slope may related to the dummy variable. For example, we have the model $$y_i = \beta_0 + \beta_1x_i + \beta_2d_i + \beta_3(x_id_i) + u_i$$ where $d_i$ is the dummy variable. And obviously the slope of independent variable $x_i$ is $\beta_1 + \beta_3d_i$. And the $x_id_i$ here is called the interaction variable.
+
+The tests on such model is the same as the tests on the model with normal dummy variables.
