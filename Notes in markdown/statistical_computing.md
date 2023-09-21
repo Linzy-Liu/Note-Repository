@@ -125,3 +125,18 @@ $$\frac{\sum_{i=1}^n (X_i-\mu_i)}{\sqrt{\sum_{i=1}^n Var(X_i)}}$$来计算
 在此仅仅阐述逆变换抽样法。这一方法如下：假定随机变量的全部可能取值为$\{x_i\}$，记$F(x) = \mathbb{P}(\eta \leq x)$，那么按照如下步骤产生随机数：
 1. 产生$U\sim U(0,1)$
 2. 寻找使得$U \in [F(x_{i-1}), F(x_i))$的$i$，而后令$\eta = x_i$。若$U \in [0, F(x_0))$，则令$\eta = x_0$
+
+# 2. 随机向量随机数的抽样法
+
+## 2.1 变换抽样法
+
+> $\mathbf{Theorem 2.1}$ 设随机向量$\mathbf{X} = (X_1, X_2, \ldots, X_n)^T$的概率密度为$f(x_1, x_2, \ldots, x_n)$，而变换$\mathbf{Y} = (Y_1, Y_2, \ldots, Y_n)^T = \mathbf{h}(\mathbf{X})$，其中$\mathbf{h}(\mathbf{x}) = (h_1(\mathbf{x}), h_2(\mathbf{x}), \ldots, h_n(\mathbf{x}))^T$，且$\mathbf{h}(\mathbf{x})$的雅可比行列式$J(\mathbf{x})$在$\mathbb{R}^n$上处处非零，则$\mathbf{Y}$的概率密度为 $$g(y_1, y_2, \ldots, y_n) = f(\mathbf{h}^{-1}(\mathbf{y}))\lvert J(\mathbf{h}^{-1}(\mathbf{y}))\rvert$$
+
+## 2.2 条件分布法
+
+假设联合密度函数$f(x_1,x_2,\ldots,x_n)$可分解为多个分布的乘积：$$f(x_1,x_2,\ldots,x_n) = f_1(x_1)f_2(x_2|x_1)\cdots f_n(x_n|x_1,x_2,\ldots, x_{n-1})$$那么，我们可以按照如下步骤产生随机数：
+1. 产生$x_1 \sim f_1(x_1)$
+2. 给定$\xi_1=x_1$，产生$X_2 \sim f_2(x_2|\xi_1=x_1)$
+3. 以此类推，直到给定$(\xi_1,\xi_2,\ldots,\xi_{n-1}) = (x_1,x_2,\ldots,x_{n-1})$， 产生$x_n \sim f_n(x_n|\xi_1=x_1,\xi_2=x_2,\ldots,\xi_{n-1}=x_{n-1})$
+
+由此可见，这个方法需要可计算的各类边缘分布。
