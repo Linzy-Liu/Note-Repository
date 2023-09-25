@@ -60,6 +60,8 @@ And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^
 In practice, we ensure the assumption by the Central Limit Theorem.
 **Corrollary** Under MLR.1-MLR.6, we have: $$\hat{\beta}_j \sim N(\beta_j, Var(\hat{\beta}_j))$$which is equivalent to $$ \frac{\hat{\beta}_j - \beta_j}{\sigma(\hat{\beta}_j)} \sim N(0,1)$$
 
+The assumption from MLR.1 to MLR.6 are called the **Classical Linear Model(CLM)** assumptions.
+
 ## Hypothesis testing
 
 Here we have two main types of hypothesis testing: **t-test** and **F-test**. ~~There is nothing different from the statistics we have learned before but the specific variables we are testing.~~
@@ -116,3 +118,18 @@ Then we have the statistc $$ F = \frac{(SSE_{pooled} - SSE_{subsamples})/k}{SSE_
 The idea in interaction variable is that the slope may related to the dummy variable. For example, we have the model $$y_i = \beta_0 + \beta_1x_i + \beta_2d_i + \beta_3(x_id_i) + u_i$$ where $d_i$ is the dummy variable. And obviously the slope of independent variable $x_i$ is $\beta_1 + \beta_3d_i$. And the $x_id_i$ here is called the interaction variable.
 
 The tests on such model is the same as the tests on the model with normal dummy variables.
+
+# MLR without certain assumptions
+
+## Heteroskedasticity
+
+Heteroskedasticity
+:  Heteroskedasticity is a systematic change in the variance of the error term over the range of values of an independent variable or variables. It is a violation of the assumption of homoskedasticity.
+
+### Testing for heteroskedasticity
+
+We can use the **Breusch-Pagan test** to test for heteroskedasticity. The null hypothesis is $H_0: \sigma^2 = \sigma^2(x_1, x_2, \ldots, x_k)$ against $H_1: \sigma^2 \not = \sigma^2(x_1, x_2, \ldots, x_k)$. And we have the test statistic $$LM = nR^2 \sim \chi^2_{k-1}$$where $R^2$ is the $R^2$ from the regression of $u^2$ on $x_1, x_2, \ldots, x_k$. And we have F statistic $$F = \frac{R^2/(k-1)}{(1-R^2)/(n-k)} \sim F_{k-1, n-k}$$ where $k$ is the number of parameters and $n$ is the number of observations.
+
+### Robust standard errors
+
+We can try to use **feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$. Th
