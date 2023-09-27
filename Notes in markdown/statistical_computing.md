@@ -140,3 +140,24 @@ $$\frac{\sum_{i=1}^n (X_i-\mu_i)}{\sqrt{\sum_{i=1}^n Var(X_i)}}$$来计算
 3. 以此类推，直到给定$(\xi_1,\xi_2,\ldots,\xi_{n-1}) = (x_1,x_2,\ldots,x_{n-1})$， 产生$x_n \sim f_n(x_n|\xi_1=x_1,\xi_2=x_2,\ldots,\xi_{n-1}=x_{n-1})$
 
 由此可见，这个方法需要可计算的各类边缘分布。
+
+## 2.3 舍选抽样法
+
+> $\mathbf{Theorem 2.1}$ 设随机向量$\xi\in\mathbb{R}^n$在平行多面体$R:\,a_i\leq x_i\leq b_i\quad(i=1,2,\ldots,n)$上取值，联合密度函数$f(x)$存在上界$$f_0=\sup_{\xi\in R}f(x)<\infin$$那么按以下步骤产生随机数：
+> 1. 产生随机数$U_0,U_1,\ldots,U_n\mathop{\sim}\limits^{iid}U(0,1)$
+> 2. 若$U_0,U_1,\ldots,U_n$满足$U_0f_0\leq f((b_1-a_1)U_1+a_1,\ldots,(b_n-a_n)U_n+a_n)$，则令$\xi_i=(b_i-a_i)U_i+a_i,\quad(i=1,2,\ldots,n)$
+> 则由此产生的随机向量$\xi$的联合密度函数为$f(x)$
+
+## 2.4 离散随机向量随机数的抽样法
+
+### 条件分布法
+
+> $\mathbf{Theorem 2.2}$ 设随机向量$\xi=(\xi_1,\xi_2,\ldots,\xi_n)^T$的联合分布列为$$P(\xi_1=x_1,\xi_2=x_2,\ldots,\xi_n=x_n)=p(x_1,x_2,\ldots,x_n)$$那么，若$p(x_1,x_2,\ldots,x_n)$可分解为多个条件分布的乘积：$$p(x_1,x_2,\ldots,x_n)=p_1(x_1)p_2(x_2|x_1)\cdots p_n(x_n|x_1,x_2,\ldots,x_{n-1})$$那么，我们可以按照如下步骤产生随机数：
+> 1. 产生$x_1\sim p_1(x_1)$
+> 2. 给定$\xi_1=x_1$，产生$x_2\sim p_2(x_2|\xi_1=x_1)$
+> 3. 以此类推，直到给定$(\xi_1,\xi_2,\ldots,\xi_{n-1})=(x_1,x_2,\ldots,x_{n-1})$，产生$x_n\sim p_n(x_n|\xi_1=x_1,\xi_2=x_2,\ldots,\xi_{n-1}=x_{n-1})$
+
+一般而言，离散随机变量会给出各个条件分布。
+
+# 3 参数估计的数值计算
+
