@@ -132,4 +132,46 @@ We can use the **Breusch-Pagan test** to test for heteroskedasticity. The null h
 
 ### Robust standard errors
 
-We can try to use **feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$. Th
+We can try to use **feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$.
+
+## Endogeneity
+
+Endogeneity
+:  Endogeneity is a situation in which an explanatory variable is correlated with the error term. It is a violation of the assumption of exogeneity.
+
+### Endogeneity problem
+
+The endogeneity problem always occurs when:
+1. The dependent variable is determined by a variable that is not included in the model.
+2. Variables have stimultaneous relationship.
+3. The dependent variable is determined by a variable that is measured with error.
+4. The sampling method is biased.
+
+### Instrumental Variables(IV)
+
+Instrumental Variables(IV)
+:  An instrumental variable is a variable that is correlated with the endogenous explanatory variable but is uncorrelated with the error term. Namely, we have the conditions below for an IV $z$:
+   1. $Cov(z, x) \not = 0$
+   2. $Cov(z, u) = 0$
+   3. The IV does not appear in the regression equation.
+We can see that the features of IV above satisfy the features of the independent variables in the regression model. So we can use IV to solve the endogeneity problem by switch the endogenous variable with the IV.
+
+### Two-stage least squares(2SLS)
+
+2SLS is a critical method to solve the endogeneity problem. The idea is to use the IV to replace the endogenous variable in the regression model. And we have the following steps:
+1. Regress the endogenous variable on the IV and other independent variables to get the fitted value $\hat{x}$.
+2. Replace the endogenous variable with the fitted value $\hat{x}$ in the regression model.
+3. Use OLS to estimate the parameters of the regression model with replaced endogenous variable.
+
+### Tests for endogeneity
+
+In the anlysis above, we have the questions below:
+1. Whether the replaced variable is endogeneous.
+2. Whether the IVs are exogeneous.
+3. Whether the IVs are relevant to the endogenous variable.
+
+Then we have the following tests:
+
+#### Testing for endogeneity
+
+We tend to use the **Hausman test** to test for endogeneity. The null hypothesis is $H_0: Cov(x, u) = 0$ against $H_1: Cov(x, u) \not = 0$. Considering in 2SLS, we can obtain the inner residual 
