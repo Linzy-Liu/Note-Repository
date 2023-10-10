@@ -174,4 +174,26 @@ Then we have the following tests:
 
 #### Testing for endogeneity
 
-We tend to use the **Hausman test** to test for endogeneity. The null hypothesis is $H_0: Cov(x, u) = 0$ against $H_1: Cov(x, u) \not = 0$. Considering in 2SLS, we can obtain the inner residual 
+We tend to use the **Hausman test** to test for endogeneity. The null hypothesis is $H_0: Cov(x, u) = 0$ against $H_1: Cov(x, u) \not = 0$. In fact, we are testing whether the efficient of 2SLS and OLS has significant difference on endogeneous variable. We write it in formula as below:
+Suppose the formula in two steps are :
+$$\begin{aligned}
+\text{Step 1: } & x_i = \pi_0 + \pi_1z_i + \pi_2x_{i2} + \ldots + \pi_kx_{ik} + v_i \\
+\text{Step 2: } & y_i = \beta_0 + \beta_1\hat{x}_i + \beta_2x_{i2} + \ldots + \beta_kx_{ik} + u_i
+\end{aligned}$$
+Then we just need to regress the formula below:
+$$y_i = \beta_0 + \beta_1x_i + \beta_2x_{i2} + \ldots + \beta_kx_{ik} + \delta \hat{v}_i + e_i$$
+The Hausman test here is equivalent to test whether $\delta = 0$.
+
+#### Testing for IV relevance
+
+In such case, we just need to exam the coefficient of IVs on the reduced form of 2SLS regression. If the coefficient is significant, then the IVs are relevant to the endogeneous variable. The "reduced form" here means the equation below:
+$$x_i = \pi_0 + \pi_1z_{i1} + \pi_1z_{i2} + \lodts + \pi_1z_{im} + \pi_2x_{1} + \ldots + \pi_kx_{i-1} + v_i$$ where $z_{ij}$ is the $j$th IV.
+
+#### Testing for IV exogeneity
+
+The idea is that, if all instruments are exogenous, the 2SLS residuals should be uncorrelated with the instruments, up to sampling error. But if there are $k + 1$ parameters and $k + 1 + q$ instruments, the 2SLS residuals have a zero mean and are identically uncorrelated with $k$ linear combinations of the instruments.
+
+**Testing Overidentifying restrictions**
+1.  Estimate the structural equation by 2SLS and obtain the 2SLS residuals, $\hat{u}_1$.
+2.  Regress $\hat{u}_1$ on all exogenous variables. Obtain the R-squared, say, $R^2$.
+3. Under the null hypothesis that all IVs are uncorrelated with $u_1$, $nR^2 \sim \chi^2(q)$, where $q$ is the number of instrumental variables from outside the model minus the total number of endogenous explanatory variables. If $nR^2_1$ exceeds (say) the 5% critical value in the $\chi^2(q)$ distribution, we reject $H_0$ and conclude that at least some of the IVs are not exogenous.
