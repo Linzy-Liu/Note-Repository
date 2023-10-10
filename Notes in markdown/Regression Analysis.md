@@ -196,4 +196,45 @@ The idea is that, if all instruments are exogenous, the 2SLS residuals should be
 **Testing Overidentifying restrictions**
 1.  Estimate the structural equation by 2SLS and obtain the 2SLS residuals, $\hat{u}_1$.
 2.  Regress $\hat{u}_1$ on all exogenous variables. Obtain the R-squared, say, $R^2$.
-3. Under the null hypothesis that all IVs are uncorrelated with $u_1$, $nR^2 \sim \chi^2(q)$, where $q$ is the number of instrumental variables from outside the model minus the total number of endogenous explanatory variables. If $nR^2_1$ exceeds (say) the 5% critical value in the $\chi^2(q)$ distribution, we reject $H_0$ and conclude that at least some of the IVs are not exogenous.
+3. Under the null hypothesis that all IVs are uncorrelated with $u_1$, $nR^2 \sim \chi^2(q)$, where $q$ is the number of instrumental variables from outside the model minus the total number of endogenous explanatory variables, and $n$ stands for the number of samples. If $nR^2_1$ exceeds (say) the 5% critical value in the $\chi^2(q)$ distribution, we reject $H_0$ and conclude that at least some of the IVs are not exogenous.
+
+# Time Series
+
+We can know that the time series data has the following features:
+1. Temporal ordering.
+2. Dependence on past values.(Serial correlation)
+3. Randomness.
+
+And we have the following models for time series data:
+1. **Static models**: $y_t = \beta_0 + \beta_1x_{1t} + \beta_2x_{2t} + \ldots + \beta_kx_{kt} + u_t$
+2. **Finite distributed lag model**: $y_t = \beta_0 + \beta_1x_t + \delta_1x_{t-1} + \delta_2x_{t-2} + \ldots + \delta_kx_{t-k} + u_t$
+
+## TS Assumptions
+
+**TS.1** Linear in parameters
+**TS.2** No perfect collinearity
+**TS.3** Zero conditional mean
+   * (Comtemporaneous) Exogeneity: $\mathbb{E}(x_t|u_t)=0$, the mean of the error term is unrelated to the explanatory variables of the same period.
+   * Strict exogeneity: $\mathbb{E}(u_t|x_1, x_2, \ldots, x_t) = 0$, the mean of the error term is unrelated to the explanatory variables of all periods.
+**TS.4** Homoskedasticity. That is to say, $Var(u_t|x_1, x_2, \lodts, x_t) = \sigma^2$, where $\sigma$ is a constant.
+**TS.5** No serial correlation. That is to say, $Corr(u_t, u_s|x_1, x_2, \ldots, x_t)=0$
+**TS.6** Normality of errors
+
+***Theorem***: If from TS.1 to TS.3 holds, then $\mathbb{E}(\hat{\beta}_j)=\beta_j$
+
+***Theorem***: Under TS.1-TS.6, the OLS estimators is BLUE of the regression coefficients.
+
+***Theorem***: Under TS.1-TS.6, the the OLS estimators have the usual normal distribution (conditional on $\mathbf{X}$). The usual F-tests and t-tests are valid.
+
+## dummy variables in TS
+
+Dummy variables are used to isolate certain periods that may be systematically different. For example, we can use dummy variables to isolate the effect of a policy change. And it works in the same way as the dummy variables in cross-sectional data. The dummy variables can also be used to capture seasonal effects.
+
+And we usually import trending variables when:
+* If the dependent variable displays an obvious trending behaviour
+* If both the dependent and some independent variables have trends
+* If only some of the independent variables have trends; their effect on the dependent variable may only be visible after a trend has been substracted.
+
+
+
+
