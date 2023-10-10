@@ -161,3 +161,31 @@ $$\frac{\sum_{i=1}^n (X_i-\mu_i)}{\sqrt{\sum_{i=1}^n Var(X_i)}}$$来计算
 
 # 3 参数估计的数值计算
 
+## 3.1 点估计
+
+在这一节，我们将会模拟：
+1. 计算点估计的的期望是否接近真实值
+2. 计算点估计的方差
+3. 计算点估计的其他数字特征
+
+### 3.1.1 期望与方差
+
+我们在这一节中，面对着这样的一个问题：
+> 对于随机变量$X$，存在一个统计量$\theta$，我们想要获取这一个统计量的期望与方差，但是我们无法直接计算，那么我们可以通过模拟的方法来计算这一统计量的期望与方差吗？
+
+在这里，我们可以采取一个朴素而简单的方法：我们可以通过模拟随机变量$X$的$K$个样本，而后计算这一统计量的估计值$\hat{\theta}_1$，而后重复这一过程$N$次，得到$\hat{\theta}_1,\hat{\theta}_2,\ldots,\hat{\theta}_N$，最后便可以计算这一统计量的期望与方差的估计值。
+$$
+\begin{align*}
+\mathbb{E}(\hat{\theta}) &\approx \frac{1}{N}\sum_{i=1}^N \hat{\theta}_i\\
+Var(\hat{\theta}) &\approx \frac{1}{N-1}\sum_{i=1}^N (\hat{\theta}_i - \mathbb{E}(\hat{\theta}))^2
+\end{align*}
+$$
+
+注意到，$\mathbb{E}(\hat{\theta})$事实上是$NK$个独立同分布的随机变量的均值，因而比如当$X\sim N(\mu,\sigma^2)$时，便可以计算得其理论方差为$\sigma^2/(NK)$
+
+## 3.2 区间估计
+
+在区间估计中，我们往往关心：置信度、区间长度等指标。
+
+在此，我们的想法和上面一样，对于每次估计，抽取$K$个样本，找到对于本个样本中满足置信度的区间，即$$\mathbb{P}(\hat{\theta}_L \leq \theta \leq \hat{\theta}_U) \geq 1-\alpha$$
+这样，我们就可以在$N$次重复实验中找到$N$个置信区间。那么最后数值计算的置信度为：$$\hat{Prob} = \frac{1}{N}\sum_{i=1}^N \mathbb{P}(\hat{\theta}_L^{(i)} \leq \theta \leq \hat{\theta}_U^{(i)})$$ 而置信区间为：$$[\frac{1}{N}\sum_{i=1}^N\hat{\theta}_L^{(i)}, \frac{1}{N}\sum_{i=1}^N\hat{\theta}_U^{(i)}]$$
