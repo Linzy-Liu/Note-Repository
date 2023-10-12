@@ -128,11 +128,15 @@ Heteroskedasticity
 
 ### Testing for heteroskedasticity
 
-We can use the **Breusch-Pagan test** to test for heteroskedasticity. The null hypothesis is $H_0: \sigma^2 = \sigma^2(x_1, x_2, \ldots, x_k)$ against $H_1: \sigma^2 \not = \sigma^2(x_1, x_2, \ldots, x_k)$. And we have the test statistic $$LM = nR^2 \sim \chi^2_{k-1}$$where $R^2$ is the $R^2$ from the regression of $u^2$ on $x_1, x_2, \ldots, x_k$. And we have F statistic $$F = \frac{R^2/(k-1)}{(1-R^2)/(n-k)} \sim F_{k-1, n-k}$$ where $k$ is the number of parameters and $n$ is the number of observations.
+We can use the **Breusch-Pagan test** to test for heteroskedasticity. The null hypothesis is $H_0: \sigma^2 = \sigma^2(x_1, x_2, \ldots, x_k)$ against $H_1: \sigma^2 \not = \sigma^2(x_1, x_2, \ldots, x_k)$. And we have the test statistic $$LM = nR^2 \sim \chi^2_{k-1}$$where $R^2$ is the $R^2$ from the regression of $u^2$ on $x_1, x_2, \ldots, x_k$. 
+And we could use F statistic $$F = \frac{R^2/(k-1)}{(1-R^2)/(n-k)} \sim F_{k-1, n-k}$$ where $k$ is the number of parameters and $n$ is the number of observations.
 
+And we could also test the joint significance of the parameters of the regression of $u^2$ on $x_1, x_2, \ldots, x_k$. Suppose the original regression has been conducted, then we will obtain $\hat{u}_i$s. WE will have $$\hat{u}^2 = \delta_0 + \delta_1x_1 + \ldots + \delta_kx_k + v$$ where $v$ is a random variable with mean $0$. And we can use F statistic to test the joint significance of $\delta_j$s.
+
+Or **White test** could be used. That is, we regress $\hat{u}_i^2$ on $\hat{y}$ and $\hat{y}^2$ : $$ \hat{u}_i^2 = \delta_0 + \delta_1\hat{y}_i + \delta_2\hat{y}_i^2 + v_i$$and test the joint significance of the parameters $\delta_1$ and $\delta_2$. It is worth noting that the statistic $LM = nR^2 \sim \chi^2_2$ is the same as the statistic in Breusch-Pagan test.
 ### Robust standard errors
 
-We can try to use **feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$.
+We can try to use **Feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$.
 
 ## Endogeneity
 
@@ -187,7 +191,7 @@ The Hausman test here is equivalent to test whether $\delta = 0$.
 #### Testing for IV relevance
 
 In such case, we just need to exam the coefficient of IVs on the reduced form of 2SLS regression. If the coefficient is significant, then the IVs are relevant to the endogeneous variable. The "reduced form" here means the equation below:
-$$x_i = \pi_0 + \pi_1z_{i1} + \pi_1z_{i2} + \lodts + \pi_1z_{im} + \pi_2x_{1} + \ldots + \pi_kx_{i-1} + v_i$$ where $z_{ij}$ is the $j$th IV.
+$$x_i = \pi_0 + \pi_1z_{i1} + \pi_1z_{i2} + \ldots + \pi_1z_{im} + \pi_2x_{1} + \ldots + \pi_kx_{i-1} + v_i$$ where $z_{ij}$ is the $j$th IV.
 
 #### Testing for IV exogeneity
 
@@ -216,7 +220,7 @@ And we have the following models for time series data:
 **TS.3** Zero conditional mean
    * (Comtemporaneous) Exogeneity: $\mathbb{E}(x_t|u_t)=0$, the mean of the error term is unrelated to the explanatory variables of the same period.
    * Strict exogeneity: $\mathbb{E}(u_t|x_1, x_2, \ldots, x_t) = 0$, the mean of the error term is unrelated to the explanatory variables of all periods.
-**TS.4** Homoskedasticity. That is to say, $Var(u_t|x_1, x_2, \lodts, x_t) = \sigma^2$, where $\sigma$ is a constant.
+**TS.4** Homoskedasticity. That is to say, $Var(u_t|x_1, x_2, \ldots, x_t) = \sigma^2$, where $\sigma$ is a constant.
 **TS.5** No serial correlation. That is to say, $Corr(u_t, u_s|x_1, x_2, \ldots, x_t)=0$
 **TS.6** Normality of errors
 
