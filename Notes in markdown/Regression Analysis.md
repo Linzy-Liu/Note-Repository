@@ -220,6 +220,7 @@ And we have the following models for time series data:
 **TS.3** Zero conditional mean
    * (Comtemporaneous) Exogeneity: $\mathbb{E}(x_t|u_t)=0$, the mean of the error term is unrelated to the explanatory variables of the same period.
    * Strict exogeneity: $\mathbb{E}(u_t|x_1, x_2, \ldots, x_t) = 0$, the mean of the error term is unrelated to the explanatory variables of all periods.
+
 **TS.4** Homoskedasticity. That is to say, $Var(u_t|x_1, x_2, \ldots, x_t) = \sigma^2$, where $\sigma$ is a constant.
 **TS.5** No serial correlation. That is to say, $Corr(u_t, u_s|x_1, x_2, \ldots, x_t)=0$
 **TS.6** Normality of errors
@@ -239,6 +240,61 @@ And we usually import trending variables when:
 * If both the dependent and some independent variables have trends
 * If only some of the independent variables have trends; their effect on the dependent variable may only be visible after a trend has been substracted.
 
+## Serial correlation
 
+In practice, we could merely see an instance that fits the TS.5 perfectly. When serial correlation occurs, the OLS estimators are still unbiased and consistent, but they are no longer efficient. And the standard errors are biased downward. And the t-statistics and F-statistics are biased.
 
+### Testing for serial correlation
+
+Suppose we have regression model:
+$$
+\begin{align*}
+y_t &= \beta_0 + \beta_1x_{1t} + \beta_2x_{2t} + \ldots + \beta_kx_{kt} + u_t \\
+u_t &= \rho u_{t-1} + \epsilon_t
+\end{align*}
+$$ And the hypothesis is $H_0: \rho=0$
+
+#### method 1: Residual Correlogram
+
+We can compute the residual correlation by $$r_k = \frac{\sum_{t=k+1}^T \hat{u}_t\hat{u}_{t-k}}{\sum_{t=1}^T \hat{u}_t^2}$$ And significant boundary is $\plusmn 2\sqrt{T}$
+
+#### method 2: Durbin-Watson test
+
+The Durbin-Watson test is a test for serial correlation in the residuals from a regression analysis. The Durbin-Watson statistic will always have a value between 0 and 4. A value of 2 means that there is no autocorrelation detected in the sample. Values approaching 0 indicate positive serial correlation and values toward 4 indicate negative serial correlation.
+
+Our hypothesis here will be $H_0: \rho=0$ against $H_1: \rho > 0$ or $H_1: \rho < 0$. And we have the test statistic $$dw = \frac{\sum_{t=2}^T(\hat{u}_t-\hat{u}_{t-1})^2}{\sum_{t=2}^T \hat{u}_t^2}$$
+We have two bounds $d_L$ and $d_U$ for the test statistic. 
+* If $dw < d_L$, we reject $H_0$ and conclude that there is positive serial correlation.
+* If $dw > d_U$, we reject $H_0$ and conclude that there is negative serial correlation. 
+* If $d_L < dw < d_U$, we fail to reject $H_0$. And the test is inconclusive.
+
+#### method 3: Breusch-Godfrey test
+
+The Breusch-Godfrey test is a test for serial correlation in the residuals from a regression analysis. In this test, we assume that the correlation between residuals could be written as $$ \hat{u}_t = \beta_0 + \beta_1x_{1t} + \ldots + \beta_kx_{kt} + \rho_1\hat{u}_{t-1} + \rho_2\hat{u}_{t-2} + \ldots + \rho_q\hat{u}_{t-q} + e_t$$ where $e_t$ is the error term. And we have the hypothesis $H_0: \rho_1 = \rho_2 = \ldots = \rho_q = 0$ against $H_1: \rho_j \not = 0$ for at least one $j$. And we have the test statistic $$LM = T\sum_{j=1}^q r_j^2 \sim \chi^2_q$$ where $r_j$ is the residual correlation at lag $j$.
+
+### Dealing with serial correlation
+
+#### method 1: Cochrane-Orcutt procedure
+
+Concerning the equation in the last section, we can use the Cochrane-Orcutt procedure to deal with the serial correlation. The idea is to use the OLS estimators of the equation below to replace the OLS estimators of the original equation.
+$$
+\begin{align*}
+y_t &= \beta_0 + \beta_1x_{1t} + \beta_2x_{2t} + \ldots + \beta_kx_{kt} + u_t \\
+u_t &= \rho u_{t-1} + \epsilon_t
+\end{align*}
+$$
+And we have the following steps:
+1. Estimate the original equation by OLS and obtain the residuals $\hat{u}_t$.
+2. Regress $\hat{u}_t$ on $\hat{u}_{t-1}$ and obtain the coefficient $\hat{\rho}$.
+3. Replace the original equation with the equation below: $$y_t - \rho y_{t-1} = \beta_0(1-\hat{\rho}) + \beta_1(x_{1t} - \hat{\rho}x_{1(t-1)}) + \ldots + (u_t - \hat{\rho}u_{t-1}) $$ we can see that the new equation is free of serial correlation while the coefficients of original equation stay the same.
+
+Howerver, we can see that the precedure can not be appied to the first sample because we do not have the value of $y_0$. Then there are two ways to deal with this problem:
+1. We can omit the first sample.
+2. We could let the fist sample calculated by follows:
+   $$
+   \begin{align*}
+   y_1^* &= \sqrt{1-\hat{\rho}^2}y_1 & x_{11}^* &= \sqrt{1-\hat{\rho}^2} \\
+   x_{12}^* &= \sqrt{1-\hat{\rho}^2}x_1 & \hat{u}_1^* &= \sqrt{1-\hat{\rho}^2}\hat{u}_1 \\ 
+   \end{align*}
+   $$
 
