@@ -200,3 +200,48 @@ Type II error: 取伪
 
 那么根据$1-\beta = \mathbb{P}(X\in C|H_1)$(其中$C$为拒绝域)，我们可以通过模拟的方法来计算$1-\beta$。事实上，$\alpha$的计算同理。
 
+## 4.1 参数检验
+
+### 单总体
+
+1. $H_0:\mu=\mu_0$ vs $H_1:\mu\neq\mu_0$
+   1. $X\sim N(\mu,\sigma^2)$，$\sigma^2$已知
+   2. $X\sim N(\mu,\sigma^2)$，$\sigma^2$未知
+2. $H_0:\sigma^2=\sigma_0^2$ vs $H_1:\sigma^2\neq\sigma_0^2$
+   1. $X\sim N(\mu,\sigma^2)$，$\mu$已知
+   2. $X\sim N(\mu,\sigma^2)$，$\mu$未知
+
+### 双总体
+
+1. $H_0:\mu_1=\mu_2$ vs $H_1:\mu_1\neq\mu_2$
+   1. $X_1\sim N(\mu_1,\sigma_1^2)$，$X_2\sim N(\mu_2,\sigma_2^2)$，$\sigma_1^2=\sigma_2^2$已知
+   2. $X_1\sim N(\mu_1,\sigma_1^2)$，$X_2\sim N(\mu_2,\sigma_2^2)$，$\sigma_1^2=\sigma_2^2$未知
+2. $H_0:\sigma_1^2=\sigma_2^2$ vs $H_1:\sigma_1^2\neq\sigma_2^2$
+   1. $X_1\sim N(\mu_1,\sigma_1^2)$，$X_2\sim N(\mu_2,\sigma_2^2)$，$\mu_1,\mu_2$已知
+   2. $X_1\sim N(\mu_1,\sigma_1^2)$，$X_2\sim N(\mu_2,\sigma_2^2)$，$\mu_1,\mu_2$未知
+
+### 4.1.1 估计功效的数值计算
+
+计算一类错误时：由$\alpha = \mathbb{P}(X\in C|H_0)$，可知：
+1. 从$H_0$中产生$N$个样本
+2. 计算统计量$T(x_1,x_2,\ldots,x_N)$的值，而后计算拒绝域$C$，得到$C_1$
+3. 重复生成样本、计算统计量$K$次，那么就可以计算得到$\alpha$的估计值为：$$\hat{\alpha} = \frac{1}{K}\sum_{i=1}^K \chi_{C_1}(T^{(i)})$$
+
+而对于功效，由于其表达式为：$1-\beta = \mathbb{P}(X\in C|H_1)$，只需考虑将样本从$H_1$中产生即可，其余步骤从上面的第2步开始。（此处的拒绝域$C$应当是在$H_0$下的拒绝域）
+
+## 4.2 单样本的拟合优度检验
+
+### 4.2.1 Pearson $\chi^2$检验
+
+在这里，我们考虑的是，对于一个已知的分布$F(x)$，我们想要检验样本是否来自这一分布。那么我们的假设为：$H_0: F(x) = F_0(x)$ vs $H_1: F(x) \neq F_0(x)$
+而后使用Pearson统计量：$$\chi^2 = \sum_{i=1}^k \frac{(n_i - np_i)^2}{np_i}$$ 这一统计量服从于$\chi^2(k-1)$的分布，其中$k$为分组数，$n_i$为第$i$组的样本数，$np_i$为第$i$组的理论概率。
+对于分组的方案，我们有两种选择：
+1. 等距分组：$[a, a+h), [a+h, a+2h), \ldots, [a+(k-1)h, a+kh)$
+2. 等频分组：$[a, a_1), [a_1, a_2), \ldots, [a_{k-1}, a_k)$
+
+### 4.2.2 Kolmogorov-Smirnov检验(K-S检验)
+
+在此处，我们考虑的是，对于一个已知的分布$F(x)$，我们想要检验样本是否来自这一分布。那么我们的假设为：$H_0: F(x) = F_0(x)$ vs $H_1: F(x) \neq F_0(x)$。假设我们从获得了$N$个独立观测样本$X_1,X_2,\ldots,X_N$，那么就会有
+经验分布函数$F_n(X)$。K-S统计量的思想是，我们将$F_n(X)$与$F_0(X)$的差值的绝对值的最大值作为统计量，即$$D_n = \sup_{i=1,2,\ldots,N}\lvert F_n(X_i) - F_0(X_i)\rvert$$
+这一差值服从于Kolmogorov分布，即$$\mathbb{P}(D_n \leq x) = 1 - 2\sum_{k=1}^{+\infin}(-1)^{k-1} e^{-2nk^2x^2}, x\in(0,+\infty)$$
+
