@@ -298,3 +298,14 @@ Howerver, we can see that the precedure can not be appied to the first sample be
    \end{align*}
    $$
 
+# DiD Model(Difference in Difference Model)
+
+## The basic idea
+
+The basic idea of DiD model is to compare the difference between the treatment group and the control group before and after the treatment. And we have the following regression model:
+$$y_{it} = \beta_0 + \beta_1D_i + \beta_2T_t + \beta_3(D_i \times T_t) + u_{it}$$ where $D_i$ is the dummy variable for the treatment group, $T_t$ is the dummy variable for the period after the treatment. And we can see that $\beta_3$ is the coefficient of interest.
+And the DiD estimator is $$\hat{\beta}_3 = (\bar{y}_{1,T} - \bar{y}_{1,C}) - (\bar{y}_{0,T} - \bar{y}_{0,C})$$ where $\bar{y}_{1,T}$ is the average of the treatment group after the treatment, $\bar{y}_{1,C}$ is the average of the control group after the treatment, $\bar{y}_{0,T}$ is the average of the treatment group before the treatment, and $\bar{y}_{0,C}$ is the average of the control group before the treatment.
+
+
+
+
