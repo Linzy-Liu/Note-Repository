@@ -306,6 +306,53 @@ The basic idea of DiD model is to compare the difference between the treatment g
 $$y_{it} = \beta_0 + \beta_1D_i + \beta_2T_t + \beta_3(D_i \times T_t) + u_{it}$$ where $D_i$ is the dummy variable for the treatment group, $T_t$ is the dummy variable for the period after the treatment. And we can see that $\beta_3$ is the coefficient of interest.
 And the DiD estimator is $$\hat{\beta}_3 = (\bar{y}_{1,T} - \bar{y}_{1,C}) - (\bar{y}_{0,T} - \bar{y}_{0,C})$$ where $\bar{y}_{1,T}$ is the average of the treatment group after the treatment, $\bar{y}_{1,C}$ is the average of the control group after the treatment, $\bar{y}_{0,T}$ is the average of the treatment group before the treatment, and $\bar{y}_{0,C}$ is the average of the control group before the treatment.
 
+The significance of the DiD estimator implies that the treatment has significant effect on the treatment group.
+
+# Limited Dependent Variables
+
+Limited Dependent Variables, LDV for short, are the dependent variables whose range is substaintively restricted. And we have the following types of LDV:
+1. Binary variables
+2. Nonnegative variables
+3. Censored variables
+4. Count variables
+5. Nonnegative variables with excess zeros
+
+## Linear Probability Model(LPM)
+
+Linear Probability Model(LPM)
+:  The linear probability model is a regression model in which the dependent variable is binary. The LPM is a special case of the probit model and the logit model.
+
+The LPM is the simplest model for binary dependent variables. And we have the following regression model:
+$$\mathbb{P}(y_i=1|\mathbf{x}) = \beta_0 + \beta_1x_{i1} + \beta_2x_{i2} + \ldots + \beta_kx_{ik}$$ where $y_i$ is the binary dependent variable. And we can see that the LPM is a special case of the linear regression model. And we can use the OLS to estimate the parameters.
+
+## Binary Choice Model
+
+Binary Choice Model
+:  The binary choice model is a regression model in which the dependent variable is binary. The binary choice model is a generalization of the linear probability model.
+
+The idea of the model is to use the latent variable to represent the binary dependent variable. The idea here is identical to the calssification quetion in Machine learning. And we have the following regression model:
+$$\mathbb{P}(y_i=1|\mathbf{x}) = G(\beta_0 + \beta_1x_{i1} + \beta_2x_{i2} + \ldots + \beta_kx_{ik})$$ where $y_i^*$ is the latent variable and $y_i$ is the binary dependent variable. And we can see that the LPM is a special case of the linear regression model. The $G$ here is somewhat similar to the activation function in Machine Learning. And we can use the MLE to estimate the parameters. 
+The $G$ could be the following functions:
+1. Probit function: $G(z) = \Phi(z)$(Standard Normal CDF)
+2. Logit function: $G(z) = \frac{1}{1+\exp(-z)}$
+
+### Goodness of fit
+
+We can use the pseudo R-squared to measure the goodness of fit. And we have the following formula:
+$$\hat{R}^2 = 1 - \log{L_{ur}} / \log{L_0}$$ where $L_{ur}$ is the likelihood of the unrestricted model and $L_0$ is the likelihood of the model with only intercept.
+
+Or we could use correration based measures. And we have the following formula:\[Corr(y_i, \tilde{y}_i)\] 
+
+### Hypothesis testing
+
+The usual t-tests can be used for single parameter hypothesis testing. And there are 3 alternatives for multiple parameter hypothesis testing:
+1. Wald test
+2. Likelihood ratio test
+3. Lagrange multiplier test
+
+The **Likelihood ratio test** is the most powerful test among the three tests. Its idea is to compare the likelihood of the restricted model and the likelihood of the unrestricted model. And we have the following formula:
+$$LR = -2(\log{L_r} - \log{L_{ur}}) \sim \chi^2_q$$ where $q$ is the number of restrictions.
+
 
 
 
