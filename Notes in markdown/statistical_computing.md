@@ -241,7 +241,60 @@ Type II error: 取伪
 
 ### 4.2.2 Kolmogorov-Smirnov检验(K-S检验)
 
-在此处，我们考虑的是，对于一个已知的分布$F(x)$，我们想要检验样本是否来自这一分布。那么我们的假设为：$H_0: F(x) = F_0(x)$ vs $H_1: F(x) \neq F_0(x)$。假设我们从获得了$N$个独立观测样本$X_1,X_2,\ldots,X_N$，那么就会有
-经验分布函数$F_n(X)$。K-S统计量的思想是，我们将$F_n(X)$与$F_0(X)$的差值的绝对值的最大值作为统计量，即$$D_n = \sup_{i=1,2,\ldots,N}\lvert F_n(X_i) - F_0(X_i)\rvert$$
+在此处，我们考虑的是，对于一个已知的分布$F(x)$，我们想要检验样本是否来自这一分布。那么我们的假设为：$H_0: F(x) = F_0(x)$ vs $H_1: F(x) \neq F_0(x)$。假设我们从获得了$N$个独立观测样本$X_1,X_2,\ldots,X_N$，那么就会有经验分布函数$F_n(X)$。
+K-S统计量的思想是，我们将$F_n(X)$与$F_0(X)$的差值的绝对值的最大值作为统计量，记$X_{(1)}, X_{(2)}, \ldots, X_{(N)}$ 为观测值的次序统计量，那么K-S统计量为：$$D_n = \sup_{x\in\mathbb{R}}\lvert F_n(x) - F_0(x)\rvert = \max_{1\leq i\leq N}\left\{\max\right(\lvert\frac{i}{N} - F_0(X_{(i)})\rvert, \lvert F_0(X_{(i)}) - \frac{i-1}{N}\rvert\left)\right\}$$
 这一差值服从于Kolmogorov分布，即$$\mathbb{P}(D_n \leq x) = 1 - 2\sum_{k=1}^{+\infin}(-1)^{k-1} e^{-2nk^2x^2}, x\in(0,+\infty)$$
 
+### 4.2.3 游程检验（变量随机性检验）
+
+这一检验是用于检验变量是否完全随机。其思想为：对于一个数据列，我们将其分为若干个游程，其中每个游程内的数据均单调上升。每个子序列的长度被称为游程长度，子序列的个数被称为游程个数。
+在随机的前提下，我们期望游程的数量不会少，也不会多，而游程的长度也不会太长或太短。因此，我们可以通过计算游程的数量与长度来检验随机性。
+
+这里，我们将序列的游程长度为$1,2,\ldots,5$的游程个数为$G_1, \ldots, G_5$，将游程长度不低于6的游程个数记为$G_6$，那么统计量为：
+$$Q_n = (G-\mathbb{E}(G))^T\Sigma_G^{-1}(G-\mathbb{G}) = \frac{1}{n} \sum_{i=1}^6\sum_{j=1}^6a_{ij}(g_i-nb_i)(g_j-nb_j)$$
+在这里，$G = (G_1, G_2, \ldots, G_6)^T$，$\mathbb{E}(G) = (nb_1, nb_2, \ldots, nb_6)^T$是一个完全已知的向量，$\Sigma_G = (a_{ij})$为一个已经给定的协方差矩阵。$G$在此的观测值为$g_i$。
+
+
+## 4.3 两样本的非参数检验
+
+### 4.3.1 Mann-Whitney U检验(Wilcoxon秩和检验)
+
+我们想要检验两个总体$X$,$Y$分布是否一致。因此我们将两者的观测值混合并排序，而后将$X$的观测值的秩和记为$W_X$。从假设来说，我们不希望两者的秩和差异过大，因此我们可以将$W_X$和$W_Y$中的最大值用来做检验
+
+而等价的Mann-Whitney U检验的统计量是，记$$W_{yx} = \left( \sum_{i=1}^n\sum_{j=1}^m\chi(Y_k \leq X_i)\right)$$
+那么统计量为：$$U_{yx} = \frac{W_{yx}-1/2}{\sqrt{(m+n+1)/(12mn)}} \mathop{\rightarrow}\limits^L N(0,1)$$
+
+### 4.3.2 K-S检验
+
+对于两个总体$X_i$，$Y_j$，有经验分布函数$F_n(x),G_m(x)$令统计量为
+$$K_n = \max\left\{\max_i\left|F_n(X_i)-G_m(X_i)\right|,\max_j\left|F_n(Y_j)-G_m(Y_j)\right|\right\}$$
+那么其服从于分布：
+$$\mathbb{P}(K_n \leq x) = 1 - 2\sum_{k=1}^{+\infin}(-1)^{k-1} e^{-2(k^2mn/(m+n))x^2}, x\in(0,+\infin)$$
+
+### 4.3.3 游程检验
+
+// 懒得写了
+
+## 4.4 独立性检验
+
+$H_0$: $X$,$Y$独立 vs $H_1$: $X$,$Y$不独立
+
+### 4.4.1 列连分析检验
+
+列连分析检验的思想是，我们将$X$的观测值分为若干个等距分组，将$Y$的观测值分为若干个等距分组，而后计算各个分组的联合频数，而后计算各个分组的期望联合频数，而后计算统计量：
+$$\chi^2 = \sum_{i=1}^k\sum_{j=1}^l \frac{(n_{ij} - n_{ij}^e)^2}{n_{ij}^e}\mathop{\rightarrow}\limits^{\quad L\quad} \chi^2((k-1)(l-1))$$
+其中$n_{ij}$为第$i$组第$j$组的联合频数，$n_{ij}^e$为第$i$组第$j$组的期望联合频数。为了验证$H_0$，我们一般使用$X$,$Y$相互独立下的期望频数来计算统计量。
+
+### 4.4.2 相关系数检验
+
+这里，我们检验：$H_0$: $\rho = 0$ vs $H_1$: $\rho \neq 0$。我们使用Pearson相关系数来检验，其统计量为：
+$$T = \frac{r\sqrt{n-2}}{\sqrt{1-r^2}} \sim t(n-2)$$
+其中$r$为Pearson相关系数: $$r = \frac{\sum_{i=1}^n (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum_{i=1}^n (X_i - \bar{X})^2}\sqrt{\sum_{i=1}^n (Y_i - \bar{Y})^2}}$$
+$n$为样本数。
+
+Spearmen秩相关系数的检验统计量为：
+$$T = r_s\sqrt{n-1} \sim N(0,1)$$
+其中$r_s$为Spearmen秩相关系数: $$r_s = \frac{\sum_{i=1}^n (R_i - \bar{R})(S_i - \bar{S})}{\sqrt{\sum_{i=1}^n (R_i - \bar{R})^2}\sqrt{\sum_{i=1}^n (S_i - \bar{S})^2}}$$
+$R_i$为$X_i$的秩，$S_i$为$Y_i$的秩。
+
+Kendall秩相关系数的检验统计量为：
