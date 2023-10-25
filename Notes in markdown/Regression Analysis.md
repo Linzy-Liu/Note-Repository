@@ -351,7 +351,3 @@ The usual t-tests can be used for single parameter hypothesis testing. And there
 
 The **Likelihood ratio test** is the most powerful test among the three tests. Its idea is to compare the likelihood of the restricted model and the likelihood of the unrestricted model. And we have the following formula:
 $$LR = -2(\log{L_r} - \log{L_{ur}}) \sim \chi^2_q$$ where $q$ is the number of restrictions.
-
-
-
-
