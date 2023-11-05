@@ -48,7 +48,7 @@ Assumptions MLR.1 through MLR.5 are collectively called **Gauss-Markov assumptio
 
 ***Theorem*** Under assumptions MLR.1 through MLR.5, conditional on the sample values of the independent variables, $$Var(\hat{\beta}_j) = \frac{\sigma^2}{SST_j(1-R_j^2)}$$where $SST_j$ is the total sample variation $SST_j=\sum_{i=1}^n(x_{ij}-\bar{x}_j)^2$ 
 
-And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^2\right)/df$，where $df$ denotes degrees of freedom. $df$ can be calculated by *(number of observations) - (number of estimated parameters) - 1*
+And we could estimate $\sigma^2$ by $\hat{\sigma}^2=\left(\sum_{i=1}^n\hat{u}_i^2\right)/df$，where $df$ denotes degrees of freedom. $df$ can be calculated by *(number of observations) - (number of estimated parameters)*
 
 ***Theorem*** Under the **Gauss-Markov assumptions**, $\mathbb{E}(\hat{\sigma}^2)=\sigma^2$
 
@@ -96,7 +96,7 @@ Here we neglect the degrees of freedom by increasing the size of dataset.
 
 ### Testing restrictions on multiple parameters
 
-For hypothesis like $H_0: \beta_j = 0, j\in I_{restrict}$ against hypothesis $H_1: H_0 \text{ is false}$ where $k$ is a positive integer, we can use the F-test, where $I_{restrict} \subset \mathbb{N}$. Suppose the cardinal number of $I_{restrict}$ is $q$, then we have the test statistic $$F=\frac{(SSR_r-SSR_{ur})/q}{SSR_{ur}/(n - k - 1)} \sim F_{q, n-k-1}$$where $SSR_r$ is the sum of squared residuals from the restricted model and $SSR_{ur}$ is the sum of squared residuals from the unrestricted model.The restricted model is defined by the model with restriction that $\beta_j = 0$ for $j \in I_{restrict}$. 
+For hypothesis like $H_0: \beta_j = 0, j\in I_{restrict}$ against hypothesis $H_1: H_0 \text{ is false}$ we can use the F-test, where $I_{restrict} \subset \mathbb{N}$. Suppose the cardinal number of $I_{restrict}$ is $q$, and $k$ is the number of parameters, then we have the test statistic $$F=\frac{(SSR_r-SSR_{ur})/q}{SSR_{ur}/(n - k)} \sim F_{q, n-k}$$where $SSR_r$ is the sum of squared residuals from the restricted model and $SSR_{ur}$ is the sum of squared residuals from the unrestricted model.The restricted model is defined by the model with restriction that $\beta_j = 0$ for $j \in I_{restrict}$. 
 
 ## Dummy Variables
 
@@ -132,10 +132,11 @@ We can use the **Breusch-Pagan test** to test for heteroskedasticity. The null h
 
 And we could also test the joint significance of the parameters of the regression of $u^2$ on $x_1, x_2, \ldots, x_k$. Suppose the original regression has been conducted, then we will obtain $\hat{u}_i$s. We will have $$\hat{u}^2 = \delta_0 + \delta_1x_1 + \ldots + \delta_kx_k + v$$ where $v$ is a random variable with mean $0$. And we can use F statistic to test the joint significance of $\delta_j$s. That is $$F = \frac{R^2/(k-1)}{(1-R^2)/(n-k)} \sim F_{k-1, n-k}$$ where $k$ is the number of parameters and $n$ is the number of observations.
 
-Or **White test** could be used. That is, we regress $\hat{u}_i^2$ on $\hat{y}$ and $\hat{y}^2$ : $$ \hat{u}_i^2 = \delta_0 + \delta_1\hat{y}_i + \delta_2\hat{y}_i^2 + v_i$$and test the joint significance of the parameters $\delta_1$ and $\delta_2$. It is worth noting that the statistic $LM = nR^2 \sim \chi^2_2$ is the same as the statistic in Breusch-Pagan test.
+Or **White test** could be used. That is, we regress $\hat{u}_i^2$ on $\hat{y}$ and $\hat{y}^2$ : $$ \hat{u}_i^2 = \delta_0 + \delta_1\hat{y}_i + \delta_2\hat{y}_i^2 + v_i$$and test the joint significance of the parameters $\delta_1$ and $\delta_2$. It is worth noting that the Breusch-Pagen statistic $LM = nR^2 \sim \chi^2_2$ is the same as the statistic in White test.
+
 ### Robust standard errors
 
-We can try to use **Feasible GLS** to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$.
+We can try to use **Feasible GLS**(FGLS in short) to estimate the variance of error term $u$. We assume: $$Var(u|x)=\sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k)=\sigma^2h(x)$$ With this assumption, we have $$u^2 = \sigma^2 \exp(\delta_0+\delta_1x_1+\ldots+\delta_kx_k) v$$ where $v$ is a random variable with mean $1$. And we can make a regession on $\log(u^2)$ on $x_1, x_2, \ldots, x_k$ to get the estimate of $\delta_j$.
 
 ## Endogeneity
 
@@ -194,12 +195,12 @@ $$x_i = \pi_0 + \pi_1z_{i1} + \pi_1z_{i2} + \ldots + \pi_1z_{im} + \pi_2x_{1} + 
 
 #### Testing for IV exogeneity
 
-The idea is that, if all instruments are exogenous, the 2SLS residuals should be uncorrelated with the instruments, up to sampling error. But if there are $k + 1$ parameters and $k + 1 + q$ instruments, the 2SLS residuals have a zero mean and are identically uncorrelated with $k$ linear combinations of the instruments.
+The idea is that, if all instruments are exogenous, the 2SLS residuals should be uncorrelated with the instruments, up to sampling error. Then we have the following overifdentification test, which is usually called **Sargan test**.
 
 **Testing Overidentifying restrictions**
-1.  Estimate the structural equation by 2SLS and obtain the 2SLS residuals, $\hat{u}_1$.
-2.  Regress $\hat{u}_1$ on all exogenous variables. Obtain the R-squared, say, $R^2$.
-3. Under the null hypothesis that all IVs are uncorrelated with $u_1$, $nR^2 \sim \chi^2(q)$, where $q$ is the number of instrumental variables from outside the model minus the total number of endogenous explanatory variables, and $n$ stands for the number of samples. If $nR^2_1$ exceeds (say) the 5% critical value in the $\chi^2(q)$ distribution, we reject $H_0$ and conclude that at least some of the IVs are not exogenous.
+1.  Estimate the structural equation by 2SLS and obtain the 2SLS residuals, $\hat{u}$.
+2.  Regress $\hat{u}$ on all exogenous variables(Including IVs and exogenous variables in the equation). Obtain the R-squared, say, $R^2$.
+3. Under the null hypothesis that all IVs are uncorrelated with $u$, $nR^2 \sim \chi^2(q)$, where $q$ is the number of IVs minus the total number of endogenous explanatory variables, and $n$ stands for the number of samples. If $nR^2$ exceeds (say) the 5% critical value in the $\chi^2(q)$ distribution, we reject $H_0$ and conclude that at least some of the IVs are not exogenous.
 
 # Time Series
 

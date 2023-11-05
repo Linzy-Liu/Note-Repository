@@ -1,6 +1,6 @@
 *.los
 katex.min.css
-Numerical Analysis.html
+*.html
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
