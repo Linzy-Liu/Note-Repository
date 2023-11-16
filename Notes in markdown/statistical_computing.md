@@ -327,4 +327,64 @@ $$\tau \sim N\left(0, \frac{2(2n+5)}{9n(n-1)}\right)$$
 
 ## 5.2 Jackknife法
 
+### 5.2.1 Jackknife法的步骤
 
+1. 从原样本$(X_1, X_2, \ldots, X_n)$中抛弃第$i$个样本，得到第$i$个**Jackknife样本**$X_{(-i)}=(X_1, \ldots, X_{(i-1)}, X_{(i+1)}, \ldots, X_n)$
+2. 基于第$i$个Jackknife样本，计算统计量$\hat{\theta}_{(-i)}$
+从而，我们便可以在此之后得到估计$\hat{\theta}$的分布与特征了。
+
+### 5.2.2 常见估计量
+
+首先对偏差进行讨论：$$ \widehat{Bias}(\hat{\theta}) = (n-1)(\hat{\theta} - \frac{1}{n}\sum_{i=1}^n \hat{\theta}_{(-i)})$$
+
+而后对方差进行讨论：$$\widehat{Var}(\hat{\theta}) = \frac{n-1}{n}\sum_{i=1}^n \left(\hat{\theta}_{(-i)} - \frac{1}{n}\sum_{i=1}^n \hat{\theta}_{(-i)}\right)^2$$
+
+## 5.3 Jackknife-after-Bootstrap法
+
+### 5.3.1 Jackknife-after-Bootstrap法的步骤
+
+1. 从原样本$(X_1, X_2, \ldots, X_n)$中抛弃第$i$个样本，得到第$i$个**Jackknife样本**$X_{(-i)}=(X_1, \ldots, X_{(i-1)}, X_{(i+1)}, \ldots, X_n)$
+2. 基于第$i$个Jackknife样本，进行Bootstrap法，得到$\hat{\theta}_{(-i)}^{(1)}, \hat{\theta}_{(-i)}^{(2)}, \ldots, \hat{\theta}_{(-i)}^{(K)}$
+3. 重复上述步骤$n$次，得到$\hat{\theta}_{(-1)}^{(1)}, \hat{\theta}_{(-1)}^{(2)}, \ldots, \hat{\theta}_{(-1)}^{(K)}; \hat{\theta}_{(-2)}^{(1)}, \hat{\theta}_{(-2)}^{(2)}, \ldots, \hat{\theta}_{(-2)}^{(K)}; \ldots; \hat{\theta}_{(-n)}^{(1)}, \hat{\theta}_{(-n)}^{(2)}, \ldots, \hat{\theta}_{(-n)}^{(K)}$
+4. 从而，我们便可以在此之后得到估计$\hat{\theta}$的分布与特征了。
+
+### 5.3.2 常见估计量
+
+依照惯例，我们在此仍然考虑偏差与方差的估计量。但在这里，我们更为关心这些估计量的方差。
+
+首先是估计方差的方差（或标准差的方差）：由上，我们已经得到了对于每个Jackknife样本的Bootstrap法的估计量，因此我们可以计算得到每个Jackknife样本的估计量的方差，而后根据Jacknife法的方差计算方法计算得到这些方差的方差，从而得到对于方差的方差的估计量。
+
+事实上，对于其他的估计量，我们也可以使用类似的方法来计算其方差的估计。
+
+## 5.4 Bootstrap法估计置信区间
+
+在本节中，我们所介绍的得到置信区间的方法均为渐进逼近的方法，即在样本量足够大时，这些方法才能够给出较为准确的置信区间。
+
+### 5.4.1 标准正态Bootstrap置信区间
+
+根据中心极限定理，我们可以得到一个渐进服从的关系：$$\frac{\hat{\theta}-\mathbb{E}\hat{\theta}}{SE(\hat{\theta})}\quad \mathop{\rightarrow}\limits^L \quad N(0,1)$$
+
+那么便可得到一个渐进置信区间：$$\hat{\theta} \pm z_{\alpha/2}SE(\hat{\theta})$$ 这一方法要求$\hat{\theta}$是无偏的。
+
+# 附录
+
+## Bootstap等的对比
+
+### Bootsrap
+
+流程
+常用例子
+不同之处（Jack-after-B，Bootstrap-CI）
+
+### Jackknife
+
+流程
+常用例子
+不同之处（Jack-after-B，Bootstrap-CI）
+
+### Monte-Carlo
+
+目的
+流程
+常见例子
+假设检验
