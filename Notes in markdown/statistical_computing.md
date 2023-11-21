@@ -358,13 +358,32 @@ $$\tau \sim N\left(0, \frac{2(2n+5)}{9n(n-1)}\right)$$
 
 ## 5.4 Bootstrap法估计置信区间
 
-在本节中，我们所介绍的得到置信区间的方法均为渐进逼近的方法，即在样本量足够大时，这些方法才能够给出较为准确的置信区间。
+在本节中，我们所介绍的得到置信区间的方法均为渐进逼近的方法，即在样本量足够大时，这些方法才能够给出较为准确的置信区间。下面我们将给出四种利用Bootstrap法来估计置信区间的方法，可以根据设计的显著性与真实覆盖率的对比来在这四种方法中进行对比。
 
 ### 5.4.1 标准正态Bootstrap置信区间
 
 根据中心极限定理，我们可以得到一个渐进服从的关系：$$\frac{\hat{\theta}-\mathbb{E}\hat{\theta}}{SE(\hat{\theta})}\quad \mathop{\rightarrow}\limits^L \quad N(0,1)$$
 
 那么便可得到一个渐进置信区间：$$\hat{\theta} \pm z_{\alpha/2}SE(\hat{\theta})$$ 这一方法要求$\hat{\theta}$是无偏的。
+
+### 5.4.2 基本的Bootstrap置信区间
+
+这一方法的思想是，我们可以通过Bootstrap法来估计$\hat{\theta}$的分布，而后根据这一分布来计算置信区间。
+具体地来说，我们首先从原样本$(X_1, X_2, \ldots, X_n)$中进行Bootstrap法，得到$\hat{\theta}^{(1)}, \hat{\theta}^{(2)}, \ldots, \hat{\theta}^{(K)}$。而后，我们可以根据给定的置信度$\alpha$，在Bootstrap估计量中得到$\hat{\theta}$的$\alpha/2$分位数与$1-\alpha/2$分位数，从而得到置信区间。
+
+### 5.4.3 基于百分位数的Bootstrap置信区间
+
+这一方法相比于上一方法多绕了一层：我们事实上在对$\hat{\theta}-\theta$做上一方法的操作。具体地来说，我们首先从原样本$(X_1, X_2, \ldots, X_n)$中进行Bootstrap法，得到$\hat{\theta}^{(1)}, \hat{\theta}^{(2)}, \ldots, \hat{\theta}^{(K)}$，以及基于原样本计算得到的$\hat{\theta}$。而后，我们可以根据给定的置信度$\alpha$，在Bootstrap估计量中得到$\hat{\theta}^{(i)}-\hat{\theta}$的$\alpha/2$分位数与$1-\alpha/2$分位数，从而得到$\hat{\theta}-\theta$的置信区间。那么进一步地，经过简单的线性变换，便可得到$\hat{\theta}$的置信区间。
+
+### 5.4.4 基于Bootsrap的t分布置信区间
+
+由于我们无法得到在这里我们所需的t分布的具体自由度，故在此我们想要得到t统计量的分位数，就只能采用像上面一样的求出全样本、而后直接寻找分位点的方法，来得到这些分位数。从而，该方法步骤如下：
+1. 从原样本$(X_1, X_2, \ldots, X_n)$中重抽样，得到$(X_1^*, X_2^*, \ldots, X_n^*)$，而后计算统计量$\hat{\theta}^*$
+2. 从$(X_1^*, X_2^*, \ldots, X_n^*)$中重抽样$K$次，每次计算统计量，得到$\hat{\theta}^{*(1)}, \hat{\theta}^{*(2)}, \ldots, \hat{\theta}^{*(K)}$
+3. 计算$$t^* = \frac{\hat{\theta}^* - \hat{\theta}}{SE(\hat{\theta}^*)}$$其中$SE(\hat{\theta}^*)$为$\hat{\theta}^*$的标准误
+4. 将1-3步重复$N$次，得到$t^{*(1)}, t^{*(2)}, \ldots, t^{*(N)}$
+5. 从$t^{*(1)}, t^{*(2)}, \ldots, t^{*(N)}$中得到$t^*$的$\alpha/2$分位数与$1-\alpha/2$分位数，从而得到$t$的置信区间。
+6. 那么最后可得到$\hat{\theta}$的置信区间为：$$\hat{\theta} \pm t_{\alpha/2}^*SE(\hat{\theta})$$，其中$SE(\hat{\theta})$为$\hat{\theta}$的标准误，即每轮基于初始重抽样得到的$\hat{\theta}^*$的标准误。
 
 # 附录
 
